@@ -9,4 +9,4 @@ Lernhub zur Vorbereitung auf die Leistungsspange der Deutschen Jugendfeuerwehr i
   - Pull Requests und Issues sind willkommen. Bitte Änderungen immer kurz beschreiben.
  
 ## Hosting
-  - Die Seiten sind über GitHub Pages erreichbar.
+  - Die Seiten sind über Vercel erreichbar.
