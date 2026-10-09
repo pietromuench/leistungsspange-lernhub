@@ -10,6 +10,3 @@ Lernhub zur Vorbereitung auf die Leistungsspange der Deutschen Jugendfeuerwehr i
  
 ## Hosting
   - Die Seiten sind über GitHub Pages erreichbar.
- 
-## Erstellt von
-  - Pietro Münch & Liam
