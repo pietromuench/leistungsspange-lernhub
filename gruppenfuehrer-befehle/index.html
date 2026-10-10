@@ -4,16 +4,56 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Gruppenführer — Befehlsgebung</title>
-<link rel="stylesheet" href="../style.css">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;600&display=swap');
+:root{--bg:#111213;--surface:#1a1c1e;--border:#2e3133;--text:#dfe1db;--muted:#6b7175;--red:#cc2b2b;--red-dim:#7a1a1a;--green:#2a7a4a;--green-text:#a3d9b8;--yellow-text:#e3c97a;--yellow:#7a5e1a;}
+*,*::before,*::after{box-sizing:border-box;}
+html,body{margin:0;background:var(--bg);color:var(--text);font-family:'IBM Plex Sans',system-ui,sans-serif;font-size:15px;line-height:1.5;}
+::selection{background:var(--red);color:#fff;}
+.page{max-width:720px;margin:0 auto;padding:32px 20px 80px;}
+.site-header{padding-bottom:20px;margin-bottom:28px;border-bottom:1px solid var(--border);}
+.site-header h1{font-size:22px;font-weight:700;letter-spacing:-0.3px;margin:0;color:#fff;}
+.tab-nav{display:flex;gap:2px;margin-bottom:24px;border-bottom:1px solid var(--border);}
+.tab-nav button{font-family:'IBM Plex Sans',sans-serif;font-size:13px;font-weight:500;background:none;border:none;border-bottom:2px solid transparent;color:var(--muted);padding:10px 14px;cursor:pointer;margin-bottom:-1px;}
+.tab-nav button:hover{color:var(--text);}
+.tab-nav button.active{color:#fff;border-bottom-color:var(--red);}
+.panel{display:none;}
+.panel.active{display:block;}
+.section{margin-bottom:28px;}
+.section-title{font-size:13px;font-weight:600;color:var(--muted);margin:0 0 12px;padding-bottom:8px;border-bottom:1px solid var(--border);}
+.section-note{font-size:12.5px;color:var(--muted);margin-bottom:10px;}
+.cmd-list{display:flex;flex-direction:column;gap:4px;}
+.cmd{font-family:'IBM Plex Mono',monospace;font-size:13.5px;line-height:1.55;color:#f0ece4;background:var(--surface);border-left:3px solid var(--red);padding:10px 14px;}
+.cmd .aside{display:block;font-family:'IBM Plex Sans',sans-serif;font-size:11.5px;color:var(--muted);margin-top:3px;}
+.cmd-formula{font-family:'IBM Plex Mono',monospace;font-size:13px;color:#f0ece4;background:var(--surface);border:1px solid var(--border);border-left:3px solid #555;padding:12px 14px;margin-bottom:4px;}
+.step{font-size:12px;font-weight:600;color:var(--muted);margin:16px 0 6px;}
+.step:first-child{margin-top:0;}
+.info-block{background:var(--surface);border:1px solid var(--border);padding:14px 16px;font-size:13px;color:var(--muted);line-height:1.55;}
+.btn{font-family:'IBM Plex Sans',sans-serif;font-size:13px;font-weight:600;background:none;border:1px solid var(--border);color:var(--text);padding:9px 16px;cursor:pointer;}
+.btn:hover{border-color:var(--muted);color:#fff;}
+.btn.primary{background:var(--red);border-color:var(--red);color:#fff;}
+.btn.primary:hover{background:#e03030;border-color:#e03030;}
+.btn-row{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px;}
+.quiz-meta{display:flex;justify-content:space-between;font-size:12px;color:var(--muted);margin-bottom:12px;}
+.quiz-q{font-size:14px;line-height:1.55;color:var(--text);margin-bottom:14px;}
+.quiz-answer{width:100%;min-height:68px;background:var(--surface);border:1px solid var(--border);color:var(--text);font-family:'IBM Plex Sans',sans-serif;font-size:13.5px;padding:10px 12px;resize:vertical;}
+.quiz-answer:focus{outline:none;border-color:var(--muted);}
+.result-box{display:none;margin-top:10px;padding:10px 14px;font-size:13px;line-height:1.5;}
+.result-box.show{display:block;}
+.result-box.good{background:#0e2318;border-left:3px solid var(--green);color:var(--green-text);}
+.result-box.partial{background:#1e1a0a;border-left:3px solid var(--yellow);color:var(--yellow-text);}
+.result-box.bad{background:#1e0d0d;border-left:3px solid var(--red-dim);color:#e8a8a8;}
+.miss{display:block;margin-top:6px;font-family:'IBM Plex Mono',monospace;font-size:12px;opacity:.85;}
+.solution{display:none;margin-top:10px;padding:12px 14px;background:var(--surface);border-left:3px solid var(--green);font-family:'IBM Plex Mono',monospace;font-size:13px;line-height:1.6;color:var(--green-text);white-space:pre-line;}
+.solution.show{display:block;}
+.footer{margin-top:40px;padding-top:14px;border-top:1px solid var(--border);font-size:11.5px;color:var(--muted);}
+</style>
 </head>
 <body>
 <div class="page">
-
   <header class="site-header">
     <h1>Gruppenführer — Befehlsgebung</h1>
-    <div class="context">Leistungsspange OSL 1 &nbsp;·&nbsp; Abnahme 10.10.2026</div>
   </header>
-
   <nav class="tab-nav">
     <button class="active" data-p="marsch">Marsch &amp; Meldung</button>
     <button data-p="stationen">Stationen</button>
@@ -21,9 +61,7 @@
     <button data-p="quiz">Abfragen</button>
   </nav>
 
-  <!-- MARSCH -->
   <section class="panel active" id="p-marsch">
-
     <div class="section">
       <div class="section-title">Marsch zur Station — gilt bei jeder Disziplin</div>
       <div class="cmd-list">
@@ -33,22 +71,16 @@
         <div class="cmd">Beim Laufen: „Rechtsschwenk" / „Linksschwenk"</div>
         <div class="cmd">„Gruppe, Halt!"</div>
         <div class="cmd">„Rechts/Links um!"</div>
-        <div class="cmd">„Gruppe OSL …, in einer Reihe zu ein oder zwei Gliedern angetreten!"<span class="aside">je nach Station</span></div>
+        <div class="cmd">„Gruppe …, in einer Reihe zu ein oder zwei Gliedern angetreten!"<span class="aside">je nach Station</span></div>
       </div>
     </div>
-
     <div class="section">
       <div class="section-title">Meldungen an den Wertungsrichter</div>
       <div class="step">Bei geordneter Aufstellung</div>
-      <div class="cmd-list">
-        <div class="cmd">„Gruppe OSL …, bereit zur Abnahme der Disziplin …!"</div>
-      </div>
+      <div class="cmd-list"><div class="cmd">„Gruppe …, bereit zur Abnahme der Disziplin …!"</div></div>
       <div class="step">Nach Beendigung</div>
-      <div class="cmd-list">
-        <div class="cmd">„Gruppe OSL … hat die Disziplin … beendet!"</div>
-      </div>
+      <div class="cmd-list"><div class="cmd">„Gruppe … hat die Disziplin … beendet!"</div></div>
     </div>
-
     <div class="section">
       <div class="section-title">Abschluss Löschangriff</div>
       <div class="cmd-list">
@@ -57,24 +89,19 @@
         <div class="cmd">„Zum Abmarsch fertig!!"</div>
       </div>
     </div>
-
   </section>
 
-  <!-- STATIONEN -->
   <section class="panel" id="p-stationen">
-
     <div class="section">
       <div class="section-title">Staffellauf</div>
       <div class="section-note">Aufwärmen nur vor der Meldung möglich — danach nicht mehr.</div>
       <div class="step">Ankunft</div>
       <div class="cmd-list">
         <div class="cmd">„Gruppe, Halt!" &nbsp;—&nbsp; „Rechts/Links um!"</div>
-        <div class="cmd">„Gruppe OSL …, in einer Reihe zu einem Glied an vorgegebener Linie – angetreten!"</div>
+        <div class="cmd">„Gruppe …, in einer Reihe zu einem Glied an vorgegebener Linie – angetreten!"</div>
       </div>
       <div class="step">Meldung</div>
-      <div class="cmd-list">
-        <div class="cmd">„Gruppe OSL …, bereit zur Abnahme der Disziplin Staffellauf!"</div>
-      </div>
+      <div class="cmd-list"><div class="cmd">„Gruppe …, bereit zur Abnahme der Disziplin Staffellauf!"</div></div>
       <div class="step">Nach „Durchführung"</div>
       <div class="cmd-list">
         <div class="cmd">„Gruppe, in einer Reihe hintereinander am Start – angetreten!"</div>
@@ -84,71 +111,60 @@
       <div class="step">Abschluss</div>
       <div class="cmd-list">
         <div class="cmd">„Gruppe, Halt!" &nbsp;—&nbsp; „Rechts/Links um!" &nbsp;—&nbsp; Antreten in einer Reihe</div>
-        <div class="cmd">„Gruppe OSL … hat die Disziplin Staffellauf beendet!"</div>
-        <div class="cmd">„Gruppe OSL …, in einer Reihe zu zwei Gliedern – angetreten!"</div>
+        <div class="cmd">„Gruppe … hat die Disziplin Staffellauf beendet!"</div>
+        <div class="cmd">„Gruppe …, in einer Reihe zu zwei Gliedern – angetreten!"</div>
         <div class="cmd">„Rechts/Links um – im Gleichschritt Marsch!"</div>
       </div>
     </div>
-
     <div class="section">
       <div class="section-title">Kugelstoßen</div>
       <div class="step">Ankunft &amp; Meldung</div>
       <div class="cmd-list">
         <div class="cmd">„Gruppe, Halt!" &nbsp;—&nbsp; „Rechts/Links um!" &nbsp;—&nbsp; In einer Reihe antreten</div>
-        <div class="cmd">„Gruppe OSL …, bereit zur Abnahme der Disziplin Kugelstoßen!"</div>
+        <div class="cmd">„Gruppe …, bereit zur Abnahme der Disziplin Kugelstoßen!"</div>
       </div>
       <div class="section-note">Nach „Durchführung" reihst du dich mit ein. 4 kg (männlich), 3 kg (weiblich).</div>
       <div class="step">Abschluss</div>
       <div class="cmd-list">
-        <div class="cmd">„Gruppe OSL … hat die Disziplin Kugelstoßen beendet!"</div>
-        <div class="cmd">„Gruppe OSL …, in einer Reihe zu zwei Gliedern – angetreten!" &nbsp;—&nbsp; „Rechts/Links um – im Gleichschritt Marsch!"</div>
+        <div class="cmd">„Gruppe … hat die Disziplin Kugelstoßen beendet!"</div>
+        <div class="cmd">„Gruppe …, in einer Reihe zu zwei Gliedern – angetreten!" &nbsp;—&nbsp; „Rechts/Links um – im Gleichschritt Marsch!"</div>
       </div>
     </div>
-
     <div class="section">
       <div class="section-title">Fragenbeantwortung</div>
       <div class="step">Ankunft &amp; Meldung</div>
       <div class="cmd-list">
         <div class="cmd">„Gruppe, Halt!" &nbsp;—&nbsp; „Rechts/Links um!" &nbsp;—&nbsp; In einer Reihe antreten</div>
-        <div class="cmd">„Gruppe OSL …, bereit zur Abnahme der Disziplin Fragenbeantwortung!"</div>
-        <div class="cmd">„Gruppe OSL …, am vorgegebenen Ort Platz nehmen und selbstständig die Helme absetzen!"</div>
+        <div class="cmd">„Gruppe …, bereit zur Abnahme der Disziplin Fragenbeantwortung!"</div>
+        <div class="cmd">„Gruppe …, am vorgegebenen Ort Platz nehmen und selbstständig die Helme absetzen!"</div>
       </div>
       <div class="section-note">Du signalisierst dem Wertungsrichter die Bereitschaft, Gruppe berät sich leise, du gibst die Antwort bekannt.</div>
       <div class="step">Abschluss</div>
       <div class="cmd-list">
-        <div class="cmd">„Gruppe OSL …, in einer Reihe zu zwei Gliedern – angetreten!"</div>
-        <div class="cmd">„Gruppe OSL … hat die Disziplin Fragenbeantwortung beendet"</div>
+        <div class="cmd">„Gruppe …, in einer Reihe zu zwei Gliedern – angetreten!"</div>
+        <div class="cmd">„Gruppe … hat die Disziplin Fragenbeantwortung beendet"</div>
         <div class="cmd">„Rechts/Links um – im Gleichschritt Marsch!"</div>
       </div>
     </div>
-
     <div class="section">
       <div class="section-title">Löschangriff — äußerer Rahmen</div>
       <div class="step">Ankunft</div>
       <div class="cmd-list">
         <div class="cmd">„Gruppe, Halt!" &nbsp;—&nbsp; „Rechts/Links um!"</div>
-        <div class="cmd">„Gruppe OSL …, gemäß Feuerwehr-Dienstvorschrift 3 – angetreten!"</div>
+        <div class="cmd">„Gruppe …, gemäß Feuerwehr-Dienstvorschrift 3 – angetreten!"</div>
       </div>
       <div class="step">Meldung</div>
-      <div class="cmd-list">
-        <div class="cmd">„Gruppe OSL …, bereit zur Abnahme der Disziplin Feuerwehr-Dienstvorschrift 3!"</div>
-      </div>
+      <div class="cmd-list"><div class="cmd">„Gruppe …, bereit zur Abnahme der Disziplin Feuerwehr-Dienstvorschrift 3!"</div></div>
       <div class="step">Abschluss</div>
       <div class="cmd-list">
-        <div class="cmd">„Gruppe OSL … hat die Disziplin Löschangriff beendet!"</div>
-        <div class="cmd">„Gruppe OSL …, in einer Reihe zu zwei Gliedern – angetreten!" &nbsp;—&nbsp; „Rechts/Links um – im Gleichschritt Marsch!"</div>
+        <div class="cmd">„Gruppe … hat die Disziplin Löschangriff beendet!"</div>
+        <div class="cmd">„Gruppe …, in einer Reihe zu zwei Gliedern – angetreten!" &nbsp;—&nbsp; „Rechts/Links um – im Gleichschritt Marsch!"</div>
       </div>
     </div>
-
-    <div class="info-block">
-      Staffelführer-Befehle (andere Rolle): nur Angriffs- und Wassertrupp, kein Schlauchtrupp, kein Melder — Staffelführer bedient den Verteiler selbst. Nicht deine Rolle als Gruppenführer.
-    </div>
-
+    <div class="info-block">Staffelführer-Befehle (andere Rolle): nur Angriffs- und Wassertrupp, kein Schlauchtrupp, kein Melder — Staffelführer bedient den Verteiler selbst.</div>
   </section>
 
-  <!-- LÖSCHANGRIFF -->
   <section class="panel" id="p-loeschangriff">
-
     <div class="section">
       <div class="section-title">Schritt 1 — Lage schildern</div>
       <div class="cmd-list">
@@ -159,88 +175,154 @@
         <div class="cmd">„Melder: zu mir!"</div>
       </div>
     </div>
-
     <div class="section">
       <div class="section-title">Schritt 2 — Trupp-Befehle</div>
       <div class="section-note">Immer dieselbe Reihenfolge:</div>
       <div class="cmd-formula">Einheit &rarr; Auftrag &rarr; Mittel &rarr; Ziel &rarr; Weg &rarr; VOR!</div>
       <div class="step">Angriffstrupp</div>
-      <div class="cmd-list">
-        <div class="cmd">„Angriffstrupp – zur Brandbekämpfung – mit 1. C-Strahlrohr – zum linken Brandabschnitt – über die Wiese – VOR!!!"</div>
-      </div>
+      <div class="cmd-list"><div class="cmd">„Angriffstrupp – zur Brandbekämpfung – mit 1. C-Strahlrohr – zum linken Brandabschnitt – über die Wiese – VOR!!!"</div></div>
       <div class="step">Wassertrupp</div>
-      <div class="cmd-list">
-        <div class="cmd">„Wassertrupp – zur Brandbekämpfung – mit 2. C-Strahlrohr – zum rechten Brandabschnitt – über die Wiese – VOR!!!"</div>
-      </div>
+      <div class="cmd-list"><div class="cmd">„Wassertrupp – zur Brandbekämpfung – mit 2. C-Strahlrohr – zum rechten Brandabschnitt – über die Wiese – VOR!!!"</div></div>
       <div class="step">Schlauchtrupp</div>
-      <div class="cmd-list">
-        <div class="cmd">„Schlauchtrupp – zur Brandbekämpfung – mit 3. C-Strahlrohr – auf direktem Weg – über die Wiese – VOR!!!"</div>
-      </div>
+      <div class="cmd-list"><div class="cmd">„Schlauchtrupp – zur Brandbekämpfung – mit 3. C-Strahlrohr – auf direktem Weg – über die Wiese – VOR!!!"</div></div>
     </div>
-
     <div class="section">
       <div class="section-title">Schritt 3 — Rückmeldungen der Trupps</div>
       <div class="step">Angriffstrupp — wiederholt Befehl, dann:</div>
-      <div class="cmd-list">
-        <div class="cmd">„1. Strahlrohr Wasser marsch" &nbsp;… später:&nbsp; „1. Strahlrohr Wasser halt"</div>
-      </div>
+      <div class="cmd-list"><div class="cmd">„1. Strahlrohr Wasser marsch" &nbsp;… später: &nbsp;„1. Strahlrohr Wasser halt"</div></div>
       <div class="step">Wassertrupp — zuerst Sauglängen ansagen:</div>
       <div class="cmd-list">
         <div class="cmd">„4-Sauglängen in diese Richtung"<span class="aside">ein Schritt vor, mit Hand zeigen</span></div>
         <div class="cmd">Wiederholt Befehl, dann: „2. Strahlrohr Wasser marsch" … „2. Strahlrohr Wasser halt"</div>
       </div>
       <div class="step">Schlauchtrupp</div>
-      <div class="cmd-list">
-        <div class="cmd">Wiederholt Befehl, dann: „3. Strahlrohr Wasser marsch" … „3. Strahlrohr Wasser halt"</div>
-      </div>
+      <div class="cmd-list"><div class="cmd">Wiederholt Befehl, dann: „3. Strahlrohr Wasser marsch" … „3. Strahlrohr Wasser halt"</div></div>
     </div>
-
     <div class="section">
-      <div class="section-title">Schritt 4 — Melder-Kette (läuft parallel)</div>
+      <div class="section-title">Schritt 4 — Melder-Kette</div>
       <div class="cmd-list">
         <div class="cmd">Melder an AT: „Wasser kommt" → an Ma: „Wasser marsch" → an WT: „Wasser kommt" → an ST: „Wasser kommt"</div>
         <div class="cmd">ST: „habe verstanden" &nbsp;·&nbsp; WT: „habe verstanden" &nbsp;·&nbsp; AT: „habe verstanden" &nbsp;·&nbsp; Ma: „Wasser halt"</div>
       </div>
     </div>
-
-    <div class="info-block">
-      Als Gruppenführer bist du an keinen Standort gebunden — du behältst den Überblick über alle Trupps.
-    </div>
-
+    <div class="info-block">Als Gruppenführer bist du an keinen Standort gebunden — du behältst den Überblick über alle Trupps.</div>
   </section>
 
-  <!-- QUIZ -->
   <section class="panel" id="p-quiz">
-
     <div class="quiz-meta">
       <span id="quizProgress">1 / 12</span>
       <span>Richtig: <b id="scoreVal">0</b> / <span id="scoreTotal"></span></span>
     </div>
-
     <div class="quiz-q" id="quizQ"></div>
     <textarea class="quiz-answer" id="quizAnswer" placeholder="Befehl eingeben oder laut sagen und Kernpunkte tippen …"></textarea>
-
     <div class="btn-row">
       <button class="btn primary" id="btnCheck">Prüfen</button>
       <button class="btn" id="btnReveal">Lösung</button>
       <button class="btn" id="btnNext">Weiter</button>
     </div>
-
     <div class="result-box" id="checkResult"></div>
     <div class="solution" id="quizSolution"></div>
-
-    <div class="btn-row" style="margin-top: 24px;">
+    <div class="btn-row" style="margin-top:24px;">
       <button class="btn" id="btnShuffle">Mischen</button>
       <button class="btn" id="btnResetScore">Score zurücksetzen</button>
     </div>
-
   </section>
 
-  <div class="footer">
-    Befehle laut sprechen — beim Wertungsrichter zählt Klarheit und Lautstärke genauso wie der Inhalt.
-  </div>
-
+  <div class="footer">Befehle laut sprechen — beim Wertungsrichter zählt Klarheit und Lautstärke genauso wie der Inhalt.</div>
 </div>
-<script src="script.js"></script>
+<script>
+document.querySelectorAll('.tab-nav button').forEach(b => {
+  b.addEventListener('click', () => {
+    document.querySelectorAll('.tab-nav button').forEach(x => x.classList.remove('active'));
+    document.querySelectorAll('.panel').forEach(x => x.classList.remove('active'));
+    b.classList.add('active');
+    document.getElementById('p-' + b.dataset.p).classList.add('active');
+  });
+});
+
+const QUIZ = [
+  { q: "Ihr steht bereit, die Gruppe soll zur ersten Station marschieren. Was ist dein erster Befehl?",
+    a: "„Gruppe, stillgestanden!"\ndann „Rechts/Links um!"\ndann „Ohne Tritt – Marsch!" (oder „Im Gleichschritt – Marsch!")",
+    key: ["gruppe stillgestanden","rechts um","marsch"] },
+  { q: "Ihr seid an der Station angekommen, die Gruppe läuft noch. Was befiehlst du?",
+    a: "„Gruppe, Halt!"\n„Rechts/Links um!"\n„Gruppe …, in einer Reihe zu ein oder zwei Gliedern angetreten!"",
+    key: ["gruppe halt","rechts um","in einer reihe","angetreten"] },
+  { q: "Die Gruppe steht ordentlich vor dem Wertungsrichter zur Disziplin Staffellauf. Meldung?",
+    a: "„Gruppe …, bereit zur Abnahme der Disziplin Staffellauf!"",
+    key: ["bereit zur abnahme","staffellauf"] },
+  { q: "Die Disziplin Kugelstoßen ist beendet, ihr steht wieder ordentlich. Was meldest du?",
+    a: "„Gruppe … hat die Disziplin Kugelstoßen beendet!"",
+    key: ["hat die disziplin","kugelstoßen","beendet"] },
+  { q: "Bei der Fragenbeantwortung: die Gruppe soll sich hinsetzen und die Helme absetzen. Was befiehlst du?",
+    a: "„Gruppe …, am vorgegebenen Ort Platz nehmen und selbstständig die Helme absetzen!"",
+    key: ["platz nehmen","helme absetzen"] },
+  { q: "Der Löschangriff beginnt. Wie schilderst du die Lage?",
+    a: "„Zur Lage: es brennt …"\n„Wasserentnahmestelle: offenes Gewässer" (zeigen)\n„Lage des Verteilers: eine B-Länge in diese Richtung" (zeigen)\n„Angriffstrupp verlegt B- und C-Leitung selbst"\n„Melder: zu mir!"",
+    key: ["zur lage","es brennt","wasserentnahmestelle","offenes gewässer","verteiler","melder zu mir"] },
+  { q: "Befehl an den Angriffstrupp: 1. C-Strahlrohr, linker Brandabschnitt, über die Wiese.",
+    a: "„Angriffstrupp – zur Brandbekämpfung – mit 1. C-Strahlrohr – zum linken Brandabschnitt – über die Wiese – VOR!!!"",
+    key: ["angriffstrupp","zur brandbekämpfung","1 c strahlrohr","linken brandabschnitt","über die wiese","vor"] },
+  { q: "Befehl an den Wassertrupp: 2. C-Strahlrohr, rechter Brandabschnitt, über die Wiese.",
+    a: "„Wassertrupp – zur Brandbekämpfung – mit 2. C-Strahlrohr – zum rechten Brandabschnitt – über die Wiese – VOR!!!"",
+    key: ["wassertrupp","zur brandbekämpfung","2 c strahlrohr","rechten brandabschnitt","über die wiese","vor"] },
+  { q: "Befehl an den Schlauchtrupp: 3. C-Strahlrohr, direkter Weg, über die Wiese.",
+    a: "„Schlauchtrupp – zur Brandbekämpfung – mit 3. C-Strahlrohr – auf direktem Weg – über die Wiese – VOR!!!"",
+    key: ["schlauchtrupp","zur brandbekämpfung","3 c strahlrohr","auf direktem weg","über die wiese","vor"] },
+  { q: "Das Feuer ist aus, alle sind zurück. Wie schließt du die Übung ab?",
+    a: "„Ist das Feuer aus?"\n„Die Gruppe … hat die Übung nach Feuerwehrdienstvorschrift 3 beendet!"\n„Zum Abmarsch fertig!!"",
+    key: ["ist das feuer aus","feuerwehrdienstvorschrift 3","zum abmarsch fertig"] },
+  { q: "Was ist die generelle Formel für jeden Trupp-Befehl?",
+    a: "Einheit → Auftrag → Mittel → Ziel → Weg → VOR!",
+    key: ["einheit","auftrag","mittel","ziel","weg","vor"] },
+  { q: "Der Staffellauf-Durchgang wird freigegeben. Wie schickst du die Gruppe los?",
+    a: "„Gruppe, in einer Reihe hintereinander am Start – angetreten!"\n„Gruppe, ohne Tritt mit selbstständigem Austreten an den Übergabepunkten – Marsch!"",
+    key: ["hintereinander am start","angetreten","ohne tritt","austreten","marsch"] },
+];
+
+let order = QUIZ.map((_,i)=>i);
+let qi = 0;
+let score = 0;
+document.getElementById('scoreTotal').textContent = QUIZ.length;
+
+function normalize(str){
+  return str.toLowerCase()
+    .replace(/ä/g,'a').replace(/ö/g,'o').replace(/ü/g,'u').replace(/ß/g,'ss')
+    .replace(/[„""'`.,!?;:\-–—()]/g,' ').replace(/\s+/g,' ').trim();
+}
+
+function showQ(){
+  const item = QUIZ[order[qi]];
+  document.getElementById('quizProgress').textContent = (qi+1)+' / '+QUIZ.length;
+  document.getElementById('quizQ').textContent = item.q;
+  document.getElementById('quizAnswer').value = '';
+  document.getElementById('quizSolution').classList.remove('show');
+  document.getElementById('quizSolution').textContent = item.a;
+  const cr = document.getElementById('checkResult');
+  cr.classList.remove('show','good','partial','bad');
+  cr.innerHTML = '';
+}
+showQ();
+
+document.getElementById('btnCheck').addEventListener('click',()=>{
+  const item = QUIZ[order[qi]];
+  const userNorm = normalize(document.getElementById('quizAnswer').value);
+  const cr = document.getElementById('checkResult');
+  if(!userNorm){ cr.className='result-box show bad'; cr.innerHTML='Noch nichts eingetragen.'; return; }
+  const missing = [];
+  item.key.forEach(k=>{ const words=normalize(k).split(' ').filter(Boolean); if(!words.every(w=>userNorm.includes(w))) missing.push(k); });
+  const ratio = (item.key.length - missing.length) / item.key.length;
+  if(ratio===1){ cr.className='result-box show good'; cr.innerHTML='Alle Kernpunkte vorhanden.'; score++; document.getElementById('scoreVal').textContent=score; }
+  else if(ratio>=0.6){ cr.className='result-box show partial'; cr.innerHTML='Fast vollständig. Fehlt noch:<span class="miss">'+missing.join(', ')+'</span>'; }
+  else{ cr.className='result-box show bad'; cr.innerHTML='Noch unvollständig.<span class="miss">Fehlt: '+missing.join(', ')+'</span>'; }
+});
+
+document.getElementById('btnReveal').addEventListener('click',()=>{ document.getElementById('quizSolution').classList.add('show'); });
+document.getElementById('btnNext').addEventListener('click',()=>{ qi=(qi+1)%QUIZ.length; showQ(); });
+document.getElementById('btnShuffle').addEventListener('click',()=>{
+  for(let i=order.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [order[i],order[j]]=[order[j],order[i]]; }
+  qi=0; showQ();
+});
+document.getElementById('btnResetScore').addEventListener('click',()=>{ score=0; document.getElementById('scoreVal').textContent=0; });
+</script>
 </body>
 </html>
