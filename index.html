@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Leistungsspange Lernhub — OSL 1</title>
+<link rel="stylesheet" href="style.css">
+<style>
+  html, body {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+  }
+
+  .hub {
+    max-width: 400px;
+    width: 100%;
+  }
+
+  .hub-header {
+    margin-bottom: 32px;
+  }
+
+  .hub-header h1 {
+    font-size: 26px;
+    font-weight: 700;
+    color: #fff;
+    margin: 0 0 4px;
+    letter-spacing: -0.3px;
+  }
+
+  .hub-header p {
+    font-size: 12px;
+    color: var(--muted);
+    margin: 0;
+  }
+
+  .tool-list {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  a.tool-link {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 18px 16px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    text-decoration: none;
+    color: var(--text);
+    transition: border-color .12s, background .12s;
+  }
+
+  a.tool-link:hover {
+    border-color: var(--muted);
+    background: #1f2123;
+  }
+
+  a.tool-link:hover .tool-arrow {
+    transform: translateX(3px);
+    color: #fff;
+  }
+
+  .tool-name {
+    font-size: 15px;
+    font-weight: 600;
+    color: #fff;
+  }
+
+  .tool-desc {
+    font-size: 12px;
+    color: var(--muted);
+    margin-top: 2px;
+  }
+
+  .tool-arrow {
+    color: var(--muted);
+    font-size: 16px;
+    flex-shrink: 0;
+    margin-left: 12px;
+    transition: transform .12s, color .12s;
+  }
+
+  .hub-footer {
+    margin-top: 24px;
+    font-size: 11.5px;
+    color: var(--muted);
+    border-top: 1px solid var(--border);
+    padding-top: 14px;
+  }
+</style>
+</head>
+<body>
+<div class="hub">
+
+  <div class="hub-header">
+    <h1>Leistungsspange Lernhub</h1>
+    <p>Gruppe OSL 1 &nbsp;·&nbsp; Abnahme 10.10.2026 &nbsp;·&nbsp; Schipkau</p>
+  </div>
+
+  <div class="tool-list">
+    <a class="tool-link" href="./gruppenfuehrer-befehle/">
+      <div>
+        <div class="tool-name">Gruppenführer-Befehle</div>
+        <div class="tool-desc">Marsch, Meldung &amp; Löschangriff-Befehlsgebung</div>
+      </div>
+      <span class="tool-arrow">→</span>
+    </a>
+
+    <a class="tool-link" href="https://kugelstoss-analyse.netlify.app" target="_blank" rel="noopener">
+      <div>
+        <div class="tool-name">Kugelstoß-Analyse</div>
+        <div class="tool-desc">Kamera-Aufnahme, Zeitlupe &amp; Technik-Checkliste</div>
+      </div>
+      <span class="tool-arrow">↗</span>
+    </a>
+
+    <a class="tool-link" href="./leistungsspange-fragen/">
+      <div>
+        <div class="tool-name">Fragenbeantwortung</div>
+        <div class="tool-desc">Alle Fragen der Broschüre als Karteikarten</div>
+      </div>
+      <span class="tool-arrow">→</span>
+    </a>
+  </div>
+
+  <div class="hub-footer">
+    Gruppenführer-Befehle und Fragenbeantwortung laufen lokal im Repo.<br>
+    Kugelstoß-Analyse ist extern gehostet.
+  </div>
+
+</div>
+</body>
+</html>
