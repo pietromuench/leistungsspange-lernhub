@@ -62,6 +62,7 @@ html,body{margin:0;background:var(--bg);color:var(--text);font-family:'IBM Plex 
   <div class="footer">Leistungsspange — Fragenbeantwortung</div>
 </div>
 <script>
+document.addEventListener('DOMContentLoaded', function() {
 const CARDS = [
   {cat:"Gesellschaft/Politik",q:"Was heißt die Abkürzung „BRD"?",a:"Bundesrepublik Deutschland"},
   {cat:"Gesellschaft/Politik",q:"Wann wurde die Bundesrepublik Deutschland gegründet?",a:"Am 23. Mai 1949 auf Grundlage des Grundgesetzes"},
@@ -171,6 +172,7 @@ document.getElementById('btnShuffle').addEventListener('click',()=>{ order=shuff
 document.getElementById('btnReset').addEventListener('click',()=>{ order=CARDS.map((_,i)=>i); activeCat='Alle'; idx=0; flipped=false; known={}; renderCats(); renderCard(); });
 
 renderCats(); renderCard();
+}); // DOMContentLoaded
 </script>
 </body>
 </html>

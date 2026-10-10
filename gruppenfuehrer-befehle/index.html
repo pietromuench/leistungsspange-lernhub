@@ -231,6 +231,7 @@ html,body{margin:0;background:var(--bg);color:var(--text);font-family:'IBM Plex 
   <div class="footer">Befehle laut sprechen — beim Wertungsrichter zählt Klarheit und Lautstärke genauso wie der Inhalt.</div>
 </div>
 <script>
+document.addEventListener('DOMContentLoaded', function() {
 document.querySelectorAll('.tab-nav button').forEach(b => {
   b.addEventListener('click', () => {
     document.querySelectorAll('.tab-nav button').forEach(x => x.classList.remove('active'));
@@ -323,6 +324,7 @@ document.getElementById('btnShuffle').addEventListener('click',()=>{
   qi=0; showQ();
 });
 document.getElementById('btnResetScore').addEventListener('click',()=>{ score=0; document.getElementById('scoreVal').textContent=0; });
+}); // DOMContentLoaded
 </script>
 </body>
 </html>
