@@ -8,18 +8,21 @@
 @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&display=swap');
 :root{--bg:#111213;--surface:#1a1c1e;--border:#2e3133;--text:#dfe1db;--muted:#6b7175;--red:#cc2b2b;}
 *,*::before,*::after{box-sizing:border-box;}
-html,body{height:100%;margin:0;background:var(--bg);color:var(--text);font-family:'IBM Plex Sans',system-ui,sans-serif;display:flex;align-items:center;justify-content:center;padding:24px;}
+html,body{min-height:100%;margin:0;background:var(--bg);color:var(--text);font-family:'IBM Plex Sans',system-ui,sans-serif;display:flex;align-items:center;justify-content:center;padding:32px 20px;}
 ::selection{background:var(--red);color:#fff;}
-.hub{max-width:400px;width:100%;}
+.hub{max-width:420px;width:100%;}
 .hub-header{margin-bottom:32px;}
 .hub-header h1{font-size:26px;font-weight:700;color:#fff;margin:0;letter-spacing:-0.3px;}
+.section-label{font-size:11px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin:20px 0 8px;}
+.section-label:first-of-type{margin-top:0;}
 .tool-list{display:flex;flex-direction:column;gap:2px;}
-a.tool-link{display:flex;align-items:center;justify-content:space-between;padding:18px 16px;background:var(--surface);border:1px solid var(--border);border-left:3px solid transparent;text-decoration:none;color:var(--text);transition:border-color .12s,background .12s;}
+a.tool-link{display:flex;align-items:center;justify-content:space-between;padding:16px;background:var(--surface);border:1px solid var(--border);border-left:3px solid transparent;text-decoration:none;color:var(--text);transition:border-color .12s,background .12s;}
 a.tool-link:hover{border-left-color:var(--red);background:#1f2123;}
 a.tool-link:hover .tool-arrow{transform:translateX(3px);color:#fff;}
-.tool-name{font-size:15px;font-weight:600;color:#fff;}
+.tool-name{font-size:14px;font-weight:600;color:#fff;}
 .tool-desc{font-size:12px;color:var(--muted);margin-top:2px;}
 .tool-arrow{color:var(--muted);font-size:16px;flex-shrink:0;margin-left:12px;transition:transform .12s,color .12s;}
+.footer{margin-top:32px;font-size:11.5px;color:var(--muted);border-top:1px solid var(--border);padding-top:14px;}
 </style>
 </head>
 <body>
@@ -27,6 +30,8 @@ a.tool-link:hover .tool-arrow{transform:translateX(3px);color:#fff;}
   <div class="hub-header">
     <h1>Leistungsspange Lernhub</h1>
   </div>
+
+  <div class="section-label">Befehlsgebung</div>
   <div class="tool-list">
     <a class="tool-link" href="./gruppenfuehrer-befehle/">
       <div>
@@ -35,14 +40,52 @@ a.tool-link:hover .tool-arrow{transform:translateX(3px);color:#fff;}
       </div>
       <span class="tool-arrow">→</span>
     </a>
-    <a class="tool-link" href="./leistungsspange-fragen/">
+    <a class="tool-link" href="./staffelfuehrer-befehle/">
       <div>
-        <div class="tool-name">Fragenbeantwortung</div>
-        <div class="tool-desc">Alle Fragen der Broschüre als Karteikarten</div>
+        <div class="tool-name">Staffelführer-Befehle</div>
+        <div class="tool-desc">Lage, Befehle &amp; Aufgaben der Staffel</div>
+      </div>
+      <span class="tool-arrow">→</span>
+    </a>
+    <a class="tool-link" href="./loeschangriff-simulator/">
+      <div>
+        <div class="tool-name">Löschangriff-Simulator</div>
+        <div class="tool-desc">Interaktiver Ablauf nach FwDV 3</div>
       </div>
       <span class="tool-arrow">→</span>
     </a>
   </div>
+
+  <div class="section-label">Fragenbeantwortung</div>
+  <div class="tool-list">
+    <a class="tool-link" href="./leistungsspange-fragen/">
+      <div>
+        <div class="tool-name">Fragenbeantwortung</div>
+        <div class="tool-desc">Karteikarten &amp; Abnahme-Simulation</div>
+      </div>
+      <span class="tool-arrow">→</span>
+    </a>
+  </div>
+
+  <div class="section-label">Sport &amp; Wertung</div>
+  <div class="tool-list">
+    <a class="tool-link" href="./schnelligkeits-timer/">
+      <div>
+        <div class="tool-name">Schnelligkeitsübung — Timer</div>
+        <div class="tool-desc">Stoppuhr mit direkter Punkteauswertung</div>
+      </div>
+      <span class="tool-arrow">→</span>
+    </a>
+    <a class="tool-link" href="./wertungsrechner/">
+      <div>
+        <div class="tool-name">Wertungsrechner</div>
+        <div class="tool-desc">Punkte berechnen für alle messbaren Disziplinen</div>
+      </div>
+      <span class="tool-arrow">→</span>
+    </a>
+  </div>
+
+  <div class="footer">© Pietro Münch &amp; Liam Schmirgal</div>
 </div>
 </body>
 </html>

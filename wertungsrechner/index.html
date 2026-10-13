@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Wertungsrechner — Leistungsspange</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;600&display=swap');
+:root{--bg:#111213;--surface:#1a1c1e;--border:#2e3133;--text:#dfe1db;--muted:#6b7175;--red:#cc2b2b;--red-dim:#7a1a1a;--green:#2a7a4a;--green-text:#a3d9b8;--yellow:#7a5e1a;--yellow-text:#e3c97a;--sidebar:220px;}
+*,*::before,*::after{box-sizing:border-box;}
+html,body{margin:0;background:var(--bg);color:var(--text);font-family:'IBM Plex Sans',system-ui,sans-serif;font-size:15px;line-height:1.5;}
+::selection{background:var(--red);color:#fff;}
+
+/* SIDEBAR */
+.sidebar{position:fixed;top:0;left:0;height:100vh;width:var(--sidebar);background:#0d0e0f;border-right:1px solid var(--border);display:flex;flex-direction:column;z-index:100;overflow-y:auto;}
+.sidebar-logo{padding:18px 16px 14px;border-bottom:1px solid var(--border);}
+.sidebar-logo a{text-decoration:none;color:#fff;font-weight:700;font-size:14px;display:block;}
+.sidebar-logo span{display:block;font-size:11px;color:var(--muted);margin-top:2px;}
+.sidebar-section{padding:14px 16px 4px;font-size:10px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.6px;}
+.sidebar-link{display:block;padding:8px 16px;font-size:13px;color:var(--muted);text-decoration:none;border-left:2px solid transparent;transition:color .12s,border-color .12s;}
+.sidebar-link:hover{color:var(--text);border-left-color:var(--border);}
+.sidebar-link.active{color:#fff;border-left-color:var(--red);}
+.sidebar-footer{margin-top:auto;padding:14px 16px;font-size:10.5px;color:var(--muted);border-top:1px solid var(--border);}
+
+/* HAMBURGER */
+.hamburger{display:none;position:fixed;top:12px;left:12px;z-index:200;background:#0d0e0f;border:1px solid var(--border);color:var(--text);width:40px;height:40px;cursor:pointer;align-items:center;justify-content:center;font-size:18px;}
+.overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:99;}
+.overlay.show{display:block;}
+
+/* MAIN */
+.main{margin-left:var(--sidebar);}
+.tool-header{display:flex;align-items:center;justify-content:space-between;padding:18px 24px 16px;border-bottom:1px solid var(--border);gap:12px;}
+.tool-header h1{font-size:20px;font-weight:700;color:#fff;margin:0;letter-spacing:-0.3px;}
+.tool-header .sub{font-size:11.5px;color:var(--muted);margin-top:2px;}
+.header-btn{font-family:'IBM Plex Sans',sans-serif;font-weight:600;font-size:12px;background:var(--red);border:none;color:#fff;padding:8px 16px;cursor:pointer;white-space:nowrap;flex-shrink:0;}
+.header-btn:hover{background:#e03030;}
+.wrap{padding:24px 24px 80px;}
+
+/* MOBILE */
+@media(max-width:768px){
+  .sidebar{transform:translateX(-100%);transition:transform .2s;}
+  .sidebar.open{transform:translateX(0);}
+  .hamburger{display:flex;}
+  .main{margin-left:0;}
+  .tool-header{padding:14px 16px 12px;padding-left:60px;}
+  .wrap{padding:18px 16px 80px;}
+}
+</style>
+</head>
+<body>
+
+<button class="hamburger" id="hamburger">☰</button>
+<div class="overlay" id="overlay"></div>
+<nav class="sidebar" id="sidebar">
+  <div class="sidebar-logo">
+    <a href="../">Leistungsspange Lernhub</a>
+    <span>© Pietro Münch &amp; Liam Schmirgal</span>
+  </div>
+  <div class="sidebar-section">Befehlsgebung</div>
+  <a class="sidebar-link" href="../gruppenfuehrer-befehle/" data-tool="gf">Gruppenführer-Befehle</a>
+  <a class="sidebar-link" href="../staffelfuehrer-befehle/" data-tool="sf">Staffelführer-Befehle</a>
+  <a class="sidebar-link" href="../loeschangriff-simulator/" data-tool="ls">Löschangriff-Simulator</a>
+  <div class="sidebar-section">Fragenbeantwortung</div>
+  <a class="sidebar-link" href="../leistungsspange-fragen/" data-tool="fragen">Fragenbeantwortung</a>
+  <div class="sidebar-section">Sport &amp; Wertung</div>
+  <a class="sidebar-link" href="../schnelligkeits-timer/" data-tool="timer">Schnelligkeitsübung — Timer</a>
+  <a class="sidebar-link" href="../wertungsrechner/" data-tool="rechner">Wertungsrechner</a>
+</nav>
+
+<div class="wrap">
+  <div class="main">
+  <div class="tool-header">
+    <div>
+      <h1>Wertungsrechner</h1>
+      <div class="sub">Punkte berechnen für alle messbaren Disziplinen</div>
+    </div>
+    
+  </div>
+
+  <div class="block">
+    <h3>Schnelligkeitsübung</h3>
+    <div class="field-row">
+      <label>Zeit Gruppe</label>
+      <input type="number" id="schnell-gruppe" placeholder="z. B. 58" min="0">
+      <span class="unit">Sekunden</span>
+      <div class="points-badge" id="badge-schnell-gruppe">—</div>
+    </div>
+    <div class="field-row">
+      <label>Zeit Staffel</label>
+      <input type="number" id="schnell-staffel" placeholder="z. B. 52" min="0">
+      <span class="unit">Sekunden</span>
+      <div class="points-badge" id="badge-schnell-staffel">—</div>
+    </div>
+    <div class="info-block">Ziel der Staffel bei der Schnelligkeitsübung: 120 m</div>
+    <table class="tabelle" style="margin-top:14px;">
+      <tr><th>Punkte</th><th>Gruppe (Sek.)</th><th>Staffel (Sek.)</th></tr>
+      <tr><td>0</td><td>über 75</td><td>über 70</td></tr>
+      <tr><td>1</td><td>bis 75</td><td>bis 70</td></tr>
+      <tr><td>2</td><td>bis 65</td><td>bis 60</td></tr>
+      <tr><td>3</td><td>bis 60</td><td>bis 55</td></tr>
+      <tr><td>4</td><td>bis 55</td><td>bis 50</td></tr>
+    </table>
+  </div>
+
+  <div class="block">
+    <h3>Kugelstoßen</h3>
+    <div class="field-row">
+      <label>Weite Gruppe</label>
+      <input type="number" id="kugel-gruppe" placeholder="z. B. 68" min="0" step="0.1">
+      <span class="unit">Meter</span>
+      <div class="points-badge" id="badge-kugel-gruppe">—</div>
+    </div>
+    <div class="field-row">
+      <label>Weite Staffel</label>
+      <input type="number" id="kugel-staffel" placeholder="z. B. 44" min="0" step="0.1">
+      <span class="unit">Meter</span>
+      <div class="points-badge" id="badge-kugel-staffel">—</div>
+    </div>
+    <table class="tabelle" style="margin-top:14px;">
+      <tr><th>Punkte</th><th>Gruppe (m)</th><th>Staffel (m)</th></tr>
+      <tr><td>0</td><td>unter 55</td><td>unter 36</td></tr>
+      <tr><td>1</td><td>bis 59</td><td>bis 39</td></tr>
+      <tr><td>2</td><td>bis 64</td><td>bis 42</td></tr>
+      <tr><td>3</td><td>bis 70</td><td>bis 46</td></tr>
+      <tr><td>4</td><td>über 70</td><td>über 46</td></tr>
+    </table>
+  </div>
+
+  <div class="block">
+    <h3>Staffellauf</h3>
+    <div class="field-row">
+      <label>Zeit Gruppe (Min:Sek)</label>
+      <input type="text" id="staffel-gruppe" placeholder="z. B. 3:40">
+      <div class="points-badge" id="badge-staffel-gruppe">—</div>
+    </div>
+    <div class="field-row">
+      <label>Zeit Staffel (Min:Sek)</label>
+      <input type="text" id="staffel-staffel" placeholder="z. B. 2:25">
+      <div class="points-badge" id="badge-staffel-staffel">—</div>
+    </div>
+    <table class="tabelle" style="margin-top:14px;">
+      <tr><th>Punkte</th><th>Gruppe (Min:Sek)</th><th>Staffel (Min:Sek)</th></tr>
+      <tr><td>0</td><td>über 4:15</td><td>über 2:50</td></tr>
+      <tr><td>1</td><td>bis 4:15</td><td>bis 2:50</td></tr>
+      <tr><td>2</td><td>bis 4:00</td><td>bis 2:40</td></tr>
+      <tr><td>3</td><td>bis 3:45</td><td>bis 2:30</td></tr>
+      <tr><td>4</td><td>bis 3:30</td><td>bis 2:00</td></tr>
+    </table>
+  </div>
+
+  <div class="total-block">
+    <div>
+      <div class="total-label">Gesamtpunkte (ohne Löschangriff &amp; Fragenbeantwortung)</div>
+      <div class="total-score"><span id="totalScore">0</span> <span class="total-max">/ 12</span></div>
+    </div>
+    <div id="verdict" class="verdict" style="display:none;"></div>
+  </div>
+
+  <div class="info-block" style="margin-top:14px;">
+    Löschangriff und Fragenbeantwortung werden nicht in Punkten bewertet — sie müssen bestanden werden. Der Gesamteindruck der Gruppe (Disziplin, Kameradschaft, Geschlossenheit) wird ebenfalls bewertet.
+  </div>
+</div>
+
+<script>
+function parseTime(str){
+  if(!str) return null;
+  const parts = str.trim().split(':');
+  if(parts.length !== 2) return null;
+  const m = parseInt(parts[0]), s = parseInt(parts[1]);
+  if(isNaN(m) || isNaN(s)) return null;
+  return m * 60 + s;
+}
+
+function getSchnellGruppe(v){
+  if(v === null) return null;
+  if(v <= 55) return 4;
+  if(v <= 60) return 3;
+  if(v <= 65) return 2;
+  if(v <= 75) return 1;
+  return 0;
+}
+function getSchnellStaffel(v){
+  if(v === null) return null;
+  if(v <= 50) return 4;
+  if(v <= 55) return 3;
+  if(v <= 60) return 2;
+  if(v <= 70) return 1;
+  return 0;
+}
+function getKugelGruppe(v){
+  if(v === null) return null;
+  if(v > 70) return 4;
+  if(v > 64) return 3;
+  if(v > 59) return 2;
+  if(v > 55) return 1;
+  return 0;
+}
+function getKugelStaffel(v){
+  if(v === null) return null;
+  if(v > 46) return 4;
+  if(v > 42) return 3;
+  if(v > 39) return 2;
+  if(v > 36) return 1;
+  return 0;
+}
+function getStaffelGruppe(sek){
+  if(sek === null) return null;
+  if(sek <= 210) return 4; // 3:30
+  if(sek <= 225) return 3; // 3:45
+  if(sek <= 240) return 2; // 4:00
+  if(sek <= 255) return 1; // 4:15
+  return 0;
+}
+function getStaffelStaffel(sek){
+  if(sek === null) return null;
+  if(sek <= 120) return 4; // 2:00
+  if(sek <= 150) return 3; // 2:30
+  if(sek <= 160) return 2; // 2:40
+  if(sek <= 170) return 1; // 2:50
+  return 0;
+}
+
+function setBadge(id, pts){
+  const el = document.getElementById(id);
+  if(pts === null){ el.textContent = '—'; el.className = 'points-badge'; return; }
+  el.textContent = pts + ' Pkt.';
+  el.className = 'points-badge p' + pts;
+}
+
+function recalc(){
+  const sg = parseFloat(document.getElementById('schnell-gruppe').value) || null;
+  const ss = parseFloat(document.getElementById('schnell-staffel').value) || null;
+  const kg = parseFloat(document.getElementById('kugel-gruppe').value) || null;
+  const ks = parseFloat(document.getElementById('kugel-staffel').value) || null;
+  const tg = parseTime(document.getElementById('staffel-gruppe').value);
+  const ts = parseTime(document.getElementById('staffel-staffel').value);
+
+  const pSG = getSchnellGruppe(sg);
+  const pSS = getSchnellStaffel(ss);
+  const pKG = getKugelGruppe(kg);
+  const pKS = getKugelStaffel(ks);
+  const pTG = getStaffelGruppe(tg);
+  const pTS = getStaffelStaffel(ts);
+
+  setBadge('badge-schnell-gruppe', pSG);
+  setBadge('badge-schnell-staffel', pSS);
+  setBadge('badge-kugel-gruppe', pKG);
+  setBadge('badge-kugel-staffel', pKS);
+  setBadge('badge-staffel-gruppe', pTG);
+  setBadge('badge-staffel-staffel', pTS);
+
+  const vals = [pSG, pSS, pKG, pKS, pTG, pTS].filter(v => v !== null);
+  const total = vals.reduce((a,b)=>a+b, 0);
+  document.getElementById('totalScore').textContent = total;
+
+  const verdict = document.getElementById('verdict');
+  if(vals.length === 6){
+    verdict.style.display = 'block';
+    if(total >= 8){
+      verdict.className = 'verdict bestanden';
+      verdict.textContent = '✓ Sehr gutes Ergebnis in den messbaren Disziplinen.';
+    } else if(total >= 4){
+      verdict.className = 'verdict knapp';
+      verdict.textContent = '~ Solides Ergebnis — noch Luft nach oben.';
+    } else {
+      verdict.className = 'verdict nichtbestanden';
+      verdict.textContent = '✗ Noch Nachholbedarf in den messbaren Disziplinen.';
+    }
+  } else {
+    verdict.style.display = 'none';
+  }
+}
+
+document.querySelectorAll('input').forEach(el => el.addEventListener('input', recalc));
+</script>
+<div style="margin-top:32px;padding-top:12px;border-top:1px solid var(--border);font-size:11px;color:var(--muted);">© Pietro Münch &amp; Liam Schmirgal</div>
+</div></div><!-- /main -->
+<script>
+
+(function(){
+  var hb = document.getElementById('hamburger');
+  var sb = document.getElementById('sidebar');
+  var ov = document.getElementById('overlay');
+  if(hb){
+    hb.addEventListener('click',function(){sb.classList.toggle('open');ov.classList.toggle('show');});
+    ov.addEventListener('click',function(){sb.classList.remove('open');ov.classList.remove('show');});
+  }
+})();
+
+
+(function(){
+  var links = document.querySelectorAll('.sidebar-link');
+  links.forEach(function(l){ if(l.dataset.tool==='rechner') l.classList.add('active'); });
+})();
+
+
+</script>
+</body>
+</html>

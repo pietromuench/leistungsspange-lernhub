@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Löschangriff-Simulator</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;600&display=swap');
+:root{--bg:#111213;--surface:#1a1c1e;--border:#2e3133;--text:#dfe1db;--muted:#6b7175;--red:#cc2b2b;--red-dim:#7a1a1a;--green:#2a7a4a;--green-text:#a3d9b8;--yellow:#7a5e1a;--yellow-text:#e3c97a;--sidebar:220px;}
+*,*::before,*::after{box-sizing:border-box;}
+html,body{margin:0;background:var(--bg);color:var(--text);font-family:'IBM Plex Sans',system-ui,sans-serif;font-size:15px;line-height:1.5;}
+::selection{background:var(--red);color:#fff;}
+
+/* SIDEBAR */
+.sidebar{position:fixed;top:0;left:0;height:100vh;width:var(--sidebar);background:#0d0e0f;border-right:1px solid var(--border);display:flex;flex-direction:column;z-index:100;overflow-y:auto;}
+.sidebar-logo{padding:18px 16px 14px;border-bottom:1px solid var(--border);}
+.sidebar-logo a{text-decoration:none;color:#fff;font-weight:700;font-size:14px;display:block;}
+.sidebar-logo span{display:block;font-size:11px;color:var(--muted);margin-top:2px;}
+.sidebar-section{padding:14px 16px 4px;font-size:10px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.6px;}
+.sidebar-link{display:block;padding:8px 16px;font-size:13px;color:var(--muted);text-decoration:none;border-left:2px solid transparent;transition:color .12s,border-color .12s;}
+.sidebar-link:hover{color:var(--text);border-left-color:var(--border);}
+.sidebar-link.active{color:#fff;border-left-color:var(--red);}
+.sidebar-footer{margin-top:auto;padding:14px 16px;font-size:10.5px;color:var(--muted);border-top:1px solid var(--border);}
+
+/* HAMBURGER */
+.hamburger{display:none;position:fixed;top:12px;left:12px;z-index:200;background:#0d0e0f;border:1px solid var(--border);color:var(--text);width:40px;height:40px;cursor:pointer;align-items:center;justify-content:center;font-size:18px;}
+.overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:99;}
+.overlay.show{display:block;}
+
+/* MAIN */
+.main{margin-left:var(--sidebar);}
+.tool-header{display:flex;align-items:center;justify-content:space-between;padding:18px 24px 16px;border-bottom:1px solid var(--border);gap:12px;}
+.tool-header h1{font-size:20px;font-weight:700;color:#fff;margin:0;letter-spacing:-0.3px;}
+.tool-header .sub{font-size:11.5px;color:var(--muted);margin-top:2px;}
+.header-btn{font-family:'IBM Plex Sans',sans-serif;font-weight:600;font-size:12px;background:var(--red);border:none;color:#fff;padding:8px 16px;cursor:pointer;white-space:nowrap;flex-shrink:0;}
+.header-btn:hover{background:#e03030;}
+.wrap{padding:24px 24px 80px;}
+
+/* MOBILE */
+@media(max-width:768px){
+  .sidebar{transform:translateX(-100%);transition:transform .2s;}
+  .sidebar.open{transform:translateX(0);}
+  .hamburger{display:flex;}
+  .main{margin-left:0;}
+  .tool-header{padding:14px 16px 12px;padding-left:60px;}
+  .wrap{padding:18px 16px 80px;}
+}
+</style>
+</head>
+<body>
+
+<button class="hamburger" id="hamburger">☰</button>
+<div class="overlay" id="overlay"></div>
+<nav class="sidebar" id="sidebar">
+  <div class="sidebar-logo">
+    <a href="../">Leistungsspange Lernhub</a>
+    <span>© Pietro Münch &amp; Liam Schmirgal</span>
+  </div>
+  <div class="sidebar-section">Befehlsgebung</div>
+  <a class="sidebar-link" href="../gruppenfuehrer-befehle/" data-tool="gf">Gruppenführer-Befehle</a>
+  <a class="sidebar-link" href="../staffelfuehrer-befehle/" data-tool="sf">Staffelführer-Befehle</a>
+  <a class="sidebar-link" href="../loeschangriff-simulator/" data-tool="ls">Löschangriff-Simulator</a>
+  <div class="sidebar-section">Fragenbeantwortung</div>
+  <a class="sidebar-link" href="../leistungsspange-fragen/" data-tool="fragen">Fragenbeantwortung</a>
+  <div class="sidebar-section">Sport &amp; Wertung</div>
+  <a class="sidebar-link" href="../schnelligkeits-timer/" data-tool="timer">Schnelligkeitsübung — Timer</a>
+  <a class="sidebar-link" href="../wertungsrechner/" data-tool="rechner">Wertungsrechner</a>
+</nav>
+
+<div class="wrap">
+  <div class="main">
+  <div class="tool-header">
+    <div>
+      <h1>Löschangriff-Simulator</h1>
+      <div class="sub">Interaktiver Ablauf nach FwDV 3</div>
+    </div>
+    
+  </div>
+
+  <div class="mode-row">
+    <button class="mode-btn active" data-mode="gf">Gruppenführer</button>
+    <button class="mode-btn" data-mode="sf">Staffelführer</button>
+  </div>
+
+  <div class="progress-bar"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
+
+  <div id="quizArea">
+    <div class="step-card">
+      <div class="step-num" id="stepNum">Schritt 1 / 10</div>
+      <div class="step-title" id="stepTitle"></div>
+      <div class="step-desc" id="stepDesc"></div>
+      <div class="options" id="options"></div>
+      <div class="feedback" id="feedback"></div>
+      <div class="nav-row">
+        <button class="act primary" id="btnNext" disabled>Weiter →</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="result-screen" id="resultScreen">
+    <div class="result-score" id="resultScore"></div>
+    <div class="result-max" id="resultMax"></div>
+    <div class="result-verdict" id="resultVerdict"></div>
+    <div><button class="act primary" id="btnRestart">Nochmal</button></div>
+  </div>
+</div>
+
+<script>
+const STEPS = {
+  gf: [
+    {title:"Lage schildern — Wasserentnahme",desc:"Wie schilderst du die Wasserentnahmestelle?",correct:1,opts:["„Wasserentnahmestelle: Hydrant"","„Wasserentnahmestelle: offenes Gewässer" (mit der Hand zeigen)","„Wasserentnahmestelle: Tankfahrzeug""],ex:"Laut Broschüre: offenes Gewässer — mit der Hand in die Richtung zeigen."},
+    {title:"Lage schildern — Verteiler",desc:"Was sagst du zur Lage des Verteilers?",correct:0,opts:["„Lage des Verteilers: eine B-Länge in diese Richtung" (zeigen)","„Verteiler liegt beim Fahrzeug"","„Verteiler wird vom Melder gesetzt""],ex:"Eine B-Länge in diese Richtung — mit der Hand zeigen."},
+    {title:"Angriffstrupp beauftragen",desc:"Welcher Befehl geht als erstes an den Angriffstrupp?",correct:2,opts:["„Angriffstrupp — zur Brandbekämpfung — mit 2. C-Strahlrohr — VOR!"","„Angriffstrupp — verlegt B-Schlauch — VOR!"","„Angriffstrupp — zur Brandbekämpfung — mit 1. C-Strahlrohr — zum linken Brandabschnitt — über die Wiese — VOR!""],ex:"Einheit → Auftrag → Mittel → Ziel → Weg → VOR!"},
+    {title:"Wassertrupp beauftragen",desc:"Welcher Befehl geht an den Wassertrupp?",correct:1,opts:["„Wassertrupp — zur Brandbekämpfung — mit 1. C-Strahlrohr — zum linken Brandabschnitt — VOR!"","„Wassertrupp — zur Brandbekämpfung — mit 2. C-Strahlrohr — zum rechten Brandabschnitt — über die Wiese — VOR!"","„Wassertrupp — baut Saugleitung auf — VOR!""],ex:"Immer dieselbe Formel: Einheit → Auftrag → Mittel → Ziel → Weg → VOR!"},
+    {title:"Schlauchtrupp beauftragen",desc:"Welcher Befehl geht an den Schlauchtrupp?",correct:0,opts:["„Schlauchtrupp — zur Brandbekämpfung — mit 3. C-Strahlrohr — auf direktem Weg — über die Wiese — VOR!"","„Schlauchtrupp — unterstützt Wassertrupp — kein VOR"","„Schlauchtrupp — zur Brandbekämpfung — mit 2. C-Strahlrohr — VOR!""],ex:"Der Schlauchtrupp unterstützt beim Wasseraufbau, wird aber trotzdem mit dem vollen Befehl losgeschickt."},
+    {title:"Rückmeldung Wassertrupp",desc:"Was sagt der Wassertrupp bevor er seinen Befehl wiederholt?",correct:2,opts:["„Wassertrupp einsatzbereit!"","„Wasserversorgung steht!"","„4-Sauglängen in diese Richtung" (ein Schritt vor, mit Hand zeigen)"],ex:"Der Wassertrupp legt zuerst die Sauglängen fest, bevor er den Befehl wiederholt."},
+    {title:"Melder-Kette — Wasser",desc:"Was meldet der Melder dem Maschinisten wenn das Wasser kommen soll?",correct:1,opts:["„Wasser kommt"","„Wasser marsch"","„Niederschraubventil öffnen""],ex:"An den Maschinisten: „Wasser marsch" — an die Trupps: „Wasser kommt"."},
+    {title:"Strahlrohr Angriffstrupp",desc:"Was meldet der Angriffstruppmann wenn er Wasser am Strahlrohr hat?",correct:0,opts:["„1. Strahlrohr Wasser marsch"","„Wasser marsch"","„Angriffstrupp einsatzbereit""],ex:"„1. Strahlrohr Wasser marsch" — die Zahl des Strahlrohrs ist wichtig."},
+    {title:"Ende der Übung",desc:"Das Feuer ist aus. Wie schließt du ab?",correct:2,opts:["„Übung beendet — alle zurück!"","„Gruppe sammeln — Abmarsch!"","„Ist das Feuer aus?" → „Die Gruppe … hat die Übung nach Feuerwehrdienstvorschrift 3 beendet!" → „Zum Abmarsch fertig!!""],ex:"Erst Frage an die Trupps, dann Meldung an den Prüfer, dann Abmarsch."},
+    {title:"Aufgabe Gruppenführer",desc:"Wo hält sich der Gruppenführer während des Angriffs auf?",correct:1,opts:["Er bedient den Verteiler","Er ist an keinen Standort gebunden und behält den Überblick","Er bleibt beim Fahrzeug"],ex:"Der Gruppenführer ist an keinen Standort gebunden — im Gegensatz zum Staffelführer bedient der Melder den Verteiler."},
+  ],
+  sf: [
+    {title:"Lage schildern — Wasserentnahme",desc:"Wie schilderst du die Wasserentnahmestelle?",correct:1,opts:["„Wasserentnahmestelle: Hydrant"","„Wasserentnahmestelle: offenes Gewässer" (mit der Hand zeigen)","„Wasserentnahmestelle: Tankfahrzeug""],ex:"Laut Broschüre: offenes Gewässer — mit der Hand in die Richtung zeigen."},
+    {title:"Angriffstrupp — C-Leitung",desc:"Was gibt der Staffelführer dem Angriffstrupp mit auf den Weg?",correct:0,opts:["„Angriffstrupp: verlegt C-Leitung selbst"","„Angriffstrupp: verlegt B- und C-Leitung selbst"","„Angriffstrupp: wartet auf Verteiler""],ex:"Bei der Staffel verlegt der Angriffstrupp nur die C-Leitung selbst — kein B-Schlauch."},
+    {title:"Angriffstrupp beauftragen",desc:"Vollständiger Befehl an den Angriffstrupp?",correct:2,opts:["„Angriffstrupp — zur Brandbekämpfung — mit 2. C-Strahlrohr — VOR!"","„Angriffstrupp — verlegt C-Leitung — VOR!"","„Angriffstrupp — zur Brandbekämpfung — mit 1. C-Strahlrohr — zum linken Brandabschnitt — über die Wiese — VOR!""],ex:"Einheit → Auftrag → Mittel → Ziel → Weg → VOR!"},
+    {title:"Wassertrupp beauftragen",desc:"Vollständiger Befehl an den Wassertrupp?",correct:1,opts:["„Wassertrupp — zur Brandbekämpfung — mit 1. C-Strahlrohr — VOR!"","„Wassertrupp — zur Brandbekämpfung — mit 2. C-Strahlrohr — zum rechten Brandabschnitt — über die Wiese — VOR!"","„Wassertrupp — baut Saugleitung auf — VOR!""],ex:"Einheit → Auftrag → Mittel → Ziel → Weg → VOR!"},
+    {title:"Kein Schlauchtrupp",desc:"Was macht der Staffelführer, was bei der Gruppe der Melder übernimmt?",correct:0,opts:["Der Staffelführer bedient den Verteiler selbst","Der Staffelführer bedient die Pumpe","Der Staffelführer unterstützt den Wassertrupp"],ex:"Kein Melder, kein Schlauchtrupp — der Staffelführer übernimmt den Verteiler selbst."},
+    {title:"Rückmeldung Wassertrupp",desc:"Was sagt der Wassertrupp zuerst bevor er den Befehl wiederholt?",correct:2,opts:["„Wassertrupp einsatzbereit!"","„B-Schlauch liegt!"","„4-Sauglängen in diese Richtung" (ein Schritt vor, mit Hand zeigen)"],ex:"Sauglängen festlegen, dann Befehl wiederholen."},
+    {title:"Strahlrohr Angriffstrupp",desc:"Was meldet der Angriffstruppmann wenn er Wasser am Strahlrohr hat?",correct:0,opts:["„1. Strahlrohr Wasser marsch"","„Wasser marsch"","„Angriffstrupp einsatzbereit""],ex:"„1. Strahlrohr Wasser marsch""},
+    {title:"Strahlrohr Wassertrupp",desc:"Was meldet der Wassertruppmann wenn er Wasser am Strahlrohr hat?",correct:1,opts:["„1. Strahlrohr Wasser marsch"","„2. Strahlrohr Wasser marsch"","„Wasser marsch""],ex:"„2. Strahlrohr Wasser marsch""},
+    {title:"Ende der Übung",desc:"Das Feuer ist aus. Wie schließt du ab?",correct:2,opts:["„Übung beendet — alle zurück!"","„Staffel sammeln — Abmarsch!"","„Ist das Feuer aus?" → „Die Gruppe … hat die Übung nach Feuerwehrdienstvorschrift 3 beendet!" → „Zum Abmarsch fertig!!""],ex:"Erst Frage an die Trupps, dann Meldung an den Prüfer, dann Abmarsch."},
+    {title:"Unterschied Staffel vs. Gruppe",desc:"Was hat die Staffel NICHT, was die Gruppe hat?",correct:0,opts:["Keinen Schlauchtrupp und keinen Melder","Keinen Maschinisten","Keinen Angriffstrupp"],ex:"Die Staffel (1/5/6) hat nur Angriffstrupp und Wassertrupp — kein Schlauchtrupp, kein Melder."},
+  ]
+};
+
+let mode = 'gf';
+let steps = STEPS[mode];
+let qi = 0;
+let score = 0;
+let answered = false;
+
+function setMode(m){
+  mode = m;
+  steps = STEPS[m];
+  document.querySelectorAll('.mode-btn').forEach(b => b.classList.toggle('active', b.dataset.mode === m));
+  reset();
+}
+
+function reset(){
+  qi = 0; score = 0; answered = false;
+  document.getElementById('resultScreen').classList.remove('show');
+  document.getElementById('quizArea').style.display = 'block';
+  showStep();
+}
+
+function showStep(){
+  const s = steps[qi];
+  const total = steps.length;
+  document.getElementById('stepNum').textContent = 'Schritt ' + (qi+1) + ' / ' + total;
+  document.getElementById('stepTitle').textContent = s.title;
+  document.getElementById('stepDesc').textContent = s.desc;
+  document.getElementById('progressFill').style.width = (qi/total*100) + '%';
+  document.getElementById('btnNext').disabled = true;
+  answered = false;
+  const fb = document.getElementById('feedback');
+  fb.className = 'feedback'; fb.textContent = '';
+
+  const optsEl = document.getElementById('options');
+  optsEl.innerHTML = '';
+  s.opts.forEach((opt, i) => {
+    const b = document.createElement('button');
+    b.className = 'option';
+    b.textContent = opt;
+    b.addEventListener('click', () => select(i));
+    optsEl.appendChild(b);
+  });
+}
+
+function select(i){
+  if(answered) return;
+  answered = true;
+  const s = steps[qi];
+  const btns = document.querySelectorAll('.option');
+  btns.forEach((b, idx) => {
+    if(idx === s.correct) b.classList.add('correct');
+    else if(idx === i) b.classList.add('wrong');
+    else b.classList.add('disabled');
+  });
+  const fb = document.getElementById('feedback');
+  if(i === s.correct){
+    score++;
+    fb.className = 'feedback show good';
+    fb.textContent = '✓ Richtig. ' + s.ex;
+  } else {
+    fb.className = 'feedback show bad';
+    fb.textContent = '✗ Falsch. ' + s.ex;
+  }
+  document.getElementById('btnNext').disabled = false;
+}
+
+document.getElementById('btnNext').addEventListener('click', () => {
+  qi++;
+  if(qi >= steps.length){
+    showResult();
+  } else {
+    showStep();
+  }
+});
+
+function showResult(){
+  document.getElementById('quizArea').style.display = 'none';
+  const rs = document.getElementById('resultScreen');
+  rs.classList.add('show');
+  document.getElementById('resultScore').textContent = score;
+  document.getElementById('resultMax').textContent = 'von ' + steps.length + ' Fragen richtig';
+  document.getElementById('progressFill').style.width = '100%';
+  const ratio = score / steps.length;
+  const v = document.getElementById('resultVerdict');
+  if(ratio >= 0.8){ v.className='result-verdict gut'; v.textContent='Sehr gut — Befehle sitzen!'; }
+  else if(ratio >= 0.5){ v.className='result-verdict mittel'; v.textContent='Solide — nochmal die schwachen Stellen üben.'; }
+  else { v.className='result-verdict schlecht'; v.textContent='Noch Nachholbedarf — Broschüre nochmal durchgehen.'; }
+}
+
+document.getElementById('btnRestart').addEventListener('click', reset);
+document.querySelectorAll('.mode-btn').forEach(b => b.addEventListener('click', () => setMode(b.dataset.mode)));
+
+showStep();
+</script>
+<div style="margin-top:32px;padding-top:12px;border-top:1px solid var(--border);font-size:11px;color:var(--muted);">© Pietro Münch &amp; Liam Schmirgal</div>
+</div></div><!-- /main -->
+<script>
+
+(function(){
+  var hb = document.getElementById('hamburger');
+  var sb = document.getElementById('sidebar');
+  var ov = document.getElementById('overlay');
+  if(hb){
+    hb.addEventListener('click',function(){sb.classList.toggle('open');ov.classList.toggle('show');});
+    ov.addEventListener('click',function(){sb.classList.remove('open');ov.classList.remove('show');});
+  }
+})();
+
+
+(function(){
+  var links = document.querySelectorAll('.sidebar-link');
+  links.forEach(function(l){ if(l.dataset.tool==='ls') l.classList.add('active'); });
+})();
+
+
+</script>
+</body>
+</html>
