@@ -80,6 +80,24 @@ nav button.active{background:#482b26}
 .block,.quiz-card{background:#1b251e}
 .cmd{border-left-color:var(--red)}
 button.act.primary,.cat-btn.active{background:#c94a3d}
+/* Simple grayscale classroom theme */
+:root{color-scheme:dark;--bg:#323232;--surface:#3d3d3d;--border:#5b5b5b;--text:#e6e6e6;--muted:#c0c0c0;--red:#e6e6e6;--red-dim:#777;--green:#999;--green-text:#e6e6e6;--yellow:#888;--yellow-text:#e6e6e6;--bad:#999;--bad-bright:#e6e6e6;--radius:8px}
+html{min-height:100%;background:#323232}
+body{min-height:100vh;background:#323232;color:#e6e6e6;font-family:system-ui,-apple-system,'Segoe UI',sans-serif;line-height:1.6}
+.wrap{max-width:820px;padding:28px 20px 60px}
+header{position:relative;padding:18px 20px;border:1px solid #5b5b5b;border-radius:8px;background:#3d3d3d;margin-bottom:22px}
+header h1{font-family:inherit;font-size:clamp(23px,4vw,30px);letter-spacing:-.025em;line-height:1.25;color:#e6e6e6}
+header .sub{font-size:13px;color:#c0c0c0}
+.back-home{display:inline-flex;align-items:center;gap:7px;margin-top:12px;color:#e6e6e6;text-decoration:underline;text-underline-offset:3px;font-size:13px;font-weight:600}.back-home:hover{color:#fff}
+nav{gap:5px;border:0;margin-bottom:20px}nav button{border:1px solid transparent;border-radius:6px;padding:8px 12px;margin:0;color:#c0c0c0;font:600 13px system-ui,-apple-system,'Segoe UI',sans-serif}nav button:hover{background:#414141}nav button.active{border-color:#777;background:#e6e6e6;color:#262626}
+.block,.quiz-card{border:1px solid #5b5b5b;border-radius:8px;background:#3d3d3d;padding:18px;margin-bottom:12px;box-shadow:none}
+.block h3{font-size:15px}.block .desc{color:#c0c0c0;font-size:13px}.cmd{border-left:3px solid #bdbdbd;border-radius:0 5px 5px 0;background:#303030;padding:10px 13px;color:#e6e6e6}.cmd .note{color:#bdbdbd}.step-label{color:#d0d0d0}.quiz-situation{font-size:15px;color:#e6e6e6}.quiz-progress{color:#c0c0c0}
+button.act,.cat-btn,.icon{font:600 13px system-ui,-apple-system,'Segoe UI',sans-serif;border:1px solid #686868;border-radius:6px;background:#383838;color:#e6e6e6;transition:background .12s,border-color .12s}button.act{padding:9px 14px}button.act:hover,.cat-btn:hover:not(.active),.icon:hover{border-color:#aaa;background:#484848;color:#fff}button.act.primary,.cat-btn.active{border:1px solid #e6e6e6;background:#e6e6e6;color:#262626;box-shadow:none}
+textarea.answer,.card{border:1px solid #5b5b5b;border-radius:7px;background:#303030;color:#e6e6e6}textarea.answer{font:14px system-ui,-apple-system,'Segoe UI',sans-serif;padding:11px 13px}textarea.answer:focus{outline:2px solid #bdbdbd;outline-offset:1px}.card{background:#3d3d3d}.card:hover{border-color:#999}.card-eyebrow{color:#e6e6e6}.card-hint{color:#bdbdbd}
+button.act.nope,button.act.yep{border-color:#777;color:#e6e6e6}button.act.nope:hover,button.act.yep:hover{background:#555;color:#fff}.check-result.good,.check-result.partial,.check-result.bad{background:#353535;border-left-color:#aaa;color:#e6e6e6}.reveal{background:#303030;border-left-color:#ccc;color:#e6e6e6}.statbar,.footer-note{color:#bdbdbd}.statbar b,.scorebar b{color:#e6e6e6}
+.footer-note{border-color:#5b5b5b}
+@media(max-width:540px){.wrap{padding:18px 14px 48px}header{padding:16px}.block,.quiz-card{padding:15px}nav button{padding:8px 9px;font-size:12px}button.act{padding:10px 9px;font-size:12px}}
+@media(prefers-reduced-motion:reduce){*,*:before,*:after{transition:none!important}}
 </style>
 </head>
 <body>
@@ -400,5 +418,6 @@ document.addEventListener('DOMContentLoaded', () => {
 </script>
 </body>
 </html>
+
 
 
