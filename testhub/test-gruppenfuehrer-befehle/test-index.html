@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="de">
 <head>
 <meta charset="UTF-8">
@@ -100,8 +100,24 @@ textarea.answer,.card{border:1px solid #5b5b5b;border-radius:7px;background:#303
 button.act.nope,button.act.yep{border-color:#777;color:#e6e6e6}button.act.nope:hover,button.act.yep:hover{background:#555;color:#fff}.check-result.good,.check-result.partial,.check-result.bad{background:#353535;border-left-color:#aaa;color:#e6e6e6}.reveal{background:#303030;border-left-color:#ccc;color:#e6e6e6}.statbar,.footer-note{color:#bdbdbd}.statbar b,.scorebar b{color:#e6e6e6}
 .footer-note{border-color:#5b5b5b}
 @media(max-width:540px){.wrap{padding:18px 14px 48px}header{padding:16px}.block,.quiz-card{padding:15px}nav button{padding:8px 9px;font-size:12px}button.act{padding:10px 9px;font-size:12px}}
-@media(max-width:768px){.sidebar{left:calc(var(--sidebar) * -1);transition:left .2s}.sidebar.open{left:0}.hamburger{display:flex}.wrap{margin:0 auto;padding-top:70px}}
+@media(max-width:768px){.sidebar{left:-220px;transition:left .2s}.sidebar.open{left:0}.hamburger{display:flex}.wrap{margin:0 auto;padding-top:70px}}
 @media(prefers-reduced-motion:reduce){*,*:before,*:after{transition:none!important}}
+/* Testhub palette */
+:root{color-scheme:dark;--bg:#111213;--surface:#1a1c1e;--surface-hover:#1f2123;--border:#2e3133;--text:#dfe1db;--muted:#6b7175;--red:#cc2b2b;--red-dim:#7a1a1a;--green:#2a7a4a;--green-text:#a3d9b8;--yellow:#7a5e1a;--yellow-text:#e3c97a;--bad-bright:#e05050;--radius:8px}
+html,body{background:#111213;color:#dfe1db}
+header{background:#1a1c1e;border-color:#2e3133}
+header h1{color:#fff}
+header .sub,.block .desc,.card-hint{color:#6b7175}
+.back-home{color:#dfe1db}.back-home:hover{color:#fff}
+nav button{color:#6b7175}nav button:hover:not(.active){background:#1f2123;color:#dfe1db}nav button.active{background:#1f2123;border-color:#2e3133;border-bottom-color:#cc2b2b;color:#fff}
+.block,.quiz-card{background:#1a1c1e;border-color:#2e3133;box-shadow:none}
+.cmd{background:#0d0e0f;border-left-color:#cc2b2b;color:#dfe1db}.step-label{color:#aeb2b0}
+button.act,.cat-btn,.icon{border-color:#2e3133;background:transparent;color:#dfe1db}button.act:hover,.cat-btn:hover:not(.active),.icon:hover{border-color:#6b7175;background:#1f2123;color:#fff}button.act.primary,.cat-btn.active{border-color:#cc2b2b;background:#cc2b2b;color:#fff;box-shadow:none}
+button.act.nope{border-color:#7a1a1a;color:#e05050}button.act.nope:hover{background:#7a1a1a;color:#fff}button.act.yep{border-color:#2a7a4a;color:#a3d9b8}button.act.yep:hover{background:#2a7a4a;color:#fff}
+textarea.answer,.card{border-color:#2e3133;background:#0d0e0f;color:#dfe1db}textarea.answer:focus{outline-color:#cc2b2b}.card{background:#1a1c1e}.card:hover{border-color:#cc2b2b}.card-eyebrow{color:#cc2b2b}.card-body,.quiz-situation{color:#dfe1db}
+.check-result.good{background:#0e2318;border-left-color:#2a7a4a;color:#a3d9b8}.check-result.partial{background:#1e1a0a;border-left-color:#7a5e1a;color:#e3c97a}.check-result.bad{background:#1e0d0d;border-left-color:#7a1a1a;color:#e8a8a8}.reveal{background:#0d0e0f;border-left-color:#2a7a4a;color:#a3d9b8}
+.sidebar-link:hover,.sidebar-link:focus-visible{color:#dfe1db;border-left-color:#cc2b2b;background:#1f2123;outline:none}
+.statbar,.footer-note{color:#6b7175}.statbar b,.scorebar b{color:#dfe1db}
 </style>
 </head>
 <body>
@@ -111,19 +127,19 @@ button.act.nope,button.act.yep{border-color:#777;color:#e6e6e6}button.act.nope:h
   <div class="sidebar-logo"><a href="../">Leistungsspange Lernhub</a><span>© Pietro Münch &amp; Liam Schmirgal</span></div>
   <div class="sidebar-section">Befehlsgebung</div>
   <a class="sidebar-link active" href="../test-gruppenfuehrer-befehle/test-index.html" data-tool="gf">Gruppenführer-Befehle</a>
-  <a class="sidebar-link" href="../../staffelfuehrer-befehle/" data-tool="sf">Staffelführer-Befehle</a>
-  <a class="sidebar-link" href="../../loeschangriff-simulator/" data-tool="ls">Löschangriff-Simulator</a>
+  <a class="sidebar-link" href="../staffelfuehrer-befehle/" data-tool="sf">Staffelführer-Befehle</a>
+  <a class="sidebar-link" href="../loeschangriff-simulator/" data-tool="ls">Löschangriff-Simulator</a>
   <div class="sidebar-section">Fragenbeantwortung</div>
   <a class="sidebar-link" href="../test-leistungsspange-fragen/test-index.html" data-tool="fragen">Fragenbeantwortung</a>
   <div class="sidebar-section">Sport &amp; Wertung</div>
-  <a class="sidebar-link" href="../../schnelligkeits-timer/" data-tool="timer">Schnelligkeitsübung — Timer</a>
+  <a class="sidebar-link" href="../schnelligkeits-timer/" data-tool="timer">Schnelligkeitsübung — Timer</a>
   <a class="sidebar-link" href="../../wertungsrechner/" data-tool="rechner">Wertungsrechner</a>
 </aside>
 <div class="wrap">
   <header>
     <h1>Gruppenführer — Befehlsgebung</h1>
     <div class="sub">Befehle, Ablauf und Team-Check für den Löschangriff</div>
-  <a class="back-home" href="../test-index.html">← Zum Lernhub</a>
+  <a class="back-home" href="../">← Zum Lernhub</a>
   </header>
 
   <nav>
