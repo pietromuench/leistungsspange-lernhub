@@ -14,6 +14,9 @@
 @media(min-width:769px){main{width:min(900px,calc(100vw - var(--sidebar) - 54px));margin-left:calc(var(--sidebar) + max(18px,(100vw - var(--sidebar) - 900px)/2));margin-right:18px}}
 @media(max-width:768px){.sidebar{left:-220px;transition:left .2s}.sidebar.open{left:0}.hamburger{display:flex}main{padding-top:70px}}
 @media(max-width:620px){main{width:calc(100% - 28px);padding-top:70px}.brand{margin-bottom:27px}.intro{margin-bottom:30px}.intro p{font-size:15px}.disciplines{grid-template-columns:1fr;gap:9px}.discipline{min-height:0;padding:15px}.note{margin-top:17px}}
+button:not(.hamburger){padding-top:9px!important;padding-bottom:9px!important;border:1px solid var(--red)!important;border-radius:6px;background:#111213!important;color:#fff!important;cursor:pointer;transition:background .15s,color .15s,border-color .15s,transform .15s}
+button:not(.hamburger):hover:not(:disabled),button:not(.hamburger):focus-visible:not(:disabled){background:var(--red)!important;border-color:var(--red)!important;color:#111213!important}
+button:not(.hamburger):disabled{cursor:not-allowed;opacity:.48}
 </style>
 </head>
 <body>

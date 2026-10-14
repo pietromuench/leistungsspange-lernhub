@@ -118,6 +118,18 @@ textarea.answer,.card{border-color:#2e3133;background:#0d0e0f;color:#dfe1db}text
 .check-result.good{background:#0e2318;border-left-color:#2a7a4a;color:#a3d9b8}.check-result.partial{background:#1e1a0a;border-left-color:#7a5e1a;color:#e3c97a}.check-result.bad{background:#1e0d0d;border-left-color:#7a1a1a;color:#e8a8a8}.reveal{background:#0d0e0f;border-left-color:#2a7a4a;color:#a3d9b8}
 .sidebar-link:hover,.sidebar-link:focus-visible{color:#dfe1db;border-left-color:#cc2b2b;background:#1f2123;outline:none}
 .statbar,.footer-note{color:#6b7175}.statbar b,.scorebar b{color:#dfe1db}
+button:not(.hamburger){padding-top:9px!important;padding-bottom:9px!important;border:1px solid var(--red)!important;border-radius:6px;background:#111213!important;color:#fff!important;cursor:pointer;transition:background .15s,color .15s,border-color .15s,transform .15s}
+button:not(.hamburger):hover:not(:disabled),button:not(.hamburger):focus-visible:not(:disabled){background:var(--red)!important;border-color:var(--red)!important;color:#111213!important}
+button:not(.hamburger):disabled{cursor:not-allowed;opacity:.48}
+</style>
+<style>
+.panel details.block{padding:0;overflow:hidden}
+.panel details.block>summary{list-style:none;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:16px 18px;cursor:pointer;color:#fff;font-weight:600;user-select:none}
+.panel details.block>summary::-webkit-details-marker{display:none}
+.panel details.block>summary::after{content:'→';color:var(--red);font-size:18px;line-height:1}
+.panel details.block[open]>summary::after{content:'↓'}
+.panel details.block>summary:hover{color:var(--red)}
+.panel .block-content{padding:0 18px 18px}
 </style>
 </head>
 <body>
@@ -452,6 +464,23 @@ document.addEventListener('DOMContentLoaded', () => {
 </script>
 <script>
 (()=>{const button=document.getElementById('hamburger'),sidebar=document.getElementById('sidebar'),overlay=document.getElementById('overlay');if(!button||!sidebar||!overlay)return;const setOpen=open=>{sidebar.classList.toggle('open',open);overlay.classList.toggle('show',open);button.setAttribute('aria-expanded',String(open));button.setAttribute('aria-label',open?'Navigation schließen':'Navigation öffnen')};button.addEventListener('click',()=>setOpen(!sidebar.classList.contains('open')));overlay.addEventListener('click',()=>setOpen(false));document.addEventListener('keydown',event=>{if(event.key==='Escape')setOpen(false)})})();
+</script>
+<script>
+document.querySelectorAll('.panel .block').forEach(block=>{
+  const heading=block.querySelector('h3');
+  if(!heading)return;
+  const details=document.createElement('details');
+  details.className='block';
+  details.open=true;
+  const summary=document.createElement('summary');
+  summary.innerHTML=heading.innerHTML;
+  const content=document.createElement('div');
+  content.className='block-content';
+  let node=heading.nextSibling;
+  while(node){const next=node.nextSibling;content.append(node);node=next;}
+  details.append(summary,content);
+  block.replaceWith(details);
+});
 </script>
 </body>
 </html>

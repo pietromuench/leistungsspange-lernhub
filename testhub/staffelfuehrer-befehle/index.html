@@ -45,6 +45,18 @@ html,body{margin:0;background:var(--bg);color:var(--text);font-family:'IBM Plex 
   .tool-header{padding:14px 16px 12px;padding-left:60px;}
   .wrap{padding:18px 16px 80px;}
 }
+button:not(.hamburger){padding-top:9px!important;padding-bottom:9px!important;border:1px solid var(--red)!important;border-radius:6px;background:#111213!important;color:#fff!important;cursor:pointer;transition:background .15s,color .15s,border-color .15s,transform .15s}
+button:not(.hamburger):hover:not(:disabled),button:not(.hamburger):focus-visible:not(:disabled){background:var(--red)!important;border-color:var(--red)!important;color:#111213!important}
+button:not(.hamburger):disabled{cursor:not-allowed;opacity:.48}
+</style>
+<style>
+.panel details.block{padding:0;overflow:hidden}
+.panel details.block>summary{list-style:none;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:16px 18px;cursor:pointer;color:#fff;font-weight:600;user-select:none}
+.panel details.block>summary::-webkit-details-marker{display:none}
+.panel details.block>summary::after{content:'→';color:var(--red);font-size:18px;line-height:1}
+.panel details.block[open]>summary::after{content:'↓'}
+.panel details.block>summary:hover{color:var(--red)}
+.panel .block-content{padding:0 18px 18px}
 </style>
 </head>
 <body>
@@ -315,6 +327,23 @@ document.getElementById('headerBtn').addEventListener('click',function(){
   if(panel) panel.scrollIntoView({behavior:'smooth',block:'start'});
 });
 
+</script>
+<script>
+document.querySelectorAll('.panel .block').forEach(block=>{
+  const heading=block.querySelector('h3');
+  if(!heading)return;
+  const details=document.createElement('details');
+  details.className='block';
+  details.open=true;
+  const summary=document.createElement('summary');
+  summary.innerHTML=heading.innerHTML;
+  const content=document.createElement('div');
+  content.className='block-content';
+  let node=heading.nextSibling;
+  while(node){const next=node.nextSibling;content.append(node);node=next;}
+  details.append(summary,content);
+  block.replaceWith(details);
+});
 </script>
 </body>
 </html>
