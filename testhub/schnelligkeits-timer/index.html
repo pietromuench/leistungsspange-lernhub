@@ -1,235 +1,502 @@
 <!DOCTYPE html>
 <html lang="de">
+
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Schnelligkeitsübung — Timer</title>
-<style>
-@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;600&display=swap');
-:root{--bg:#111213;--surface:#1a1c1e;--border:#2e3133;--text:#dfe1db;--muted:#6b7175;--red:#cc2b2b;--red-dim:#7a1a1a;--green:#2a7a4a;--green-text:#a3d9b8;--yellow:#7a5e1a;--yellow-text:#e3c97a;--sidebar:220px;}
-*,*::before,*::after{box-sizing:border-box;}
-html,body{margin:0;background:var(--bg);color:var(--text);font-family:'IBM Plex Sans',system-ui,sans-serif;font-size:15px;line-height:1.5;}
-::selection{background:var(--red);color:#fff;}
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Schnelligkeitsübung — Timer</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;600&display=swap');
 
-/* SIDEBAR */
-.sidebar{position:fixed;top:0;left:0;height:100vh;width:var(--sidebar);background:#0d0e0f;border-right:1px solid var(--border);display:flex;flex-direction:column;z-index:100;overflow-y:auto;}
-.sidebar-logo{padding:18px 16px 14px;border-bottom:1px solid var(--border);}
-.sidebar-logo a{text-decoration:none;color:#fff;font-weight:700;font-size:14px;display:block;}
-.sidebar-logo span{display:block;font-size:11px;color:var(--muted);margin-top:2px;}
-.sidebar-section{padding:14px 16px 4px;font-size:10px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.6px;}
-.sidebar-link{display:block;padding:8px 16px;font-size:13px;color:var(--muted);text-decoration:none;border-left:2px solid transparent;transition:color .12s,border-color .12s;}
-.sidebar-link:hover,.sidebar-link:focus-visible{color:var(--text);border-left-color:var(--red);background:#1f2123;outline:none;}
-.sidebar-link.active{color:#fff;border-left-color:var(--red);}
-.sidebar-footer{margin-top:auto;padding:14px 16px;font-size:10.5px;color:var(--muted);border-top:1px solid var(--border);}
+    :root {
+      --bg: #111213;
+      --surface: #1a1c1e;
+      --border: #2e3133;
+      --text: #dfe1db;
+      --muted: #6b7175;
+      --red: #cc2b2b;
+      --red-dim: #7a1a1a;
+      --green: #2a7a4a;
+      --green-text: #a3d9b8;
+      --yellow: #7a5e1a;
+      --yellow-text: #e3c97a;
+      --sidebar: 220px;
+    }
 
-/* HAMBURGER */
-.hamburger{display:none;position:fixed;top:12px;left:12px;z-index:200;background:#0d0e0f;border:1px solid var(--border);color:var(--text);width:40px;height:40px;cursor:pointer;align-items:center;justify-content:center;font-size:18px;}
-.overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:99;}
-.overlay.show{display:block;}
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+    }
 
-/* MAIN */
-.main{margin-left:var(--sidebar);}
-.tool-header{display:flex;align-items:center;justify-content:space-between;padding:18px 24px 16px;border-bottom:1px solid var(--border);gap:12px;}
-.tool-header h1{font-size:20px;font-weight:700;color:#fff;margin:0;letter-spacing:-0.3px;}
-.tool-header .sub{font-size:11.5px;color:var(--muted);margin-top:2px;}
-.header-btn{font-family:'IBM Plex Sans',sans-serif;font-weight:600;font-size:12px;background:var(--red);border:none;color:#fff;padding:8px 16px;cursor:pointer;white-space:nowrap;flex-shrink:0;}
-.header-btn:hover{background:#e03030;}
-.wrap{padding:24px 24px 80px;}
+    html,
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'IBM Plex Sans', system-ui, sans-serif;
+      font-size: 15px;
+      line-height: 1.5;
+    }
 
-/* MOBILE */
-@media(max-width:768px){
-  .sidebar{transform:translateX(-100%);transition:transform .2s;}
-  .sidebar.open{transform:translateX(0);}
-  .hamburger{display:flex;}
-  .main{margin-left:0;}
-  .tool-header{padding:14px 16px 12px;padding-left:60px;}
-  .wrap{padding:18px 16px 80px;}
-}
-button:not(.hamburger){padding-top:9px!important;padding-bottom:9px!important;border:1px solid var(--red)!important;border-radius:6px;background:#111213!important;color:#fff!important;cursor:pointer;transition:background .15s,color .15s,border-color .15s,transform .15s}
-button:not(.hamburger):hover:not(:disabled),button:not(.hamburger):focus-visible:not(:disabled){background:var(--red)!important;border-color:var(--red)!important;color:#111213!important}
-button:not(.hamburger):disabled{cursor:not-allowed;opacity:.48}
-</style>
+    ::selection {
+      background: var(--red);
+      color: #fff;
+    }
+
+    /* SIDEBAR */
+    .sidebar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: 100vh;
+      width: var(--sidebar);
+      background: #0d0e0f;
+      border-right: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      z-index: 100;
+      overflow-y: auto;
+    }
+
+    .sidebar-logo {
+      padding: 18px 16px 14px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .sidebar-logo a {
+      text-decoration: none;
+      color: #fff;
+      font-weight: 700;
+      font-size: 15px;
+      display: block;
+    }
+
+    .sidebar-logo span {
+      display: block;
+      font-size: 11px;
+      color: var(--muted);
+      margin-top: 2px;
+    }
+
+    .sidebar-section {
+      padding: 14px 16px 4px;
+      font-size: 10px;
+      font-weight: 600;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: .6px;
+    }
+
+    .sidebar-link {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 8px 16px;
+      font-size: 13px;
+      color: var(--muted);
+      text-decoration: none;
+      border-left: 2px solid transparent;
+      transition: color .12s, border-color .12s, background .12s
+    }
+
+    .sidebar-link:hover,
+    .sidebar-link:focus-visible {
+      color: var(--text);
+      border-left-color: var(--red);
+      background: #1f2123;
+      outline: none
+    }
+
+    .sidebar-link.active {
+      color: #fff;
+      border-left-color: var(--red)
+    }
+
+    .sidebar-link .tool-arrow {
+      margin-left: auto;
+      color: var(--muted);
+      font-size: 15px;
+      transition: transform .12s, color .12s
+    }
+
+    .sidebar-link:hover .tool-arrow {
+      transform: translateX(3px);
+      color: #fff
+    }
+
+    .sidebar-footer {
+      margin-top: auto;
+      padding: 14px 16px;
+      font-size: 10.5px;
+      color: var(--muted);
+      border-top: 1px solid var(--border);
+    }
+
+    /* HAMBURGER */
+    .hamburger {
+      display: none;
+      position: fixed;
+      top: 12px;
+      left: 12px;
+      z-index: 200;
+      background: #0d0e0f;
+      border: 1px solid var(--border);
+      color: var(--text);
+      width: 40px;
+      height: 40px;
+      cursor: pointer;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+    }
+
+    .overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, .6);
+      z-index: 99;
+    }
+
+    .overlay.show {
+      display: block;
+    }
+
+    /* MAIN */
+    .main {
+      margin-left: var(--sidebar);
+    }
+
+    .tool-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 18px 24px 16px;
+      border-bottom: 1px solid var(--border);
+      gap: 12px;
+    }
+
+    .tool-header h1 {
+      font-size: 20px;
+      font-weight: 700;
+      color: #fff;
+      margin: 0;
+      letter-spacing: -0.3px;
+    }
+
+    .tool-header .sub {
+      font-size: 11.5px;
+      color: var(--muted);
+      margin-top: 2px;
+    }
+
+    .header-btn {
+      font-family: 'IBM Plex Sans', sans-serif;
+      font-weight: 600;
+      font-size: 12px;
+      background: var(--red);
+      border: none;
+      color: #fff;
+      padding: 8px 16px;
+      cursor: pointer;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+
+    .header-btn:hover {
+      background: #e03030;
+    }
+
+    .wrap {
+      padding: 24px 24px 80px;
+    }
+
+    /* MOBILE */
+    @media(max-width:768px) {
+      .sidebar {
+        transform: translateX(-100%);
+        transition: transform .2s;
+      }
+
+      .sidebar.open {
+        transform: translateX(0);
+      }
+
+      .hamburger {
+        display: flex;
+      }
+
+      .main {
+        margin-left: 0;
+      }
+
+      .tool-header {
+        padding: 14px 16px 12px;
+        padding-left: 60px;
+      }
+
+      .wrap {
+        padding: 18px 16px 80px;
+      }
+    }
+
+    button:not(.hamburger) {
+      padding-top: 9px !important;
+      padding-bottom: 9px !important;
+      border: 1px solid var(--red) !important;
+      border-radius: 6px;
+      background: #111213 !important;
+      color: #fff !important;
+      cursor: pointer;
+      transition: background .15s, color .15s, border-color .15s, transform .15s
+    }
+
+    button:not(.hamburger):hover:not(:disabled),
+    button:not(.hamburger):focus-visible:not(:disabled) {
+      background: var(--red) !important;
+      border-color: var(--red) !important;
+      color: #111213 !important
+    }
+
+    button:not(.hamburger):disabled {
+      cursor: not-allowed;
+      opacity: .48
+    }
+  </style>
 </head>
+
 <body>
 
-<button class="hamburger" id="hamburger">☰</button>
-<div class="overlay" id="overlay"></div>
-<nav class="sidebar" id="sidebar">
-  <div class="sidebar-logo">
-    <a href="../">Leistungsspange Lernhub</a>
-    <span>© Pietro Münch &amp; Liam Schmirgal</span>
-  </div>
-  <div class="sidebar-section">Befehlsgebung</div>
-  <a class="sidebar-link" href="../test-gruppenfuehrer-befehle/test-index.html" data-tool="gf">Gruppenführer-Befehle</a>
-  <a class="sidebar-link" href="../staffelfuehrer-befehle/" data-tool="sf">Staffelführer-Befehle</a>
-  <a class="sidebar-link" href="../loeschangriff-simulator/" data-tool="ls">Löschangriff-Simulator</a>
-  <div class="sidebar-section">Fragenbeantwortung</div>
-  <a class="sidebar-link" href="../test-leistungsspange-fragen/test-index.html" data-tool="fragen">Fragenbeantwortung</a>
-  <div class="sidebar-section">Sport &amp; Wertung</div>
-  <a class="sidebar-link" href="../schnelligkeits-timer/" data-tool="timer">Schnelligkeitsübung — Timer</a>
-  <a class="sidebar-link" href="../../wertungsrechner/" data-tool="rechner">Wertungsrechner</a>
-</nav>
-
-<div class="wrap">
-  <div class="main">
-  <div class="tool-header">
-    <div>
-      <h1>Schnelligkeitsübung — Timer</h1>
-      <div class="sub">Stoppuhr mit Punkteauswertung</div>
+  <button class="hamburger" id="hamburger">☰</button>
+  <div class="overlay" id="overlay"></div>
+  <nav class="sidebar" id="sidebar" aria-label="Lernhub-Navigation">
+    <div class="sidebar-logo"><a href="../">Leistungsspange Lernhub</a>
     </div>
-    
+    <a class="sidebar-link" href="../">Startseite<span class="tool-arrow">→</span></a>
+    <div class="sidebar-section">Befehlsgebung</div>
+    <a class="sidebar-link" href="../test-gruppenfuehrer-befehle/test-index.html">Gruppenführer-Befehle<span
+        class="tool-arrow">→</span></a>
+    <a class="sidebar-link" href="../staffelfuehrer-befehle">Staffelführer-Befehle<span
+        class="tool-arrow">→</span></a>
+    <a class="sidebar-link" href="../loeschangriff-simulator">Löschangriff-Simulator<span
+        class="tool-arrow">→</span></a>
+    <div class="sidebar-section">Fragenbeantwortung</div>
+    <a class="sidebar-link" href="../test-leistungsspange-fragen/test-index.html">Fragenbeantwortung<span
+        class="tool-arrow">→</span></a>
+    <div class="sidebar-section">Sport &amp; Wertung</div>
+    <a class="sidebar-link active" href="../schnelligkeits-timer">Schnelligkeitsübung - Timer<span
+        class="tool-arrow">→</span></a>
+    <a class="sidebar-link" href="../wertungsrechner">Wertungsrechner<span class="tool-arrow">→</span></a>
+    <div class="sidebar-footer">© Pietro Münch &amp; Liam Schmirgal</div>
+  </nav>
+
+  <div class="wrap">
+    <div class="main">
+      <div class="tool-header">
+        <div>
+          <h1>Schnelligkeitsübung — Timer</h1>
+          <div class="sub">Stoppuhr mit Punkteauswertung</div>
+        </div>
+
+      </div>
+
+      <div class="mode-row" style="display:flex;gap:8px;margin-bottom:20px;">
+        <button class="act" id="btnGruppe"
+          style="flex:1;border-color:var(--red);color:#fff;background:var(--red);">Gruppe</button>
+        <button class="act" id="btnStaffel" style="flex:1;">Staffel</button>
+      </div>
+
+      <div class="timer-display" id="timerDisplay">00.00</div>
+
+      <div class="btn-row">
+        <button class="act primary" id="btnStart">Start</button>
+        <button class="act" id="btnStop" disabled>Stopp</button>
+        <button class="act" id="btnReset">Zurücksetzen</button>
+      </div>
+
+      <div class="result-block" id="resultBlock">
+        <div class="result-points" id="resultPoints"></div>
+        <div class="result-label" id="resultLabel"></div>
+      </div>
+
+      <div class="steps-block">
+        <h3>Ablauf Schnelligkeitsübung</h3>
+        <div class="step-item">
+          <div class="step-n">1</div>
+          <div class="step-text"><b>Ausgangstellung:</b> Gruppe/Staffel steht in einer Reihe, C-Schläuche liegen bereit
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-n">2</div>
+          <div class="step-text"><b>Start:</b> Auf Signal — erster Teilnehmer läuft los und legt den ersten C-Schlauch
+            aus</div>
+        </div>
+        <div class="step-item">
+          <div class="step-n">3</div>
+          <div class="step-text"><b>Ablauf:</b> Jeder Teilnehmer legt seinen Schlauch aus und kuppelt ihn an den
+            vorherigen an</div>
+        </div>
+        <div class="step-item">
+          <div class="step-n">4</div>
+          <div class="step-text"><b>Ziel Staffel:</b> 120 m Schlauchleitung ausgelegt und gekuppelt</div>
+        </div>
+        <div class="step-item">
+          <div class="step-n">5</div>
+          <div class="step-text"><b>Stopp:</b> Zeit wird gestoppt wenn die letzte Kupplung geschlossen ist</div>
+        </div>
+      </div>
+
+      <div class="steps-block">
+        <h3>Wertungstabelle</h3>
+        <table class="tabelle">
+          <tr>
+            <th>Punkte</th>
+            <th>Gruppe (Sek.)</th>
+            <th>Staffel (Sek.)</th>
+          </tr>
+          <tr>
+            <td class="p0">0</td>
+            <td>über 75</td>
+            <td>über 70</td>
+          </tr>
+          <tr>
+            <td class="p1">1</td>
+            <td>bis 75</td>
+            <td>bis 70</td>
+          </tr>
+          <tr>
+            <td class="p2">2</td>
+            <td>bis 65</td>
+            <td>bis 60</td>
+          </tr>
+          <tr>
+            <td class="p3">3</td>
+            <td>bis 60</td>
+            <td>bis 55</td>
+          </tr>
+          <tr>
+            <td class="p4">4</td>
+            <td>bis 55</td>
+            <td>bis 50</td>
+          </tr>
+        </table>
+      </div>
+    </div>
+
+    <script>
+      let mode = 'gruppe';
+      let running = false;
+      let startTime = null;
+      let elapsed = 0;
+      let raf = null;
+
+      document.getElementById('btnGruppe').addEventListener('click', () => setMode('gruppe'));
+      document.getElementById('btnStaffel').addEventListener('click', () => setMode('staffel'));
+
+      function setMode(m) {
+        mode = m;
+        document.getElementById('btnGruppe').style.background = m === 'gruppe' ? 'var(--red)' : 'transparent';
+        document.getElementById('btnGruppe').style.borderColor = m === 'gruppe' ? 'var(--red)' : 'var(--border)';
+        document.getElementById('btnGruppe').style.color = m === 'gruppe' ? '#fff' : 'var(--text)';
+        document.getElementById('btnStaffel').style.background = m === 'staffel' ? 'var(--red)' : 'transparent';
+        document.getElementById('btnStaffel').style.borderColor = m === 'staffel' ? 'var(--red)' : 'var(--border)';
+        document.getElementById('btnStaffel').style.color = m === 'staffel' ? '#fff' : 'var(--text)';
+        doReset();
+      }
+
+      function fmt(ms) {
+        const s = Math.floor(ms / 1000);
+        const h = Math.floor((ms % 1000) / 10);
+        return String(s).padStart(2, '0') + '.' + String(h).padStart(2, '0');
+      }
+
+      function tick() {
+        elapsed = Date.now() - startTime;
+        document.getElementById('timerDisplay').textContent = fmt(elapsed);
+        raf = requestAnimationFrame(tick);
+      }
+
+      function getPoints(sek) {
+        if (mode === 'gruppe') {
+          if (sek <= 55) return 4;
+          if (sek <= 60) return 3;
+          if (sek <= 65) return 2;
+          if (sek <= 75) return 1;
+          return 0;
+        } else {
+          if (sek <= 50) return 4;
+          if (sek <= 55) return 3;
+          if (sek <= 60) return 2;
+          if (sek <= 70) return 1;
+          return 0;
+        }
+      }
+
+      document.getElementById('btnStart').addEventListener('click', () => {
+        startTime = Date.now() - elapsed;
+        running = true;
+        document.getElementById('timerDisplay').className = 'timer-display running';
+        document.getElementById('btnStart').disabled = true;
+        document.getElementById('btnStop').disabled = false;
+        document.getElementById('resultBlock').classList.remove('show');
+        raf = requestAnimationFrame(tick);
+      });
+
+      document.getElementById('btnStop').addEventListener('click', () => {
+        cancelAnimationFrame(raf);
+        running = false;
+        const sek = elapsed / 1000;
+        const pts = getPoints(sek);
+        const display = document.getElementById('timerDisplay');
+        display.className = 'timer-display ' + (pts >= 3 ? 'done-good' : pts >= 1 ? '' : 'done-bad');
+        document.getElementById('btnStart').disabled = false;
+        document.getElementById('btnStop').disabled = true;
+        const rb = document.getElementById('resultBlock');
+        rb.classList.add('show');
+        document.getElementById('resultPoints').className = 'result-points p' + pts;
+        document.getElementById('resultPoints').textContent = pts + ' Punkte';
+        const labels = ['Keine Punkte — weiter üben!', '1 Punkt', '2 Punkte', '3 Punkte — stark!', '4 Punkte — Bestleistung!'];
+        document.getElementById('resultLabel').textContent = sek.toFixed(2) + ' Sekunden · ' + labels[pts];
+      });
+
+      function doReset() {
+        cancelAnimationFrame(raf);
+        running = false;
+        elapsed = 0;
+        startTime = null;
+        document.getElementById('timerDisplay').textContent = '00.00';
+        document.getElementById('timerDisplay').className = 'timer-display';
+        document.getElementById('btnStart').disabled = false;
+        document.getElementById('btnStop').disabled = true;
+        document.getElementById('resultBlock').classList.remove('show');
+      }
+      document.getElementById('btnReset').addEventListener('click', doReset);
+    </script>
+    <div style="margin-top:32px;padding-top:12px;border-top:1px solid var(--border);font-size:11px;color:var(--muted);">
+      © Pietro Münch &amp; Liam Schmirgal</div>
   </div>
+  </div><!-- /main -->
+  <script>
 
-  <div class="mode-row" style="display:flex;gap:8px;margin-bottom:20px;">
-    <button class="act" id="btnGruppe" style="flex:1;border-color:var(--red);color:#fff;background:var(--red);">Gruppe</button>
-    <button class="act" id="btnStaffel" style="flex:1;">Staffel</button>
-  </div>
-
-  <div class="timer-display" id="timerDisplay">00.00</div>
-
-  <div class="btn-row">
-    <button class="act primary" id="btnStart">Start</button>
-    <button class="act" id="btnStop" disabled>Stopp</button>
-    <button class="act" id="btnReset">Zurücksetzen</button>
-  </div>
-
-  <div class="result-block" id="resultBlock">
-    <div class="result-points" id="resultPoints"></div>
-    <div class="result-label" id="resultLabel"></div>
-  </div>
-
-  <div class="steps-block">
-    <h3>Ablauf Schnelligkeitsübung</h3>
-    <div class="step-item"><div class="step-n">1</div><div class="step-text"><b>Ausgangstellung:</b> Gruppe/Staffel steht in einer Reihe, C-Schläuche liegen bereit</div></div>
-    <div class="step-item"><div class="step-n">2</div><div class="step-text"><b>Start:</b> Auf Signal — erster Teilnehmer läuft los und legt den ersten C-Schlauch aus</div></div>
-    <div class="step-item"><div class="step-n">3</div><div class="step-text"><b>Ablauf:</b> Jeder Teilnehmer legt seinen Schlauch aus und kuppelt ihn an den vorherigen an</div></div>
-    <div class="step-item"><div class="step-n">4</div><div class="step-text"><b>Ziel Staffel:</b> 120 m Schlauchleitung ausgelegt und gekuppelt</div></div>
-    <div class="step-item"><div class="step-n">5</div><div class="step-text"><b>Stopp:</b> Zeit wird gestoppt wenn die letzte Kupplung geschlossen ist</div></div>
-  </div>
-
-  <div class="steps-block">
-    <h3>Wertungstabelle</h3>
-    <table class="tabelle">
-      <tr><th>Punkte</th><th>Gruppe (Sek.)</th><th>Staffel (Sek.)</th></tr>
-      <tr><td class="p0">0</td><td>über 75</td><td>über 70</td></tr>
-      <tr><td class="p1">1</td><td>bis 75</td><td>bis 70</td></tr>
-      <tr><td class="p2">2</td><td>bis 65</td><td>bis 60</td></tr>
-      <tr><td class="p3">3</td><td>bis 60</td><td>bis 55</td></tr>
-      <tr><td class="p4">4</td><td>bis 55</td><td>bis 50</td></tr>
-    </table>
-  </div>
-</div>
-
-<script>
-let mode = 'gruppe';
-let running = false;
-let startTime = null;
-let elapsed = 0;
-let raf = null;
-
-document.getElementById('btnGruppe').addEventListener('click', () => setMode('gruppe'));
-document.getElementById('btnStaffel').addEventListener('click', () => setMode('staffel'));
-
-function setMode(m){
-  mode = m;
-  document.getElementById('btnGruppe').style.background = m==='gruppe'?'var(--red)':'transparent';
-  document.getElementById('btnGruppe').style.borderColor = m==='gruppe'?'var(--red)':'var(--border)';
-  document.getElementById('btnGruppe').style.color = m==='gruppe'?'#fff':'var(--text)';
-  document.getElementById('btnStaffel').style.background = m==='staffel'?'var(--red)':'transparent';
-  document.getElementById('btnStaffel').style.borderColor = m==='staffel'?'var(--red)':'var(--border)';
-  document.getElementById('btnStaffel').style.color = m==='staffel'?'#fff':'var(--text)';
-  doReset();
-}
-
-function fmt(ms){
-  const s = Math.floor(ms/1000);
-  const h = Math.floor((ms%1000)/10);
-  return String(s).padStart(2,'0') + '.' + String(h).padStart(2,'0');
-}
-
-function tick(){
-  elapsed = Date.now() - startTime;
-  document.getElementById('timerDisplay').textContent = fmt(elapsed);
-  raf = requestAnimationFrame(tick);
-}
-
-function getPoints(sek){
-  if(mode === 'gruppe'){
-    if(sek <= 55) return 4;
-    if(sek <= 60) return 3;
-    if(sek <= 65) return 2;
-    if(sek <= 75) return 1;
-    return 0;
-  } else {
-    if(sek <= 50) return 4;
-    if(sek <= 55) return 3;
-    if(sek <= 60) return 2;
-    if(sek <= 70) return 1;
-    return 0;
-  }
-}
-
-document.getElementById('btnStart').addEventListener('click', () => {
-  startTime = Date.now() - elapsed;
-  running = true;
-  document.getElementById('timerDisplay').className = 'timer-display running';
-  document.getElementById('btnStart').disabled = true;
-  document.getElementById('btnStop').disabled = false;
-  document.getElementById('resultBlock').classList.remove('show');
-  raf = requestAnimationFrame(tick);
-});
-
-document.getElementById('btnStop').addEventListener('click', () => {
-  cancelAnimationFrame(raf);
-  running = false;
-  const sek = elapsed / 1000;
-  const pts = getPoints(sek);
-  const display = document.getElementById('timerDisplay');
-  display.className = 'timer-display ' + (pts >= 3 ? 'done-good' : pts >= 1 ? '' : 'done-bad');
-  document.getElementById('btnStart').disabled = false;
-  document.getElementById('btnStop').disabled = true;
-  const rb = document.getElementById('resultBlock');
-  rb.classList.add('show');
-  document.getElementById('resultPoints').className = 'result-points p' + pts;
-  document.getElementById('resultPoints').textContent = pts + ' Punkte';
-  const labels = ['Keine Punkte — weiter üben!', '1 Punkt', '2 Punkte', '3 Punkte — stark!', '4 Punkte — Bestleistung!'];
-  document.getElementById('resultLabel').textContent = sek.toFixed(2) + ' Sekunden · ' + labels[pts];
-});
-
-function doReset(){
-  cancelAnimationFrame(raf);
-  running = false;
-  elapsed = 0;
-  startTime = null;
-  document.getElementById('timerDisplay').textContent = '00.00';
-  document.getElementById('timerDisplay').className = 'timer-display';
-  document.getElementById('btnStart').disabled = false;
-  document.getElementById('btnStop').disabled = true;
-  document.getElementById('resultBlock').classList.remove('show');
-}
-document.getElementById('btnReset').addEventListener('click', doReset);
-</script>
-<div style="margin-top:32px;padding-top:12px;border-top:1px solid var(--border);font-size:11px;color:var(--muted);">© Pietro Münch &amp; Liam Schmirgal</div>
-</div></div><!-- /main -->
-<script>
-
-(function(){
-  var hb = document.getElementById('hamburger');
-  var sb = document.getElementById('sidebar');
-  var ov = document.getElementById('overlay');
-  if(hb){
-    hb.addEventListener('click',function(){sb.classList.toggle('open');ov.classList.toggle('show');});
-    ov.addEventListener('click',function(){sb.classList.remove('open');ov.classList.remove('show');});
-  }
-})();
+    (function () {
+      var hb = document.getElementById('hamburger');
+      var sb = document.getElementById('sidebar');
+      var ov = document.getElementById('overlay');
+      if (hb) {
+        hb.addEventListener('click', function () { sb.classList.toggle('open'); ov.classList.toggle('show'); });
+        ov.addEventListener('click', function () { sb.classList.remove('open'); ov.classList.remove('show'); });
+      }
+    })();
 
 
-(function(){
-  var links = document.querySelectorAll('.sidebar-link');
-  links.forEach(function(l){ if(l.dataset.tool==='timer') l.classList.add('active'); });
-})();
+    (function () {
+      var links = document.querySelectorAll('.sidebar-link');
+      links.forEach(function (l) { if (l.dataset.tool === 'timer') l.classList.add('active'); });
+    })();
 
 
-</script>
+  </script>
 </body>
+
 </html>

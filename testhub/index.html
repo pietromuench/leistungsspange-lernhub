@@ -1,66 +1,500 @@
 ﻿<!DOCTYPE html>
 <html lang="de">
+
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="theme-color" content="#111213">
-<meta name="description" content="Der Lernhub für die Leistungsspange der Deutschen Jugendfeuerwehr.">
-<title>Leistungsspange – Lernhub</title>
-<style>
-@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&display=swap');
-:root{color-scheme:dark;--bg:#111213;--surface:#1a1c1e;--surface-hover:#1f2123;--line:#2e3133;--text:#dfe1db;--muted:#6b7175;--soft:#6b7175;--red:#cc2b2b;--sidebar:220px}
-*{box-sizing:border-box}html{min-height:100%;background:var(--bg)}body{margin:0;min-height:100vh;background:var(--bg);color:var(--text);font:16px/1.6 system-ui,-apple-system,'Segoe UI',sans-serif}a{color:inherit}main{width:min(900px,calc(100% - 36px));margin:0 auto;padding:36px 0 56px}.brand{display:flex;align-items:center;gap:10px;margin:0 0 34px;color:var(--muted);font-size:12px;font-weight:700;letter-spacing:.1em;text-transform:uppercase}.brand-logo{width:50px;height:50px;flex:none;object-fit:contain;filter:grayscale(1);opacity:.82}.intro{max-width:680px;margin-bottom:36px}.intro h1{margin:0 0 12px;color:#fff;font-size:clamp(32px,5vw,48px);line-height:1.12;letter-spacing:-.035em}.intro p{margin:0;color:var(--muted);font-size:17px}.facts{display:flex;flex-wrap:wrap;gap:10px;margin-top:20px}.fact{padding:6px 11px;border:1px solid var(--line);border-radius:6px;color:var(--text);font-size:13px}.fact strong{margin-right:5px;font-size:15px}.section-title{margin:0 0 13px;color:#fff;font-size:20px;letter-spacing:-.02em}.section-subtitle{margin:-7px 0 17px;color:var(--muted);font-size:14px}.disciplines{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.discipline{display:flex;gap:15px;align-items:flex-start;min-height:140px;padding:18px;border:1px solid var(--line);border-left:3px solid transparent;border-radius:8px;background:var(--surface);text-decoration:none;transition:background .12s,border-color .12s}.discipline[href]:hover{background:var(--surface-hover);border-left-color:var(--red)}.discipline:focus-visible{outline:2px solid var(--red);outline-offset:3px}.number{display:grid;flex:0 0 34px;place-items:center;width:34px;height:34px;border:1px solid #777;border-radius:6px;color:var(--text);font-size:13px;font-weight:700}.discipline h3{margin:1px 0 5px;color:#fff;font-size:16px}.discipline p{margin:0;color:var(--muted);font-size:14px;line-height:1.5}.status{display:inline-block;margin-top:12px;color:var(--soft);font-size:12px;transition:transform .12s}.discipline[href]:hover .status.ready{transform:translateX(3px)}.status.ready{color:#fff;font-weight:600}.note{margin-top:22px;padding:15px 17px;border-left:3px solid var(--red);background:var(--surface);color:var(--muted);font-size:14px}.note strong{color:#fff}footer{margin-top:38px;padding-top:15px;border-top:1px solid var(--line);color:var(--soft);font-size:12px}
-.sidebar{position:fixed;top:0;left:0;height:100vh;width:var(--sidebar);background:#0d0e0f;border-right:1px solid var(--line);display:flex;flex-direction:column;z-index:100;overflow-y:auto}.sidebar-logo{padding:18px 16px 14px;border-bottom:1px solid var(--line)}.sidebar-logo a{text-decoration:none;color:#fff;font-weight:700;font-size:14px;display:block}.sidebar-logo span{display:block;font-size:11px;color:var(--muted);margin-top:2px}.sidebar-section{padding:14px 16px 4px;font-size:10px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.6px}.sidebar-link{display:flex;align-items:center;justify-content:space-between;padding:8px 16px;font-size:13px;color:var(--muted);text-decoration:none;border-left:2px solid transparent;transition:color .12s,border-color .12s,background .12s}.sidebar-link:hover,.sidebar-link:focus-visible{color:var(--text);border-left-color:var(--red);background:#1f2123;outline:none}.sidebar-link.active{color:#fff;border-left-color:var(--red)}.sidebar-link .tool-arrow{margin-left:auto;color:var(--muted);font-size:15px;transition:transform .12s,color .12s}.sidebar-link:hover .tool-arrow{transform:translateX(3px);color:#fff}.sidebar-footer{margin-top:auto;padding:14px 16px;font-size:10.5px;color:var(--muted);border-top:1px solid var(--line)}.hamburger{display:none;position:fixed;top:12px;left:12px;z-index:200;background:#0d0e0f;border:1px solid var(--line);color:var(--text);width:40px;height:40px;cursor:pointer;align-items:center;justify-content:center;font-size:18px}.overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:99}.overlay.show{display:block}
-@media(min-width:769px){main{width:min(900px,calc(100vw - var(--sidebar) - 54px));margin-left:calc(var(--sidebar) + max(18px,(100vw - var(--sidebar) - 900px)/2));margin-right:18px}}
-@media(max-width:768px){.sidebar{left:-220px;transition:left .2s}.sidebar.open{left:0}.hamburger{display:flex}main{padding-top:70px}}
-@media(max-width:620px){main{width:calc(100% - 28px);padding-top:70px}.brand{margin-bottom:27px}.intro{margin-bottom:30px}.intro p{font-size:15px}.disciplines{grid-template-columns:1fr;gap:9px}.discipline{min-height:0;padding:15px}.note{margin-top:17px}}
-button:not(.hamburger){padding-top:9px!important;padding-bottom:9px!important;border:1px solid var(--red)!important;border-radius:6px;background:#111213!important;color:#fff!important;cursor:pointer;transition:background .15s,color .15s,border-color .15s,transform .15s}
-button:not(.hamburger):hover:not(:disabled),button:not(.hamburger):focus-visible:not(:disabled){background:var(--red)!important;border-color:var(--red)!important;color:#111213!important}
-button:not(.hamburger):disabled{cursor:not-allowed;opacity:.48}
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#111213">
+  <meta name="description" content="Der Lernhub für die Leistungsspange der Deutschen Jugendfeuerwehr.">
+  <title>Leistungsspange Lernhub</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&display=swap');
+
+    :root {
+      color-scheme: dark;
+      --bg: #111213;
+      --surface: #1a1c1e;
+      --surface-hover: #1f2123;
+      --line: #2e3133;
+      --text: #dfe1db;
+      --muted: #6b7175;
+      --soft: #6b7175;
+      --red: #cc2b2b;
+      --sidebar: 220px
+    }
+
+    * {
+      box-sizing: border-box
+    }
+
+    html {
+      min-height: 100%;
+      background: var(--bg)
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: var(--bg);
+      color: var(--text);
+      font: 16px/1.6 system-ui, -apple-system, 'Segoe UI', sans-serif
+    }
+
+    a {
+      color: inherit
+    }
+
+    main {
+      width: min(900px, calc(100% - 36px));
+      margin: 0 auto;
+      padding: 36px 0 56px
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin: 0 0 34px;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: .1em;
+      text-transform: uppercase
+    }
+
+    .brand-logo {
+      width: 50px;
+      height: 50px;
+      flex: none;
+      object-fit: contain;
+      filter: grayscale(1);
+      opacity: .82
+    }
+
+    .intro {
+      max-width: 680px;
+      margin-bottom: 36px
+    }
+
+    .intro h1 {
+      margin: 0 0 12px;
+      color: #fff;
+      font-size: clamp(32px, 5vw, 48px);
+      line-height: 1.12;
+      letter-spacing: -.035em
+    }
+
+    .intro p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 17px
+    }
+
+    .facts {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 20px
+    }
+
+    .fact {
+      padding: 6px 11px;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      color: var(--text);
+      font-size: 13px
+    }
+
+    .fact strong {
+      margin-right: 5px;
+      font-size: 15px
+    }
+
+    .section-title {
+      margin: 0 0 13px;
+      color: #fff;
+      font-size: 20px;
+      letter-spacing: -.02em
+    }
+
+    .section-subtitle {
+      margin: -7px 0 17px;
+      color: var(--muted);
+      font-size: 14px
+    }
+
+    .disciplines {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px
+    }
+
+    .discipline {
+      display: flex;
+      gap: 15px;
+      align-items: flex-start;
+      min-height: 140px;
+      padding: 18px;
+      border: 1px solid var(--line);
+      border-left: 3px solid transparent;
+      border-radius: 8px;
+      background: var(--surface);
+      text-decoration: none;
+      transition: background .12s, border-color .12s
+    }
+
+    .discipline[href]:hover {
+      background: var(--surface-hover);
+      border-left-color: var(--red)
+    }
+
+    .discipline:focus-visible {
+      outline: 2px solid var(--red);
+      outline-offset: 3px
+    }
+
+    .number {
+      display: grid;
+      flex: 0 0 34px;
+      place-items: center;
+      width: 34px;
+      height: 34px;
+      border: 1px solid #777;
+      border-radius: 6px;
+      color: var(--text);
+      font-size: 13px;
+      font-weight: 700
+    }
+
+    .discipline h3 {
+      margin: 1px 0 5px;
+      color: #fff;
+      font-size: 16px
+    }
+
+    .discipline p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.5
+    }
+
+    .status {
+      display: inline-block;
+      margin-top: 12px;
+      color: var(--soft);
+      font-size: 12px;
+      transition: transform .12s
+    }
+
+    .discipline[href]:hover .status.ready {
+      transform: translateX(3px)
+    }
+
+    .status.ready {
+      color: #fff;
+      font-weight: 600
+    }
+
+    .note {
+      margin-top: 22px;
+      padding: 15px 17px;
+      border-left: 3px solid var(--red);
+      background: var(--surface);
+      color: var(--muted);
+      font-size: 14px
+    }
+
+    .note strong {
+      color: #fff
+    }
+
+    footer {
+      margin-top: 38px;
+      padding-top: 15px;
+      border-top: 1px solid var(--line);
+      color: var(--soft);
+      font-size: 12px
+    }
+
+    .sidebar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: 100vh;
+      width: var(--sidebar);
+      background: #0d0e0f;
+      border-right: 1px solid var(--line);
+      display: flex;
+      flex-direction: column;
+      z-index: 100;
+      overflow-y: auto
+    }
+
+    .sidebar-logo {
+      padding: 18px 16px 14px;
+      border-bottom: 1px solid var(--line)
+    }
+
+    .sidebar-logo a {
+      text-decoration: none;
+      color: #fff;
+      font-weight: 700;
+      font-size: 15px;
+      display: block
+    }
+
+    .sidebar-logo span {
+      display: block;
+      font-size: 11px;
+      color: var(--muted);
+      margin-top: 2px
+    }
+
+    .sidebar-section {
+      padding: 14px 16px 4px;
+      font-size: 10px;
+      font-weight: 600;
+      color: var(--text);
+      text-transform: uppercase;
+      letter-spacing: .6px
+    }
+
+    .sidebar-link {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 8px 16px;
+      font-size: 13px;
+      color: var(--muted);
+      text-decoration: none;
+      border-left: 2px solid transparent;
+      transition: color .12s, border-color .12s, background .12s
+    }
+
+    .sidebar-link:hover,
+    .sidebar-link:focus-visible {
+      color: var(--text);
+      border-left-color: var(--red);
+      background: #1f2123;
+      outline: none
+    }
+
+    .sidebar-link.active {
+      color: #fff;
+      border-left-color: var(--red)
+    }
+
+    .sidebar-link .tool-arrow {
+      margin-left: auto;
+      color: var(--muted);
+      font-size: 15px;
+      transition: transform .12s, color .12s
+    }
+
+    .sidebar-link:hover .tool-arrow {
+      transform: translateX(3px);
+      color: #fff
+    }
+
+    .sidebar-footer {
+      margin-top: auto;
+      padding: 14px 16px;
+      font-size: 10.5px;
+      color: var(--muted);
+      border-top: 1px solid var(--line)
+    }
+
+    .hamburger {
+      display: none;
+      position: fixed;
+      top: 12px;
+      left: 12px;
+      z-index: 200;
+      background: #0d0e0f;
+      border: 1px solid var(--line);
+      color: var(--text);
+      width: 40px;
+      height: 40px;
+      cursor: pointer;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px
+    }
+
+    .overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, .6);
+      z-index: 99
+    }
+
+    .overlay.show {
+      display: block
+    }
+
+    @media(min-width:769px) {
+      main {
+        width: min(900px, calc(100vw - var(--sidebar) - 54px));
+        margin-left: calc(var(--sidebar) + max(18px, (100vw - var(--sidebar) - 900px)/2));
+        margin-right: 18px
+      }
+    }
+
+    @media(max-width:768px) {
+      .sidebar {
+        left: -220px;
+        transition: left .2s
+      }
+
+      .sidebar.open {
+        left: 0
+      }
+
+      .hamburger {
+        display: flex
+      }
+
+      main {
+        padding-top: 70px
+      }
+    }
+
+    @media(max-width:620px) {
+      main {
+        width: calc(100% - 28px);
+        padding-top: 70px
+      }
+
+      .brand {
+        margin-bottom: 27px
+      }
+
+      .intro {
+        margin-bottom: 30px
+      }
+
+      .intro p {
+        font-size: 15px
+      }
+
+      .disciplines {
+        grid-template-columns: 1fr;
+        gap: 9px
+      }
+
+      .discipline {
+        min-height: 0;
+        padding: 15px
+      }
+
+      .note {
+        margin-top: 17px
+      }
+    }
+
+    button:not(.hamburger) {
+      padding-top: 9px !important;
+      padding-bottom: 9px !important;
+      border: 1px solid var(--red) !important;
+      border-radius: 6px;
+      background: #111213 !important;
+      color: #fff !important;
+      cursor: pointer;
+      transition: background .15s, color .15s, border-color .15s, transform .15s
+    }
+
+    button:not(.hamburger):hover:not(:disabled),
+    button:not(.hamburger):focus-visible:not(:disabled) {
+      background: var(--red) !important;
+      border-color: var(--red) !important;
+      color: #111213 !important
+    }
+
+    button:not(.hamburger):disabled {
+      cursor: not-allowed;
+      opacity: .48
+    }
+  </style>
 </head>
+
 <body>
-<button class="hamburger" id="hamburger" type="button" aria-label="Navigation öffnen" aria-expanded="false">☰</button>
-<div class="overlay" id="overlay"></div>
-<nav class="sidebar" id="sidebar" aria-label="Lernhub-Navigation">
-  <div class="sidebar-logo"><a href="../">Leistungsspange Lernhub</a><span>© Pietro Münch &amp; Liam Schmirgal</span></div>
-  <div class="sidebar-section">Befehlsgebung</div>
-  <a class="sidebar-link" href="./test-gruppenfuehrer-befehle/test-index.html">Gruppenführer-Befehle<span class="tool-arrow">→</span></a>
-  <a class="sidebar-link" href="../staffelfuehrer-befehle/">Staffelführer-Befehle<span class="tool-arrow">→</span></a>
-  <a class="sidebar-link" href="../loeschangriff-simulator/">Löschangriff-Simulator<span class="tool-arrow">→</span></a>
-  <div class="sidebar-section">Fragenbeantwortung</div>
-  <a class="sidebar-link" href="./test-leistungsspange-fragen/test-index.html">Fragenbeantwortung<span class="tool-arrow">→</span></a>
-  <div class="sidebar-section">Sport &amp; Wertung</div>
-  <a class="sidebar-link" href="../schnelligkeits-timer/">Schnelligkeitsübung — Timer<span class="tool-arrow">→</span></a>
-  <a class="sidebar-link" href="../wertungsrechner/">Wertungsrechner<span class="tool-arrow">→</span></a>
-  <a class="sidebar-link active" href="./">Testhub<span class="tool-arrow">→</span></a>
-  <div class="sidebar-footer">© Pietro Münch &amp; Liam Schmirgal</div>
-</nav>
-<main>
-  <div class="brand"><img class="brand-logo" src="./kjf_logo.png" alt="Kreisjugendfeuerwehr Oberspreewald-Lausitz"><span>Leistungsspange · Lernhub</span></div>
-  <header class="intro">
-    <h1>Fit für die Leistungsspange</h1>
-    <p>Hier findest du die fünf Disziplinen auf einen Blick. Such dir ein Thema aus, übe in deinem Tempo und unterstütz dein Team.</p>
-    <div class="facts" aria-label="Prüfung auf einen Blick"><span class="fact"><strong>5</strong> Disziplinen</span><span class="fact"><strong>9</strong> Mitglieder in der Löschgruppe</span><span class="fact">Gemeinsam zählt’s</span></div>
-  </header>
-  <section aria-labelledby="discipline-heading">
-    <h2 class="section-title" id="discipline-heading">Das kommt dran</h2>
-    <p class="section-subtitle">Die Prüfung verbindet Sport, Feuerwehrwissen und Teamarbeit.</p>
-    <div class="disciplines">
-      <a class="discipline" href="./schnelligkeits-timer/"><span class="number">01</span><div><h3>Schnelligkeitsübung</h3><p>Als Gruppe eine C-Schlauchleitung zügig und ordentlich auslegen.</p><span class="status ready">Timer öffnen →</span></div></a>
-      <a class="discipline" href="../wertungsrechner/"><span class="number">02</span><div><h3>Kugelstoßen</h3><p>Mit Technik und gemeinsamer Leistung möglichst weit stoßen.</p><span class="status ready">Wertung berechnen →</span></div></a>
-      <a class="discipline" href="../wertungsrechner/"><span class="number">03</span><div><h3>Staffellauf</h3><p>Den Staffelstab sicher weitergeben und als Team ins Ziel kommen.</p><span class="status ready">Wertung berechnen →</span></div></a>
-      <a class="discipline" href="./loeschangriff-simulator/"><span class="number">04</span><div><h3>Löschangriff</h3><p>Ablauf nach FwDV 3 und die Befehle der Gruppenführung üben.</p><span class="status ready">Simulator öffnen →</span></div></a>
-      <a class="discipline" href="./test-leistungsspange-fragen/test-index.html"><span class="number">05</span><div><h3>Fragenbeantwortung</h3><p>Wichtige Themen mit Karteikarten wiederholen.</p><span class="status ready">Karteikarten öffnen →</span></div></a>
+  <button class="hamburger" id="hamburger" type="button" aria-label="Navigation öffnen" aria-expanded="false">☰</button>
+  <div class="overlay" id="overlay"></div>
+  <nav class="sidebar" id="sidebar" aria-label="Lernhub-Navigation">
+    <div class="sidebar-logo"><a href="../">Leistungsspange Lernhub</a>
     </div>
-  </section>
-  <aside class="note"><strong>Denkt dran:</strong> Die Leistungsspange ist eine Gruppenleistung. Übt miteinander und helft euch gegenseitig.</aside>
-  <footer>Jugendfeuerwehr · Landkreis Oberspreewald-Lausitz</footer>
-</main>
-<script>
-(()=>{const button=document.getElementById('hamburger'),sidebar=document.getElementById('sidebar'),overlay=document.getElementById('overlay');if(!button||!sidebar||!overlay)return;const setOpen=open=>{sidebar.classList.toggle('open',open);overlay.classList.toggle('show',open);button.setAttribute('aria-expanded',String(open));button.setAttribute('aria-label',open?'Navigation schließen':'Navigation öffnen')};button.addEventListener('click',()=>setOpen(!sidebar.classList.contains('open')));overlay.addEventListener('click',()=>setOpen(false));document.addEventListener('keydown',event=>{if(event.key==='Escape')setOpen(false)})})();
-</script>
+    <a class="sidebar-link active" href="./">Startseite<span class="tool-arrow">→</span></a>
+    <div class="sidebar-section">Befehlsgebung</div>
+    <a class="sidebar-link" href="../testhub/test-gruppenfuehrer-befehle/test-index.html">Gruppenführer-Befehle<span
+        class="tool-arrow">→</span></a>
+    <a class="sidebar-link" href="../testhub/staffelfuehrer-befehle">Staffelführer-Befehle<span
+        class="tool-arrow">→</span></a>
+    <a class="sidebar-link" href="../testhub/loeschangriff-simulator">Löschangriff-Simulator<span
+        class="tool-arrow">→</span></a>
+    <div class="sidebar-section">Fragenbeantwortung</div>
+    <a class="sidebar-link" href="../testhub/test-leistungsspange-fragen/test-index.html">Fragenbeantwortung<span
+        class="tool-arrow">→</span></a>
+    <div class="sidebar-section">Sport &amp; Wertung</div>
+    <a class="sidebar-link" href="../testhub/schnelligkeits-timer">Schnelligkeitsübung - Timer<span
+        class="tool-arrow">→</span></a>
+    <a class="sidebar-link" href="../testhub/wertungsrechner">Wertungsrechner<span class="tool-arrow">→</span></a>
+    <div class="sidebar-footer">© Pietro Münch &amp; Liam Schmirgal</div>
+  </nav>
+  <main>
+    <header class="intro">
+      <h1>Leistungsspange Lernhub</h1>
+      <p>Hier findest du die fünf Disziplinen auf einen Blick. Such dir ein Thema aus, übe in deinem Tempo und
+        unterstütz dein Team.</p>
+    </header>
+    <section aria-labelledby="discipline-heading">
+      <h2 class="section-title" id="discipline-heading">Das kommt dran</h2>
+      <p class="section-subtitle">Die Prüfung verbindet Sport, Feuerwehrwissen und Teamarbeit.</p>
+      <div class="disciplines">
+        <a class="discipline" href="../schnelligkeits-timer/"><span class="number">01</span>
+          <div>
+            <h3>Schnelligkeitsübung</h3>
+            <p>Als Gruppe eine C-Schlauchleitung zügig und ordentlich auslegen.</p><span class="status ready">Timer
+              öffnen →</span>
+          </div>
+        </a>
+        <a class="discipline" href="../wertungsrechner/"><span class="number">02</span>
+          <div>
+            <h3>Kugelstoßen</h3>
+            <p>Mit Technik und gemeinsamer Leistung möglichst weit stoßen.</p><span class="status ready">Wertung
+              berechnen →</span>
+          </div>
+        </a>
+        <a class="discipline" href="../wertungsrechner/"><span class="number">03</span>
+          <div>
+            <h3>Staffellauf</h3>
+            <p>Den Staffelstab sicher weitergeben und als Team ins Ziel kommen.</p><span class="status ready">Wertung
+              berechnen →</span>
+          </div>
+        </a>
+        <a class="discipline" href="../loeschangriff-simulator/"><span class="number">04</span>
+          <div>
+            <h3>Löschangriff</h3>
+            <p>Ablauf nach FwDV 3 und die Befehle der Gruppenführung üben.</p><span class="status ready">Simulator
+              öffnen →</span>
+          </div>
+        </a>
+        <a class="discipline" href="../test-leistungsspange-fragen"><span class="number">05</span>
+          <div>
+            <h3>Fragenbeantwortung</h3>
+            <p>Wichtige Themen mit Karteikarten wiederholen.</p><span class="status ready">Karteikarten öffnen →</span>
+          </div>
+        </a>
+      </div>
+    </section>
+    <aside class="note"><strong>Denkt dran:</strong> Die Leistungsspange ist eine Gruppenleistung. Übt miteinander und
+      helft euch gegenseitig.</aside>
+    <footer>Jugendfeuerwehr · Landkreis Oberspreewald-Lausitz</footer>
+  </main>
+  <script>
+    (() => { const button = document.getElementById('hamburger'), sidebar = document.getElementById('sidebar'), overlay = document.getElementById('overlay'); if (!button || !sidebar || !overlay) return; const setOpen = open => { sidebar.classList.toggle('open', open); overlay.classList.toggle('show', open); button.setAttribute('aria-expanded', String(open)); button.setAttribute('aria-label', open ? 'Navigation schließen' : 'Navigation öffnen') }; button.addEventListener('click', () => setOpen(!sidebar.classList.contains('open'))); overlay.addEventListener('click', () => setOpen(false)); document.addEventListener('keydown', event => { if (event.key === 'Escape') setOpen(false) }) })();
+  </script>
 </body>
+
 </html>
-
-

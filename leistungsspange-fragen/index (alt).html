@@ -1,289 +1,477 @@
 <!DOCTYPE html>
 <html lang="de">
+
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Fragenbeantwortung — Karteikarten</title>
-<style>
-@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;600&display=swap');
-:root{--bg:#111213;--surface:#1a1c1e;--border:#2e3133;--text:#dfe1db;--muted:#6b7175;--red:#cc2b2b;--red-dim:#7a1a1a;--green:#2a7a4a;--green-text:#a3d9b8;--bad:#cc2b2b;--bad-bright:#e05050;}
-*,*::before,*::after{box-sizing:border-box;}
-html,body{margin:0;background:var(--bg);color:var(--text);font-family:'IBM Plex Sans',system-ui,sans-serif;}
-::selection{background:var(--red);color:#fff;}
-.wrap{max-width:520px;margin:0 auto;padding:26px 18px 90px;}
-header{border-bottom:1px solid var(--border);padding-bottom:14px;margin-bottom:22px;}
-header h1{font-size:22px;font-weight:700;color:#fff;margin:0 0 4px;letter-spacing:-0.3px;}
-header .sub{font-size:12px;color:var(--muted);}
-.cats{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:18px;}
-.cat-btn{font-family:'IBM Plex Sans',sans-serif;font-weight:600;font-size:12px;background:transparent;border:1px solid var(--border);color:var(--muted);padding:7px 12px;cursor:pointer;}
-.cat-btn.active{background:var(--red);border-color:var(--red);color:#fff;}
-.cat-btn:hover:not(.active){border-color:var(--muted);color:var(--text);}
-.statbar{display:flex;justify-content:space-between;font-size:12px;color:var(--muted);margin-bottom:10px;padding:0 2px;}
-.statbar b{color:var(--green-text);}
-.card{border:1px solid var(--border);background:var(--surface);min-height:230px;display:flex;flex-direction:column;justify-content:center;padding:26px 24px;cursor:pointer;user-select:none;margin-bottom:16px;transition:border-color .15s;}
-.card:hover{border-color:var(--muted);}
-.card-eyebrow{font-size:11px;font-weight:600;color:var(--red);margin-bottom:12px;}
-.card-body{font-size:15px;line-height:1.55;color:#eef0ea;white-space:pre-wrap;word-break:break-word;}
-.card-hint{font-size:11px;color:var(--muted);text-align:center;margin-top:18px;}
-.verdict-row{display:flex;gap:10px;margin-bottom:12px;}
-button.act{flex:1;font-family:'IBM Plex Sans',sans-serif;font-weight:600;font-size:13px;border:1px solid var(--border);background:transparent;color:var(--text);padding:12px 14px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;}
-button.act.nope{border-color:var(--red-dim);color:var(--bad-bright);}
-button.act.nope:hover{background:var(--red-dim);color:#fff;}
-button.act.yep{border-color:var(--green);color:var(--green-text);}
-button.act.yep:hover{background:var(--green);color:#fff;}
-.nav-row{display:flex;justify-content:center;gap:10px;}
-button.icon{border:1px solid var(--border);background:transparent;color:var(--text);width:40px;height:40px;cursor:pointer;font-size:15px;display:flex;align-items:center;justify-content:center;}
-button.icon:hover{border-color:var(--muted);color:#fff;}
-.footer-note{margin-top:34px;padding-top:14px;border-top:1px solid var(--border);font-size:11.5px;color:var(--muted);}
-</style>
-</head>
-<body>
-<div class="wrap">
-  <header>
-    <h1>Fragenbeantwortung — Karteikarten</h1>
-    <div class="sub">Leistungsspange · Broschüre Stand 06.08.2026</div>
-  </header>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Fragenbeantwortung — Karteikarten</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;600&display=swap');
 
-  <div class="cats" id="cats"></div>
-
-  <div class="statbar">
-    <span id="progress">Karte 1 / 1</span>
-    <span>✓ <b id="knownCount">0</b> &nbsp; ✗ <b id="unknownCount" style="color:var(--bad-bright);">0</b></span>
-  </div>
-
-  <div class="card" id="card">
-    <div class="card-eyebrow" id="cardEyebrow"></div>
-    <div class="card-body" id="cardBody"></div>
-    <div class="card-hint">Tippen zum Umdrehen</div>
-  </div>
-
-  <div class="verdict-row">
-    <button class="act nope" id="btnNope">✗ Nochmal</button>
-    <button class="act yep" id="btnYep">✓ Kann ich</button>
-  </div>
-
-  <div class="nav-row">
-    <button class="icon" id="btnPrev" title="Zurück">‹</button>
-    <button class="icon" id="btnShuffle" title="Mischen">⤨</button>
-    <button class="icon" id="btnReset" title="Zurücksetzen">↺</button>
-    <button class="icon" id="btnNext" title="Weiter">›</button>
-  </div>
-
-  <div class="footer-note">Leistungsspange — Fragenbeantwortung</div>
-</div>
-
-<script>
-document.addEventListener('DOMContentLoaded', () => {
-  const CARDS = [
-    {"cat":"Gesellschafts- und Jugendpolitik","q":"Was heißt die Abkürzung „BRD“?","a":"- BRD = Bundesrepublik Deutschland"},
-    {"cat":"Gesellschafts- und Jugendpolitik","q":"Wann wurde die Bundesrepublik Deutschland gegründet?","a":"- Am 23. Mai 1949 auf der Grundlage des Grundgesetzes"},
-    {"cat":"Gesellschafts- und Jugendpolitik","q":"Welcher andere deutsche Staat entstand im gleichen Jahr am 7. Oktober?","a":"- Am 7. Oktober 1949 wurde die Deutsche Demokratische Republik (= DDR) gegründet."},
-    {"cat":"Gesellschafts- und Jugendpolitik","q":"Welche Staatsform herrscht in der BRD?","a":"- parlamentarische Demokratie"},
-    {"cat":"Gesellschafts- und Jugendpolitik","q":"Erklärt den Begriff „parlamentarische Demokratie“!","a":"- Demokratie = Volksherrschaft = Alle Macht geht vom Volk aus.\n- parlamentarisch: Das Volk wählt seine Volksvertreter in ein Parlament."},
-    {"cat":"Gesellschafts- und Jugendpolitik","q":"Wie heißt das Parlament der BRD und wo hat es seinen Sitz?","a":"- Name: Deutscher Bundestag\n- Sitz: Reichstag in Berlin"},
-    {"cat":"Gesellschafts- und Jugendpolitik","q":"Welche politische Funktion hat die Stadt Berlin?","a":"- Berlin ist die Bundeshauptstadt der Bundesrepublik Deutschland."},
-    {"cat":"Gesellschafts- und Jugendpolitik","q":"Wer wählt das deutsche Parlament?","a":"- alle (wahlberechtigten) Bürgerinnen und Bürger der BRD"},
-    {"cat":"Gesellschafts- und Jugendpolitik","q":"Welchen Titel trägt das Staatsoberhaupt der BRD? Wie heißt die Person zurzeit?","a":"- Titel: Bundespräsident\n- Name: Frank-Walter Steinmeier"},
-    {"cat":"Gesellschafts- und Jugendpolitik","q":"Welchen Titel trägt der/die Regierungschef/in der BRD? Wie heißt die Person zurzeit?","a":"- Titel: Bundeskanzler/in\n- Name: Friedrich Merz"},
-    {"cat":"Gesellschafts- und Jugendpolitik","q":"Wie viele Bundesländer hat die BRD? Benennt mindestens fünf mit den Landeshauptstädten!","a":"- Es gibt insgesamt 16 Bundesländer:\n(1) Baden-Württemberg – Stuttgart\n(2) Bayern – München\n(3) Berlin\n(4) Brandenburg – Potsdam\n(5) Bremen\n(6) Hamburg\n(7) Hessen – Wiesbaden\n(8) Mecklenburg-Vorpommern – Schwerin\n(9) Niedersachsen – Hannover\n(10) Nordrhein-Westfalen – Düsseldorf\n(11) Rheinland-Pfalz – Mainz\n(12) Saarland – Saarbrücken\n(13) Sachsen – Dresden\n(14) Sachsen-Anhalt – Magdeburg\n(15) Schleswig-Holstein – Kiel\n(16) Thüringen – Erfurt"},
-    {"cat":"Gesellschafts- und Jugendpolitik","q":"Nennt die drei Stadtstaaten unter den Bundesländern?","a":"- Berlin\n- Bremen\n- Hamburg"},
-    {"cat":"Gesellschafts- und Jugendpolitik","q":"Wie heißt das Bundesland, in dem wir leben? Gebt die Landeshauptstadt an!","a":"- Bundesland: Brandenburg\n- Landeshauptstadt: Potsdam"},
-    {"cat":"Gesellschafts- und Jugendpolitik","q":"Welchen Titel trägt der Regierungschef von Brandenburg? Wie heißt diese Person derzeit?","a":"- Titel: Ministerpräsident\n- Name: Dr. Dietmar Woidke"},
-    {"cat":"Gesellschafts- und Jugendpolitik","q":"Welchen Titel trägt der Minister für den Brand- und Katastrophenschutz in Brandenburg? Wie heißt diese Person derzeit?","a":"- Titel: Minister des Innern und für Kommunales\n- Name: Dr. Jan Redmann"},
-    {"cat":"Gesellschafts- und Jugendpolitik","q":"In welchem Landkreis leben wir? Nennt die Kreisstadt!","a":"- Landkreis: Oberspreewald-Lausitz (OSL)\n- Kreisstadt: Senftenberg"},
-    {"cat":"Gesellschafts- und Jugendpolitik","q":"Von welchen drei Nachbarlandkreisen ist unser Landkreis umgeben?","a":"- Norden: Landkreis Dahme-Spreewald (LDS)\n- Westen: Landkreis Elbe-Elster (EE)\n- Osten: Landkreis Spree-Neiße (SPN)"},
-    {"cat":"Gesellschafts- und Jugendpolitik","q":"In welches Land fährt man, wenn man Brandenburg in Richtung Osten verlässt?","a":"- in die Republik Polen"},
-    {"cat":"Gesellschafts- und Jugendpolitik","q":"Zu welchem Landkreis gehört die Stadt Cottbus?","a":"- zu gar keinem Landkreis; Cottbus ist eine kreisfreie Stadt"},
-    {"cat":"Gesellschafts- und Jugendpolitik","q":"In welches Bundesland kommt man, wenn man unseren Landkreis in Richtung Süden verlässt?","a":"- nach Sachsen"},
-    {"cat":"Gesellschafts- und Jugendpolitik","q":"Welches Gesetz regelt alle Fragen des Brandschutzes im Land Brandenburg?","a":"- Brandenburgisches Brand- und Katastrophenschutzgesetz (BbgBKG)"},
-    {"cat":"Gesellschafts- und Jugendpolitik","q":"Von wem wurde dieses Gesetz beschlossen?","a":"- Landtag des Landes Brandenburg"},
-    {"cat":"Gesellschafts- und Jugendpolitik","q":"Welche drei Aufgaben hat die Feuerwehr gemäß Brand- und Katastrophenschutzgesetz?","a":"- Rettung\n- Brandbekämpfung\n- Technische Hilfeleistung\n\nErläuterung:\n- Rettung: Abwenden einer Lebensgefahr von Menschen oder Tieren durch lebensrettende Sofortmaßnahmen oder Befreien aus einer lebensbedrohenden Zwangslage\n- Brandbekämpfung: dem Einzelnen und der Allgemeinheit bei Brandgefahren beizustehen\n- Technische Hilfeleistung: bei sonstigen Notständen aller Art Hilfe leisten"},
-    {"cat":"Gesellschafts- und Jugendpolitik","q":"Welche Arten von Feuerwehren gibt es in Brandenburg?","a":"Öffentliche Feuerwehren:\n- Freiwillige Feuerwehren\n- Berufsfeuerwehren\nNichtöffentliche Feuerwehren:\n- Betriebsfeuerwehren\n- Werkfeuerwehren"},
-    {"cat":"Gesellschafts- und Jugendpolitik","q":"Welche Art einer Feuerwehr ist in eurer Gemeinde vorhanden?","a":"- Freiwillige Feuerwehr"},
-    {"cat":"Gesellschafts- und Jugendpolitik","q":"Wer ist der örtliche Aufgabenträger der Freiwilligen Feuerwehr in Brandenburg?","a":"- die Ämter\n- die amtsfreien Gemeinden\n- (die Verbandsgemeinden) und\n- die kreisfreien Städte"},
-    {"cat":"Gesellschafts- und Jugendpolitik","q":"Wer ist der Vorgesetzte aller Feuerwehrangehörigen in eurer Feuerwehr? Wie heißt die betreffende Person bei euch?","a":"- Amtsdirektor (Altdöbern, Ortrand, Ruhland)\n- Bürgermeister (Calau, Großräschen, Lauchhammer, Lübbenau, Schipkau, Schwarzheide, Senftenberg, Vetschau)\n- Namen nennen"},
-    {"cat":"Gesellschafts- und Jugendpolitik","q":"Wer führt die Freiwillige Feuerwehr in eurem Amt bzw. eurer amtsfreien Gemeinde? Wie heißt die betreffende Person bei euch?","a":"- der Amtswehrführer (Ämter Altdöbern, Ortrand, Ruhland)\n- der Gemeindewehrführer (Gemeinde Schipkau)\n- Stadtwehrführer (Städte Calau, Großräschen, Lauchhammer, Lübbenau, Schwarzheide, Senftenberg, Vetschau)\n- Namen nennen"},
-    {"cat":"Gesellschafts- und Jugendpolitik","q":"Was ist eine Jugendfeuerwehr?","a":"- Die Jugendfeuerwehr ist die Jugendgruppe innerhalb einer Freiwilligen Feuerwehr."},
-    {"cat":"Gesellschafts- und Jugendpolitik","q":"Wer führt die Jugendfeuerwehr?","a":"- der Jugendfeuerwehrwart"},
-    {"cat":"Gesellschafts- und Jugendpolitik","q":"In welchen Verband sind alle Feuerwehren der Bundesrepublik Deutschland zusammengeschlossen?","a":"- Deutscher Feuerwehrverband (DFV)"},
-    {"cat":"Gesellschafts- und Jugendpolitik","q":"Was ist die Deutsche Jugendfeuerwehr?","a":"- Dies sind die Jugendfeuerwehren in der Gemeinschaft des Deutschen Feuerwehrverbandes als Zusammenschluss aller Jugendfeuerwehren in der Bundesrepublik Deutschland."},
-    {"cat":"Gesellschafts- und Jugendpolitik","q":"Ab welchem Alter kann man Mitglied einer Jugendfeuerwehr in Brandenburg werden?","a":"- Es gibt hierfür kein einheitliches Eintrittsalter. Der örtliche Aufgabenträger des Brandschutzes legt das Alter gemeinsam mit der Wehrführung fest."},
-    {"cat":"Gesellschafts- und Jugendpolitik","q":"Ab welchem Alter kann man in Brandenburg Mitglied in einer Freiwilligen Feuerwehr werden?","a":"- Ab dem vollendeten 16. Lebensjahr ist das möglich."},
-    {"cat":"Gesellschafts- und Jugendpolitik","q":"Welche Pflichten hat das Feuerwehrmitglied?","a":"- an Einsätzen, Übungen, Lehrgängen und Ausbildungen teilzunehmen\n- Weisungen der Vorgesetzten nachkommen\n- Verschwiegenheit wahren\n- keine Bild- und Tonaufnahmen weitergeben\n- kameradschaftliches Verhalten zeigen\n- geltende Vorschriften beachten\n- persönliche Schutzausrüstung tragen\n- Geräte und Ausrüstung schonen"},
-    {"cat":"Gesellschafts- und Jugendpolitik","q":"Welche Rechte hat ein Mitglied der Freiwilligen Feuerwehr?","a":"- keine Nachteile im Arbeits- oder Dienstverhältnis\n- Freistellung während Einsätzen, Übungen, Ausbildungsveranstaltungen\n- Recht auf Fortzahlung des Arbeitsentgelts\n- Recht auf Ersatz seiner Auslagen\n- Recht auf Bereitstellung von persönlicher Schutzausrüstung\n- Recht auf Unfallversicherungsschutz\n- Recht auf Anhörung bei der Bestellung der Ortswehrführung (nur Einsatzabteilung)"},
-    {"cat":"Gesellschafts- und Jugendpolitik","q":"Wie lauten in der Bundesrepublik die einheitlichen Notrufnummern?","a":"- Feuerwehr: 112\n- Rettungsdienst: 112\n- Polizei: 110"},
-    {"cat":"Gesellschafts- und Jugendpolitik","q":"Wer ist verpflichtet, Hilfe zu rufen oder einen Brand zu melden?","a":"- jeder Bürger bei der Feststellung eines Notfalls oder eines Feuers\n- Wer der Meldung nicht nachkommt, macht sich strafbar."},
-    {"cat":"Gesellschafts- und Jugendpolitik","q":"Welche Angaben soll eine Notrufmeldung mindestens enthalten?","a":"- Was ist passiert?\n- Wo ist es passiert?\n- Wie viele Personen sind in Gefahr?\n- Wer meldet?\n- Warten auf Nachfragen!"},
-    {"cat":"Gesellschafts- und Jugendpolitik","q":"Wo wird in Brandenburg eine Notrufmeldung unter der Nummer 112 entgegengenommen?","a":"- In den Regionalleitstellen der Feuerwehr bzw. des Rettungsdienstes, die jeweils für mehrere Landkreise bzw. kreisfreie Städte zuständig sind"},
-    {"cat":"Gesellschafts- und Jugendpolitik","q":"Wo befindet sich die für den Landkreis Oberspreewald-Lausitz zuständige Regionalleitstelle? Wie heißt diese Leitstelle?","a":"- Sie befindet sich bei der Berufsfeuerwehr in Cottbus.\n- Sie heißt Leitstelle Lausitz."},
-    {"cat":"Gesellschafts- und Jugendpolitik","q":"Wer kann die Leistungsspange der DJF erwerben?","a":"- Mitglieder einer Jugendfeuerwehr, die am Tag der Abnahme mindestens ein Jahr Mitglied sind\n- ein gültiger Mitgliedsausweis muss vorliegen\n- sie müssen im Abnahmejahr 15 Jahre alt sein oder werden und dürfen im Abnahmejahr nicht 19 Jahre werden."},
-    {"cat":"Gesellschafts- und Jugendpolitik","q":"Welche Leistungen sind zum Erwerb der Leistungsspange zu erbringen?","a":"- Insgesamt sind fünf Übungen zu absolvieren:\n(1) Auslegen einer C-Schlauchleitung als Schnelligkeitsübung\n(2) Kugelstoßen\n(3) Staffellauf\n(4) Vortragen eines Löschangriffs (gemäß FwDV 3)\n(5) Beantwortung von Fragen (mündlich)\n- Die Leistungsspange soll die Gruppe als geschlossene Einheit absolvieren.\n- Es wird nur die Gruppenleistung bewertet, dabei hilft der Stärkere dem Schwächeren.\n- Auch wird der Gesamteindruck der Gruppe bewertet."},
-    {"cat":"Organisation","q":"Welche Feuerwehrdienstvorschrift regelt das Vorgehen einer Löschgruppe im Einsatz?","a":"- Die Feuerwehrdienstvorschrift 3 (FwDV 3): „Einheiten im Lösch- und Hilfeleistungseinsatz“"},
-    {"cat":"Organisation","q":"Wie viele Feuerwehrleute bilden eine Löschgruppe?","a":"- neun Feuerwehrleute, also 1/8/9"},
-    {"cat":"Organisation","q":"Welche Einheiten kennen wir noch bei der Feuerwehr? Nennt die Bezeichnung und die Anzahl der erforderlichen Einsatzkräfte!","a":"- selbstständiger Trupp: 1/2/3\n- Löschstaffel: 1/5/6\n- Löschzug: 1/3/18/22"},
-    {"cat":"Organisation","q":"Wie heißen die einzelnen Funktionen innerhalb einer Löschgruppe?","a":"(1) Gruppenführer\n(2) Maschinist\n(3) Melder\n(4) Angriffstruppführer\n(5) Angriffstruppmann\n(6) Wassertruppführer\n(7) Wassertruppmann\n(8) Schlauchtruppführer\n(9) Schlauchtruppmann"},
-    {"cat":"Organisation","q":"Wie viele Einsatzkräfte gehören innerhalb der Löschgruppe zu jedem Trupp?","a":"- zwei Einsatzkräfte"},
-    {"cat":"Ausrüstung (Fahrzeuge)","q":"Nennt Feuerwehrfahrzeuge in eurer Ortsfeuerwehr?","a":"- Antwort je nach Ausstattung der eigenen Ortsfeuerwehr nennen"},
-    {"cat":"Ausrüstung (Fahrzeuge)","q":"Nennt ein Beispiel für ein typisches Löschgruppenfahrzeug!","a":"- z. B. LF 20/16, LF 16/12, LF 10, LF 10/6 oder LF 16-TS"},
-    {"cat":"Ausrüstung (Fahrzeuge)","q":"Erläutert die Bezeichnungen folgender Feuerwehrfahrzeuge!","a":"- TLF 4000: Tanklöschfahrzeug, Pumpe 2000 l/min, 4000 l Wassertank, Truppbesatzung\n- LF 20: Löschgruppenfahrzeug, Pumpe 2000 l/min, Gruppenbesatzung, einziges mit 3-teiliger Schiebleiter\n- TSF: Tragkraftspritzenfahrzeug, herausnehmbare Pumpe 800 l/min, Staffelbesatzung\n- DLA(K) 23-12: Drehleiter mit Korb, Nennrettungshöhe 23 m, Nennausladung 12 m\n- RW: Rüstwagen\n- RTW: Rettungswagen"},
-    {"cat":"Ausrüstung (Fahrzeuge)","q":"Nennt die Abkürzungen für folgende Fahrzeuge!","a":"- Vorausrüstwagen: VRW\n- Einsatzleitwagen: ELW\n- Gerätewagen-Gefahrgut: GW-G\n- Mannschaftstransportwagen: MTW\n- Notarzteinsatzfahrzeug: NEF\n- Rettungshubschrauber: RTH"},
-    {"cat":"Ausrüstung (Fahrzeuge)","q":"Woran erkennt man bei einem Feuerwehrfahrzeug im Straßenverkehr, dass es sich auf einer Einsatzfahrt befindet?","a":"- Es fährt mit blauem Blinklicht (Blaulicht) und Signalhorn (Martinshorn)."},
-    {"cat":"Ausrüstung (Fahrzeuge)","q":"Was verbirgt sich hinter der Bezeichnung PFPN 10-1000?","a":"- Portable Feuerlöschkreiselpumpe Normaldruck\n- 1000 l/min Förderleistung und einem Ausgangsdruck von 10 bar unter bestimmten Bedingungen"},
-    {"cat":"Geräte","q":"Welche zwei Gruppen von Feuerwehrschläuchen unterscheiden wir?","a":"- Saugschläuche und\n- Druckschläuche"},
-    {"cat":"Geräte","q":"Welche Größen werden bei beiden Arten von Schläuchen angewendet?","a":"- Größen A, B, C und D"},
-    {"cat":"Geräte","q":"Wofür verwenden wir A-Saugschläuche?","a":"- Sie werden zur Wasserentnahme aus offenen Gewässern genutzt."},
-    {"cat":"Geräte","q":"Welche beiden Längen gibt es bei A-Saugschläuchen? Welchen Durchmesser haben sie?","a":"- Sie sind entweder 2,50 m oder 1,60 m lang.\n- Der Durchmesser beträgt 110 mm."},
-    {"cat":"Geräte","q":"Wofür kann ein D-Saugschlauch genutzt werden?","a":"- D-Saugschläuche setzt man zum Entnehmen des Schaummittels aus einem Kanister mithilfe eines Zumischers ein."},
-    {"cat":"Geräte","q":"Wie lang kann ein genormter C-Druckschlauch sein?","a":"- C-Druckschläuche sind 15 m oder 20 m lang."},
-    {"cat":"Geräte","q":"Wofür werden C-Druckschläuche verwendet?","a":"- Sie dienen der Wasserversorgung zwischen dem Verteiler und den Strahlrohren."},
-    {"cat":"Geräte","q":"Wie lang kann ein genormter B-Druckschlauch sein?","a":"- B-Druckschläuche sind 5 m, 20 m oder 35 m lang."},
-    {"cat":"Geräte","q":"Wofür setzt man B-Druckschläuche ein?","a":"- Eingesetzt werden sie zur Wasserversorgung vom Hydranten zur Feuerlöschkreiselpumpe bzw. von dort bis zum Verteiler."},
-    {"cat":"Geräte","q":"Welche Kupplungsgrößen sind bei der Feuerwehr üblich?","a":"- A-Kupplungen\n- B-Kupplungen\n- C-Kupplungen\n- D-Kupplungen"},
-    {"cat":"Geräte","q":"Welche Aufgabe haben Kupplungen?","a":"- Kupplungen dienen zum Verbinden von Schläuchen und zum Anschließen von Schläuchen an alle möglichen Armaturen.\n- Blindkupplungen verschließen außerdem Pumpenausgänge bzw. Tankeinfüllstutzen an Löschfahrzeugen mit Wassertank."},
-    {"cat":"Geräte","q":"Welche Funktion hat ein Übergangsstück?","a":"- Ein Übergangsstück verbindet verschieden große Kupplungen miteinander."},
-    {"cat":"Geräte","q":"Welche Einrichtungen ermöglichen die Entnahme von Wasser aus dem öffentlichen Wassernetz?","a":"- Unterflurhydranten und Überflurhydranten"},
-    {"cat":"Geräte","q":"Was wird zum Öffnen von Hydranten benötigt?","a":"- Unterflurhydrantenschlüssel für Unterflurhydranten\n- Überflurhydrantenschlüssel für Überflurhydranten"},
-    {"cat":"Geräte","q":"Mit welchem Hilfsmittel findet man schnell Unterflurhydranten?","a":"- mittels Hydrantenhinweisschildern\n- diese sind rechteckig, weiß und mit einem roten Rand versehen\n- angebracht an Gebäuden, Masten, festen Zäunen u. ä."},
-    {"cat":"Geräte","q":"Welche Hinweise findet man immer auf Hydrantenschildern?","a":"- Nummer des Hydranten\n- Durchmesser der verlegten Druckleitung\n- Entfernung vom Schild zum Hydranten nach vorn und rechts bzw. links"},
-    {"cat":"Geräte","q":"Wodurch unterscheiden sich Feuerwehrleinen von Arbeitsleinen?","a":"- durch eine unterschiedliche Farbgebung\n- weiße Leine: Feuerwehrleine\n- rote Leine bzw. Kennzeichnung: Arbeitsleine"},
-    {"cat":"Geräte","q":"Wozu wird eine Feuerwehrleine verwendet?","a":"- zur Menschenrettung\n- zum Selbstretten der Einsatzkräfte\n- zum Hochziehen von Arbeitsgeräten\n- als Sicherungsleine für Feuerwehrleute\n- zur Kennzeichnung des Rückzugsweges beim Innenangriff"},
-    {"cat":"Geräte","q":"Wozu dienen Arbeitsleinen?","a":"- Arbeitsleinen dienen als Halteleinen oder Ventilleinen, ebenso als Hilfsleinen und Absperrleinen.\n- Leinen, die als Arbeitsleinen gekennzeichnet wurden, dürfen nicht für die Menschenrettung oder zum Selbstretten verwendet werden."},
-    {"cat":"Geräte","q":"Was sind tragbare Leitern?","a":"- Tragbare Leitern sind Leitern, die auf oder in Feuerwehrfahrzeugen mitgeführt, an der Einsatzstelle von der Mannschaft genommen und an die vorgesehene Stelle getragen werden."},
-    {"cat":"Geräte","q":"Welche genormten tragbaren Leitern finden im Feuerwehrdienst Verwendung?","a":"- Klappleiter\n- Steckleiter\n- dreiteilige Schiebleiter\n- Hakenleiter mit abklappbarem Haken\n- Multifunktionsleiter"},
-    {"cat":"Geräte","q":"Welche Kleinlöschgeräte werden unterschieden?","a":"- Kübelspritze\n- Feuerlöscher\n- Löschdecke\n- Löscheimer\n- Brandklatsche (Feuerpatsche, Brandpatsche)"},
-    {"cat":"Geräte","q":"Was ist eine Kübelspritze?","a":"- ein kleines tragbares Löschgerät, das mit Wasser befüllt wird und eine eingebaute, von Hand zu betätigende Kolbenpumpe besitzt\n- An Kübelspritzen wird ein 5 Meter langer D-Druckschlauch mit D-Strahlrohr angekuppelt.\n- Die einzufüllende Wassermenge beträgt 10 Liter."},
-    {"cat":"Geräte","q":"Wozu dient eine Kübelspritze?","a":"- Sie dient zur Bekämpfung von kleinen begrenzten Bränden, von Entstehungsbränden, zum Ablöschen kleiner Glutnester und zum Nachlöschen auf Brandstellen."},
-    {"cat":"Geräte","q":"Was ist ein Feuerlöscher?","a":"- Feuerlöscher sind von Hand zu transportierende Kleinlöschgeräte.\n- Sie stehen entweder ständig unter Druck oder werden bei Inbetriebnahme unter Druck gesetzt.\n- Feuerlöscher dürfen eine maximale Masse von 20 kg haben."},
-    {"cat":"Geräte","q":"Wozu dienen Feuerlöscher?","a":"- Sie dienen zur Brandbekämpfung von Entstehungsbränden bzw. Bränden kleiner Ausbreitung mit örtlicher Begrenzung."},
-    {"cat":"Geräte","q":"Welche Arten von Feuerlöschern kennt ihr?","a":"- Wasserlöscher\n- Schaumlöscher\n- Pulverlöscher ABC\n- Metallbrand-Pulverlöscher D\n- Kohlendioxidlöscher"},
-    {"cat":"Löschmittel und Löschverfahren","q":"Welche Voraussetzungen müssen vorliegen, damit etwas brennen kann?","a":"- ein brennbarer Stoff\n- Sauerstoff\n- Zündtemperatur\n- richtiges Mengenverhältnis zwischen brennbarem Stoff und Sauerstoff"},
-    {"cat":"Löschmittel und Löschverfahren","q":"Welche Erscheinungsformen des Feuers können vorliegen?","a":"- nur Glut\n- nur Flammen\n- Flammen und Glut"},
-    {"cat":"Löschmittel und Löschverfahren","q":"Welche fünf Brandklassen gibt es?","a":"- Brandklasse A: feste brennbare Stoffe (Holz, Kohle, Papier, Pappe, …)\n- Brandklasse B: flüssige oder flüssig werdende brennbare Stoffe (Benzin, Diesel, Ethanol, …)\n- Brandklasse C: brennbare gasförmige Stoffe (Methan, Ethan, Propan, Butan, Wasserstoff, …)\n- Brandklasse D: brennbare Metalle\n- Brandklasse F: Brände von Speiseölen und -fetten in Frittier- und Fettbackgeräten"},
-    {"cat":"Löschmittel und Löschverfahren","q":"Welche beiden grundsätzlichen Löschwirkungen werden unterschieden?","a":"- Abkühlen und\n- Ersticken"},
-    {"cat":"Löschmittel und Löschverfahren","q":"Welche Löschmittel sind euch bekannt?","a":"- Wasser\n- Schaum\n- Pulver\n- Kohlendioxid\n- Sand"},
-    {"cat":"Löschmittel und Löschverfahren","q":"Welches ist das Hauptlöschmittel bei der Feuerwehr?","a":"- Wasser"},
-    {"cat":"Löschmittel und Löschverfahren","q":"Welche Vorteile hat das Löschmittel Wasser?","a":"- Es ist (fast) überall vorhanden.\n- Es ist sehr preiswert.\n- Es kann viel Wärme aufnehmen.\n- Es ist ungiftig.\n- Es ist chemisch neutral.\n- Es hat eine große Wurfweite und Wurfhöhe."},
-    {"cat":"Löschmittel und Löschverfahren","q":"Welche Hauptlöschwirkung besitzt das Löschmittel Wasser beim Löschen eines Brandes?","a":"- kühlende Wirkung, weil es dem brennbaren Stoff Wärme entzieht"},
-    {"cat":"Löschmittel und Löschverfahren","q":"Nennt Beispiele für Brände, bei denen Wasser nicht eingesetzt werden darf!","a":"- Brände von Flüssigkeiten, die nicht mit Wasser mischbar sind\n- Fettbrände\n- Metallbrände\n- Schornsteinbrände\n- Elektrische Anlagen nur bedingt (Sicherheitsabstände einhalten)"},
-    {"cat":"Löschmittel und Löschverfahren","q":"Bei welchen Bränden kann das Löschmittel Schaum zum Einsatz kommen?","a":"- Brände der Brandklasse B (flüssige und flüssig werdende brennbare Stoffe)\n- Brände der Brandklasse F (Brände von Speiseölen und -fetten)"},
-    {"cat":"Löschmittel und Löschverfahren","q":"Welche zwei Löschwirkungen hat Schaum?","a":"- Der Schaum hat hauptsächlich erstickende Wirkung.\n- Als Nebenlöschwirkung tritt auch Abkühlen auf, da Schaum Wasser enthält."},
-    {"cat":"Unfallverhütung","q":"In welcher Vorschrift ist der Unfallschutz im Feuerwehrdienst geregelt?","a":"- in der Unfallverhütungsvorschrift „Feuerwehren“ (DGUV Vorschrift 49)"},
-    {"cat":"Unfallverhütung","q":"Nennt die persönliche Schutzausrüstung eines Jugendfeuerwehrmitglieds!","a":"(1) Übungsanzug der Deutschen Jugendfeuerwehr\n(2) Schutzhelm der Jugendfeuerwehr\n(3) Zweidornschnalle\n(4) Schutzhandschuhe\n(5) Festes Schuhwerk"},
-    {"cat":"Unfallverhütung","q":"In welchen Situationen gelten die Richtlinien der Unfallverhütungsvorschrift „Feuerwehren“?","a":"- bei Ausbildungen\n- bei Übungen\n- bei Lehrgängen\n- bei Einsätzen\n- beim Dienstsport\n- bei der Kameradschaftspflege\n- beim technischen Dienst\n- bei Freizeitmaßnahmen der Jugendfeuerwehr\n- bei allen Veranstaltungen, die unmittelbar mit dem Feuerwehrdienst verbunden sind\n- auf dem Weg zum Feuerwehrgerätehaus und wieder nach Hause"},
-    {"cat":"Unfallverhütung","q":"Müssen Feuerwehrangehörige über die Unfallverhütungsvorschriften informiert sein?","a":"- Ja, jeder Angehörige einer Freiwilligen Feuerwehr ist einmal im Jahr über die Festlegungen der UVV zu belehren.\n- Alle Teilnehmer an der Belehrung sind schriftlich festzuhalten und bestätigen ihre Teilnahme mit Unterschrift.\n- Jedem Feuerwehrmitglied müssen die Bestimmungen der DGUV Vorschrift 49 ständig zugänglich sein."},
-    {"cat":"Unfallverhütung","q":"Wo sind Jugendfeuerwehrmitglieder gegen Unfälle versichert?","a":"- Jugendfeuerwehrmitglieder sind wie alle anderen Feuerwehrleute in der Feuerwehrunfallkasse Brandenburg (FUKBB) unfallversichert."},
-    {"cat":"Unfallverhütung","q":"Darf von den Bestimmungen der DGUV Vorschrift 49 abgewichen werden?","a":"- Nein, diese Vorschriften sind grundsätzlich einzuhalten.\n- Eine Ausnahme gibt es gemäß § 15 Abs. (1) der DGUV Vorschrift 49: Im Einzelfall kann bei Einsätzen unter Beachtung des Eigenschutzes zur Rettung von Personen aus Lebensgefahr von den Bestimmungen abgewichen werden."},
-    {"cat":"Unfallverhütung","q":"Was ist zu tun, wenn ein Feuerwehrmitglied einen Unfall erlitten hat?","a":"- Zunächst einmal ist erste Hilfe zu leisten.\n- Jede Verletzung ist unverzüglich dem Jugendfeuerwehrwart, Gruppenführer, Einsatzleiter oder einem anderen Verantwortlichen zu melden.\n- Die Verletzung ist durch Eintragung in das Verbandbuch zu dokumentieren.\n- Bei schweren Verletzungen ist unverzüglich ein Arzt aufzusuchen.\n- Eine Unfallanzeige muss innerhalb von drei Tagen an die Feuerwehrunfallkasse Brandenburg gesandt werden."},
-    {"cat":"Unfallverhütung","q":"Dürfen Mitglieder einer Jugendfeuerwehr am Dienst der aktiven Feuerwehrangehörigen (Einsatzabteilung) teilnehmen?","a":"- Ja, gemäß § 17 Abs. (2) der DGUV Vorschrift 49 dürfen Kinder und Jugendliche\n- nur nach landesrechtlichen Bestimmungen\n- und nur außerhalb des Gefahrenbereichs\n- unter Aufsicht erfahrener Feuerwehrangehöriger mitwirken."},
-    {"cat":"Unfallverhütung","q":"Dürfen Mitglieder einer Jugendfeuerwehr an Einsätzen teilnehmen?","a":"- Nein, Kinder und Jugendliche dürfen gemäß § 17 Abs. (3) der DGUV Vorschrift 49 als Feuerwehrangehörige an Feuerwehreinsätzen nicht teilnehmen."}
-  ];
-
-  const categories = ["Alle", ...Array.from(new Set(CARDS.map(c => c.cat)))];
-  let activeCat = "Alle";
-  let order = CARDS.map((_, i) => i);
-  let idx = 0;
-  let flipped = false;
-  let known = {};
-
-  function shuffleArr(arr){
-    const a = [...arr];
-    for(let i = a.length - 1; i > 0; i--){
-      const j = Math.floor(Math.random() * (i + 1));
-      [a[i], a[j]] = [a[j], a[i]];
+    :root {
+      --bg: #111213;
+      --surface: #1a1c1e;
+      --border: #2e3133;
+      --text: #dfe1db;
+      --muted: #6b7175;
+      --red: #cc2b2b;
+      --red-dim: #7a1a1a;
+      --green: #2a7a4a;
+      --green-text: #a3d9b8;
+      --bad: #cc2b2b;
+      --bad-bright: #e05050;
     }
-    return a;
-  }
 
-  function filteredOrder(){
-    if(activeCat === "Alle") return order;
-    return order.filter(i => CARDS[i].cat === activeCat);
-  }
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+    }
 
-  function renderCats(){
-    const el = document.getElementById('cats');
-    el.innerHTML = '';
-    categories.forEach(c => {
-      const b = document.createElement('button');
-      b.className = 'cat-btn' + (c === activeCat ? ' active' : '');
-      b.textContent = c;
-      b.addEventListener('click', () => {
-        activeCat = c;
+    html,
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'IBM Plex Sans', system-ui, sans-serif;
+    }
+
+    ::selection {
+      background: var(--red);
+      color: #fff;
+    }
+
+    .wrap {
+      max-width: 520px;
+      margin: 0 auto;
+      padding: 26px 18px 90px;
+    }
+
+    header {
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 14px;
+      margin-bottom: 22px;
+    }
+
+    header h1 {
+      font-size: 22px;
+      font-weight: 700;
+      color: #fff;
+      margin: 0 0 4px;
+      letter-spacing: -0.3px;
+    }
+
+    header .sub {
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .cats {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 18px;
+    }
+
+    .cat-btn {
+      font-family: 'IBM Plex Sans', sans-serif;
+      font-weight: 600;
+      font-size: 12px;
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--muted);
+      padding: 7px 12px;
+      cursor: pointer;
+    }
+
+    .cat-btn.active {
+      background: var(--red);
+      border-color: var(--red);
+      color: #fff;
+    }
+
+    .cat-btn:hover:not(.active) {
+      border-color: var(--muted);
+      color: var(--text);
+    }
+
+    .statbar {
+      display: flex;
+      justify-content: space-between;
+      font-size: 12px;
+      color: var(--muted);
+      margin-bottom: 10px;
+      padding: 0 2px;
+    }
+
+    .statbar b {
+      color: var(--green-text);
+    }
+
+    .card {
+      border: 1px solid var(--border);
+      background: var(--surface);
+      min-height: 230px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 26px 24px;
+      cursor: pointer;
+      user-select: none;
+      margin-bottom: 16px;
+      transition: border-color .15s;
+    }
+
+    .card:hover {
+      border-color: var(--muted);
+    }
+
+    .card-eyebrow {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--red);
+      margin-bottom: 12px;
+    }
+
+    .card-body {
+      font-size: 15px;
+      line-height: 1.55;
+      color: #eef0ea;
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+
+    .card-hint {
+      font-size: 11px;
+      color: var(--muted);
+      text-align: center;
+      margin-top: 18px;
+    }
+
+    .verdict-row {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+
+    button.act {
+      flex: 1;
+      font-family: 'IBM Plex Sans', sans-serif;
+      font-weight: 600;
+      font-size: 13px;
+      border: 1px solid var(--border);
+      background: transparent;
+      color: var(--text);
+      padding: 12px 14px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+    }
+
+    button.act.nope {
+      border-color: var(--red-dim);
+      color: var(--bad-bright);
+    }
+
+    button.act.nope:hover {
+      background: var(--red-dim);
+      color: #fff;
+    }
+
+    button.act.yep {
+      border-color: var(--green);
+      color: var(--green-text);
+    }
+
+    button.act.yep:hover {
+      background: var(--green);
+      color: #fff;
+    }
+
+    .nav-row {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+    }
+
+    button.icon {
+      border: 1px solid var(--border);
+      background: transparent;
+      color: var(--text);
+      width: 40px;
+      height: 40px;
+      cursor: pointer;
+      font-size: 15px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    button.icon:hover {
+      border-color: var(--muted);
+      color: #fff;
+    }
+
+    .footer-note {
+      margin-top: 34px;
+      padding-top: 14px;
+      border-top: 1px solid var(--border);
+      font-size: 11.5px;
+      color: var(--muted);
+    }
+  </style>
+</head>
+
+<body>
+  <div class="wrap">
+    <header>
+      <h1>Fragenbeantwortung — Karteikarten</h1>
+      <div class="sub">Leistungsspange · Broschüre Stand 06.08.2026</div>
+    </header>
+
+    <div class="cats" id="cats"></div>
+
+    <div class="statbar">
+      <span id="progress">Karte 1 / 1</span>
+      <span>✓ <b id="knownCount">0</b> &nbsp; ✗ <b id="unknownCount" style="color:var(--bad-bright);">0</b></span>
+    </div>
+
+    <div class="card" id="card">
+      <div class="card-eyebrow" id="cardEyebrow"></div>
+      <div class="card-body" id="cardBody"></div>
+      <div class="card-hint">Tippen zum Umdrehen</div>
+    </div>
+
+    <div class="verdict-row">
+      <button class="act nope" id="btnNope">✗ Nochmal</button>
+      <button class="act yep" id="btnYep">✓ Kann ich</button>
+    </div>
+
+    <div class="nav-row">
+      <button class="icon" id="btnPrev" title="Zurück">‹</button>
+      <button class="icon" id="btnShuffle" title="Mischen">⤨</button>
+      <button class="icon" id="btnReset" title="Zurücksetzen">↺</button>
+      <button class="icon" id="btnNext" title="Weiter">›</button>
+    </div>
+
+    <div class="footer-note">Leistungsspange — Fragenbeantwortung</div>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const CARDS = [
+        { "cat": "Gesellschafts- und Jugendpolitik", "q": "Was heißt die Abkürzung „BRD“?", "a": "- BRD = Bundesrepublik Deutschland" },
+        { "cat": "Gesellschafts- und Jugendpolitik", "q": "Wann wurde die Bundesrepublik Deutschland gegründet?", "a": "- Am 23. Mai 1949 auf der Grundlage des Grundgesetzes" },
+        { "cat": "Gesellschafts- und Jugendpolitik", "q": "Welcher andere deutsche Staat entstand im gleichen Jahr am 7. Oktober?", "a": "- Am 7. Oktober 1949 wurde die Deutsche Demokratische Republik (= DDR) gegründet." },
+        { "cat": "Gesellschafts- und Jugendpolitik", "q": "Welche Staatsform herrscht in der BRD?", "a": "- parlamentarische Demokratie" },
+        { "cat": "Gesellschafts- und Jugendpolitik", "q": "Erklärt den Begriff „parlamentarische Demokratie“!", "a": "- Demokratie = Volksherrschaft = Alle Macht geht vom Volk aus.\n- parlamentarisch: Das Volk wählt seine Volksvertreter in ein Parlament." },
+        { "cat": "Gesellschafts- und Jugendpolitik", "q": "Wie heißt das Parlament der BRD und wo hat es seinen Sitz?", "a": "- Name: Deutscher Bundestag\n- Sitz: Reichstag in Berlin" },
+        { "cat": "Gesellschafts- und Jugendpolitik", "q": "Welche politische Funktion hat die Stadt Berlin?", "a": "- Berlin ist die Bundeshauptstadt der Bundesrepublik Deutschland." },
+        { "cat": "Gesellschafts- und Jugendpolitik", "q": "Wer wählt das deutsche Parlament?", "a": "- alle (wahlberechtigten) Bürgerinnen und Bürger der BRD" },
+        { "cat": "Gesellschafts- und Jugendpolitik", "q": "Welchen Titel trägt das Staatsoberhaupt der BRD? Wie heißt die Person zurzeit?", "a": "- Titel: Bundespräsident\n- Name: Frank-Walter Steinmeier" },
+        { "cat": "Gesellschafts- und Jugendpolitik", "q": "Welchen Titel trägt der/die Regierungschef/in der BRD? Wie heißt die Person zurzeit?", "a": "- Titel: Bundeskanzler/in\n- Name: Friedrich Merz" },
+        { "cat": "Gesellschafts- und Jugendpolitik", "q": "Wie viele Bundesländer hat die BRD? Benennt mindestens fünf mit den Landeshauptstädten!", "a": "- Es gibt insgesamt 16 Bundesländer:\n(1) Baden-Württemberg – Stuttgart\n(2) Bayern – München\n(3) Berlin\n(4) Brandenburg – Potsdam\n(5) Bremen\n(6) Hamburg\n(7) Hessen – Wiesbaden\n(8) Mecklenburg-Vorpommern – Schwerin\n(9) Niedersachsen – Hannover\n(10) Nordrhein-Westfalen – Düsseldorf\n(11) Rheinland-Pfalz – Mainz\n(12) Saarland – Saarbrücken\n(13) Sachsen – Dresden\n(14) Sachsen-Anhalt – Magdeburg\n(15) Schleswig-Holstein – Kiel\n(16) Thüringen – Erfurt" },
+        { "cat": "Gesellschafts- und Jugendpolitik", "q": "Nennt die drei Stadtstaaten unter den Bundesländern?", "a": "- Berlin\n- Bremen\n- Hamburg" },
+        { "cat": "Gesellschafts- und Jugendpolitik", "q": "Wie heißt das Bundesland, in dem wir leben? Gebt die Landeshauptstadt an!", "a": "- Bundesland: Brandenburg\n- Landeshauptstadt: Potsdam" },
+        { "cat": "Gesellschafts- und Jugendpolitik", "q": "Welchen Titel trägt der Regierungschef von Brandenburg? Wie heißt diese Person derzeit?", "a": "- Titel: Ministerpräsident\n- Name: Dr. Dietmar Woidke" },
+        { "cat": "Gesellschafts- und Jugendpolitik", "q": "Welchen Titel trägt der Minister für den Brand- und Katastrophenschutz in Brandenburg? Wie heißt diese Person derzeit?", "a": "- Titel: Minister des Innern und für Kommunales\n- Name: Dr. Jan Redmann" },
+        { "cat": "Gesellschafts- und Jugendpolitik", "q": "In welchem Landkreis leben wir? Nennt die Kreisstadt!", "a": "- Landkreis: Oberspreewald-Lausitz (OSL)\n- Kreisstadt: Senftenberg" },
+        { "cat": "Gesellschafts- und Jugendpolitik", "q": "Von welchen drei Nachbarlandkreisen ist unser Landkreis umgeben?", "a": "- Norden: Landkreis Dahme-Spreewald (LDS)\n- Westen: Landkreis Elbe-Elster (EE)\n- Osten: Landkreis Spree-Neiße (SPN)" },
+        { "cat": "Gesellschafts- und Jugendpolitik", "q": "In welches Land fährt man, wenn man Brandenburg in Richtung Osten verlässt?", "a": "- in die Republik Polen" },
+        { "cat": "Gesellschafts- und Jugendpolitik", "q": "Zu welchem Landkreis gehört die Stadt Cottbus?", "a": "- zu gar keinem Landkreis; Cottbus ist eine kreisfreie Stadt" },
+        { "cat": "Gesellschafts- und Jugendpolitik", "q": "In welches Bundesland kommt man, wenn man unseren Landkreis in Richtung Süden verlässt?", "a": "- nach Sachsen" },
+        { "cat": "Gesellschafts- und Jugendpolitik", "q": "Welches Gesetz regelt alle Fragen des Brandschutzes im Land Brandenburg?", "a": "- Brandenburgisches Brand- und Katastrophenschutzgesetz (BbgBKG)" },
+        { "cat": "Gesellschafts- und Jugendpolitik", "q": "Von wem wurde dieses Gesetz beschlossen?", "a": "- Landtag des Landes Brandenburg" },
+        { "cat": "Gesellschafts- und Jugendpolitik", "q": "Welche drei Aufgaben hat die Feuerwehr gemäß Brand- und Katastrophenschutzgesetz?", "a": "- Rettung\n- Brandbekämpfung\n- Technische Hilfeleistung\n\nErläuterung:\n- Rettung: Abwenden einer Lebensgefahr von Menschen oder Tieren durch lebensrettende Sofortmaßnahmen oder Befreien aus einer lebensbedrohenden Zwangslage\n- Brandbekämpfung: dem Einzelnen und der Allgemeinheit bei Brandgefahren beizustehen\n- Technische Hilfeleistung: bei sonstigen Notständen aller Art Hilfe leisten" },
+        { "cat": "Gesellschafts- und Jugendpolitik", "q": "Welche Arten von Feuerwehren gibt es in Brandenburg?", "a": "Öffentliche Feuerwehren:\n- Freiwillige Feuerwehren\n- Berufsfeuerwehren\nNichtöffentliche Feuerwehren:\n- Betriebsfeuerwehren\n- Werkfeuerwehren" },
+        { "cat": "Gesellschafts- und Jugendpolitik", "q": "Welche Art einer Feuerwehr ist in eurer Gemeinde vorhanden?", "a": "- Freiwillige Feuerwehr" },
+        { "cat": "Gesellschafts- und Jugendpolitik", "q": "Wer ist der örtliche Aufgabenträger der Freiwilligen Feuerwehr in Brandenburg?", "a": "- die Ämter\n- die amtsfreien Gemeinden\n- (die Verbandsgemeinden) und\n- die kreisfreien Städte" },
+        { "cat": "Gesellschafts- und Jugendpolitik", "q": "Wer ist der Vorgesetzte aller Feuerwehrangehörigen in eurer Feuerwehr? Wie heißt die betreffende Person bei euch?", "a": "- Amtsdirektor (Altdöbern, Ortrand, Ruhland)\n- Bürgermeister (Calau, Großräschen, Lauchhammer, Lübbenau, Schipkau, Schwarzheide, Senftenberg, Vetschau)\n- Namen nennen" },
+        { "cat": "Gesellschafts- und Jugendpolitik", "q": "Wer führt die Freiwillige Feuerwehr in eurem Amt bzw. eurer amtsfreien Gemeinde? Wie heißt die betreffende Person bei euch?", "a": "- der Amtswehrführer (Ämter Altdöbern, Ortrand, Ruhland)\n- der Gemeindewehrführer (Gemeinde Schipkau)\n- Stadtwehrführer (Städte Calau, Großräschen, Lauchhammer, Lübbenau, Schwarzheide, Senftenberg, Vetschau)\n- Namen nennen" },
+        { "cat": "Gesellschafts- und Jugendpolitik", "q": "Was ist eine Jugendfeuerwehr?", "a": "- Die Jugendfeuerwehr ist die Jugendgruppe innerhalb einer Freiwilligen Feuerwehr." },
+        { "cat": "Gesellschafts- und Jugendpolitik", "q": "Wer führt die Jugendfeuerwehr?", "a": "- der Jugendfeuerwehrwart" },
+        { "cat": "Gesellschafts- und Jugendpolitik", "q": "In welchen Verband sind alle Feuerwehren der Bundesrepublik Deutschland zusammengeschlossen?", "a": "- Deutscher Feuerwehrverband (DFV)" },
+        { "cat": "Gesellschafts- und Jugendpolitik", "q": "Was ist die Deutsche Jugendfeuerwehr?", "a": "- Dies sind die Jugendfeuerwehren in der Gemeinschaft des Deutschen Feuerwehrverbandes als Zusammenschluss aller Jugendfeuerwehren in der Bundesrepublik Deutschland." },
+        { "cat": "Gesellschafts- und Jugendpolitik", "q": "Ab welchem Alter kann man Mitglied einer Jugendfeuerwehr in Brandenburg werden?", "a": "- Es gibt hierfür kein einheitliches Eintrittsalter. Der örtliche Aufgabenträger des Brandschutzes legt das Alter gemeinsam mit der Wehrführung fest." },
+        { "cat": "Gesellschafts- und Jugendpolitik", "q": "Ab welchem Alter kann man in Brandenburg Mitglied in einer Freiwilligen Feuerwehr werden?", "a": "- Ab dem vollendeten 16. Lebensjahr ist das möglich." },
+        { "cat": "Gesellschafts- und Jugendpolitik", "q": "Welche Pflichten hat das Feuerwehrmitglied?", "a": "- an Einsätzen, Übungen, Lehrgängen und Ausbildungen teilzunehmen\n- Weisungen der Vorgesetzten nachkommen\n- Verschwiegenheit wahren\n- keine Bild- und Tonaufnahmen weitergeben\n- kameradschaftliches Verhalten zeigen\n- geltende Vorschriften beachten\n- persönliche Schutzausrüstung tragen\n- Geräte und Ausrüstung schonen" },
+        { "cat": "Gesellschafts- und Jugendpolitik", "q": "Welche Rechte hat ein Mitglied der Freiwilligen Feuerwehr?", "a": "- keine Nachteile im Arbeits- oder Dienstverhältnis\n- Freistellung während Einsätzen, Übungen, Ausbildungsveranstaltungen\n- Recht auf Fortzahlung des Arbeitsentgelts\n- Recht auf Ersatz seiner Auslagen\n- Recht auf Bereitstellung von persönlicher Schutzausrüstung\n- Recht auf Unfallversicherungsschutz\n- Recht auf Anhörung bei der Bestellung der Ortswehrführung (nur Einsatzabteilung)" },
+        { "cat": "Gesellschafts- und Jugendpolitik", "q": "Wie lauten in der Bundesrepublik die einheitlichen Notrufnummern?", "a": "- Feuerwehr: 112\n- Rettungsdienst: 112\n- Polizei: 110" },
+        { "cat": "Gesellschafts- und Jugendpolitik", "q": "Wer ist verpflichtet, Hilfe zu rufen oder einen Brand zu melden?", "a": "- jeder Bürger bei der Feststellung eines Notfalls oder eines Feuers\n- Wer der Meldung nicht nachkommt, macht sich strafbar." },
+        { "cat": "Gesellschafts- und Jugendpolitik", "q": "Welche Angaben soll eine Notrufmeldung mindestens enthalten?", "a": "- Was ist passiert?\n- Wo ist es passiert?\n- Wie viele Personen sind in Gefahr?\n- Wer meldet?\n- Warten auf Nachfragen!" },
+        { "cat": "Gesellschafts- und Jugendpolitik", "q": "Wo wird in Brandenburg eine Notrufmeldung unter der Nummer 112 entgegengenommen?", "a": "- In den Regionalleitstellen der Feuerwehr bzw. des Rettungsdienstes, die jeweils für mehrere Landkreise bzw. kreisfreie Städte zuständig sind" },
+        { "cat": "Gesellschafts- und Jugendpolitik", "q": "Wo befindet sich die für den Landkreis Oberspreewald-Lausitz zuständige Regionalleitstelle? Wie heißt diese Leitstelle?", "a": "- Sie befindet sich bei der Berufsfeuerwehr in Cottbus.\n- Sie heißt Leitstelle Lausitz." },
+        { "cat": "Gesellschafts- und Jugendpolitik", "q": "Wer kann die Leistungsspange der DJF erwerben?", "a": "- Mitglieder einer Jugendfeuerwehr, die am Tag der Abnahme mindestens ein Jahr Mitglied sind\n- ein gültiger Mitgliedsausweis muss vorliegen\n- sie müssen im Abnahmejahr 15 Jahre alt sein oder werden und dürfen im Abnahmejahr nicht 19 Jahre werden." },
+        { "cat": "Gesellschafts- und Jugendpolitik", "q": "Welche Leistungen sind zum Erwerb der Leistungsspange zu erbringen?", "a": "- Insgesamt sind fünf Übungen zu absolvieren:\n(1) Auslegen einer C-Schlauchleitung als Schnelligkeitsübung\n(2) Kugelstoßen\n(3) Staffellauf\n(4) Vortragen eines Löschangriffs (gemäß FwDV 3)\n(5) Beantwortung von Fragen (mündlich)\n- Die Leistungsspange soll die Gruppe als geschlossene Einheit absolvieren.\n- Es wird nur die Gruppenleistung bewertet, dabei hilft der Stärkere dem Schwächeren.\n- Auch wird der Gesamteindruck der Gruppe bewertet." },
+        { "cat": "Organisation", "q": "Welche Feuerwehrdienstvorschrift regelt das Vorgehen einer Löschgruppe im Einsatz?", "a": "- Die Feuerwehrdienstvorschrift 3 (FwDV 3): „Einheiten im Lösch- und Hilfeleistungseinsatz“" },
+        { "cat": "Organisation", "q": "Wie viele Feuerwehrleute bilden eine Löschgruppe?", "a": "- neun Feuerwehrleute, also 1/8/9" },
+        { "cat": "Organisation", "q": "Welche Einheiten kennen wir noch bei der Feuerwehr? Nennt die Bezeichnung und die Anzahl der erforderlichen Einsatzkräfte!", "a": "- selbstständiger Trupp: 1/2/3\n- Löschstaffel: 1/5/6\n- Löschzug: 1/3/18/22" },
+        { "cat": "Organisation", "q": "Wie heißen die einzelnen Funktionen innerhalb einer Löschgruppe?", "a": "(1) Gruppenführer\n(2) Maschinist\n(3) Melder\n(4) Angriffstruppführer\n(5) Angriffstruppmann\n(6) Wassertruppführer\n(7) Wassertruppmann\n(8) Schlauchtruppführer\n(9) Schlauchtruppmann" },
+        { "cat": "Organisation", "q": "Wie viele Einsatzkräfte gehören innerhalb der Löschgruppe zu jedem Trupp?", "a": "- zwei Einsatzkräfte" },
+        { "cat": "Ausrüstung (Fahrzeuge)", "q": "Nennt Feuerwehrfahrzeuge in eurer Ortsfeuerwehr?", "a": "- Antwort je nach Ausstattung der eigenen Ortsfeuerwehr nennen" },
+        { "cat": "Ausrüstung (Fahrzeuge)", "q": "Nennt ein Beispiel für ein typisches Löschgruppenfahrzeug!", "a": "- z. B. LF 20/16, LF 16/12, LF 10, LF 10/6 oder LF 16-TS" },
+        { "cat": "Ausrüstung (Fahrzeuge)", "q": "Erläutert die Bezeichnungen folgender Feuerwehrfahrzeuge!", "a": "- TLF 4000: Tanklöschfahrzeug, Pumpe 2000 l/min, 4000 l Wassertank, Truppbesatzung\n- LF 20: Löschgruppenfahrzeug, Pumpe 2000 l/min, Gruppenbesatzung, einziges mit 3-teiliger Schiebleiter\n- TSF: Tragkraftspritzenfahrzeug, herausnehmbare Pumpe 800 l/min, Staffelbesatzung\n- DLA(K) 23-12: Drehleiter mit Korb, Nennrettungshöhe 23 m, Nennausladung 12 m\n- RW: Rüstwagen\n- RTW: Rettungswagen" },
+        { "cat": "Ausrüstung (Fahrzeuge)", "q": "Nennt die Abkürzungen für folgende Fahrzeuge!", "a": "- Vorausrüstwagen: VRW\n- Einsatzleitwagen: ELW\n- Gerätewagen-Gefahrgut: GW-G\n- Mannschaftstransportwagen: MTW\n- Notarzteinsatzfahrzeug: NEF\n- Rettungshubschrauber: RTH" },
+        { "cat": "Ausrüstung (Fahrzeuge)", "q": "Woran erkennt man bei einem Feuerwehrfahrzeug im Straßenverkehr, dass es sich auf einer Einsatzfahrt befindet?", "a": "- Es fährt mit blauem Blinklicht (Blaulicht) und Signalhorn (Martinshorn)." },
+        { "cat": "Ausrüstung (Fahrzeuge)", "q": "Was verbirgt sich hinter der Bezeichnung PFPN 10-1000?", "a": "- Portable Feuerlöschkreiselpumpe Normaldruck\n- 1000 l/min Förderleistung und einem Ausgangsdruck von 10 bar unter bestimmten Bedingungen" },
+        { "cat": "Geräte", "q": "Welche zwei Gruppen von Feuerwehrschläuchen unterscheiden wir?", "a": "- Saugschläuche und\n- Druckschläuche" },
+        { "cat": "Geräte", "q": "Welche Größen werden bei beiden Arten von Schläuchen angewendet?", "a": "- Größen A, B, C und D" },
+        { "cat": "Geräte", "q": "Wofür verwenden wir A-Saugschläuche?", "a": "- Sie werden zur Wasserentnahme aus offenen Gewässern genutzt." },
+        { "cat": "Geräte", "q": "Welche beiden Längen gibt es bei A-Saugschläuchen? Welchen Durchmesser haben sie?", "a": "- Sie sind entweder 2,50 m oder 1,60 m lang.\n- Der Durchmesser beträgt 110 mm." },
+        { "cat": "Geräte", "q": "Wofür kann ein D-Saugschlauch genutzt werden?", "a": "- D-Saugschläuche setzt man zum Entnehmen des Schaummittels aus einem Kanister mithilfe eines Zumischers ein." },
+        { "cat": "Geräte", "q": "Wie lang kann ein genormter C-Druckschlauch sein?", "a": "- C-Druckschläuche sind 15 m oder 20 m lang." },
+        { "cat": "Geräte", "q": "Wofür werden C-Druckschläuche verwendet?", "a": "- Sie dienen der Wasserversorgung zwischen dem Verteiler und den Strahlrohren." },
+        { "cat": "Geräte", "q": "Wie lang kann ein genormter B-Druckschlauch sein?", "a": "- B-Druckschläuche sind 5 m, 20 m oder 35 m lang." },
+        { "cat": "Geräte", "q": "Wofür setzt man B-Druckschläuche ein?", "a": "- Eingesetzt werden sie zur Wasserversorgung vom Hydranten zur Feuerlöschkreiselpumpe bzw. von dort bis zum Verteiler." },
+        { "cat": "Geräte", "q": "Welche Kupplungsgrößen sind bei der Feuerwehr üblich?", "a": "- A-Kupplungen\n- B-Kupplungen\n- C-Kupplungen\n- D-Kupplungen" },
+        { "cat": "Geräte", "q": "Welche Aufgabe haben Kupplungen?", "a": "- Kupplungen dienen zum Verbinden von Schläuchen und zum Anschließen von Schläuchen an alle möglichen Armaturen.\n- Blindkupplungen verschließen außerdem Pumpenausgänge bzw. Tankeinfüllstutzen an Löschfahrzeugen mit Wassertank." },
+        { "cat": "Geräte", "q": "Welche Funktion hat ein Übergangsstück?", "a": "- Ein Übergangsstück verbindet verschieden große Kupplungen miteinander." },
+        { "cat": "Geräte", "q": "Welche Einrichtungen ermöglichen die Entnahme von Wasser aus dem öffentlichen Wassernetz?", "a": "- Unterflurhydranten und Überflurhydranten" },
+        { "cat": "Geräte", "q": "Was wird zum Öffnen von Hydranten benötigt?", "a": "- Unterflurhydrantenschlüssel für Unterflurhydranten\n- Überflurhydrantenschlüssel für Überflurhydranten" },
+        { "cat": "Geräte", "q": "Mit welchem Hilfsmittel findet man schnell Unterflurhydranten?", "a": "- mittels Hydrantenhinweisschildern\n- diese sind rechteckig, weiß und mit einem roten Rand versehen\n- angebracht an Gebäuden, Masten, festen Zäunen u. ä." },
+        { "cat": "Geräte", "q": "Welche Hinweise findet man immer auf Hydrantenschildern?", "a": "- Nummer des Hydranten\n- Durchmesser der verlegten Druckleitung\n- Entfernung vom Schild zum Hydranten nach vorn und rechts bzw. links" },
+        { "cat": "Geräte", "q": "Wodurch unterscheiden sich Feuerwehrleinen von Arbeitsleinen?", "a": "- durch eine unterschiedliche Farbgebung\n- weiße Leine: Feuerwehrleine\n- rote Leine bzw. Kennzeichnung: Arbeitsleine" },
+        { "cat": "Geräte", "q": "Wozu wird eine Feuerwehrleine verwendet?", "a": "- zur Menschenrettung\n- zum Selbstretten der Einsatzkräfte\n- zum Hochziehen von Arbeitsgeräten\n- als Sicherungsleine für Feuerwehrleute\n- zur Kennzeichnung des Rückzugsweges beim Innenangriff" },
+        { "cat": "Geräte", "q": "Wozu dienen Arbeitsleinen?", "a": "- Arbeitsleinen dienen als Halteleinen oder Ventilleinen, ebenso als Hilfsleinen und Absperrleinen.\n- Leinen, die als Arbeitsleinen gekennzeichnet wurden, dürfen nicht für die Menschenrettung oder zum Selbstretten verwendet werden." },
+        { "cat": "Geräte", "q": "Was sind tragbare Leitern?", "a": "- Tragbare Leitern sind Leitern, die auf oder in Feuerwehrfahrzeugen mitgeführt, an der Einsatzstelle von der Mannschaft genommen und an die vorgesehene Stelle getragen werden." },
+        { "cat": "Geräte", "q": "Welche genormten tragbaren Leitern finden im Feuerwehrdienst Verwendung?", "a": "- Klappleiter\n- Steckleiter\n- dreiteilige Schiebleiter\n- Hakenleiter mit abklappbarem Haken\n- Multifunktionsleiter" },
+        { "cat": "Geräte", "q": "Welche Kleinlöschgeräte werden unterschieden?", "a": "- Kübelspritze\n- Feuerlöscher\n- Löschdecke\n- Löscheimer\n- Brandklatsche (Feuerpatsche, Brandpatsche)" },
+        { "cat": "Geräte", "q": "Was ist eine Kübelspritze?", "a": "- ein kleines tragbares Löschgerät, das mit Wasser befüllt wird und eine eingebaute, von Hand zu betätigende Kolbenpumpe besitzt\n- An Kübelspritzen wird ein 5 Meter langer D-Druckschlauch mit D-Strahlrohr angekuppelt.\n- Die einzufüllende Wassermenge beträgt 10 Liter." },
+        { "cat": "Geräte", "q": "Wozu dient eine Kübelspritze?", "a": "- Sie dient zur Bekämpfung von kleinen begrenzten Bränden, von Entstehungsbränden, zum Ablöschen kleiner Glutnester und zum Nachlöschen auf Brandstellen." },
+        { "cat": "Geräte", "q": "Was ist ein Feuerlöscher?", "a": "- Feuerlöscher sind von Hand zu transportierende Kleinlöschgeräte.\n- Sie stehen entweder ständig unter Druck oder werden bei Inbetriebnahme unter Druck gesetzt.\n- Feuerlöscher dürfen eine maximale Masse von 20 kg haben." },
+        { "cat": "Geräte", "q": "Wozu dienen Feuerlöscher?", "a": "- Sie dienen zur Brandbekämpfung von Entstehungsbränden bzw. Bränden kleiner Ausbreitung mit örtlicher Begrenzung." },
+        { "cat": "Geräte", "q": "Welche Arten von Feuerlöschern kennt ihr?", "a": "- Wasserlöscher\n- Schaumlöscher\n- Pulverlöscher ABC\n- Metallbrand-Pulverlöscher D\n- Kohlendioxidlöscher" },
+        { "cat": "Löschmittel und Löschverfahren", "q": "Welche Voraussetzungen müssen vorliegen, damit etwas brennen kann?", "a": "- ein brennbarer Stoff\n- Sauerstoff\n- Zündtemperatur\n- richtiges Mengenverhältnis zwischen brennbarem Stoff und Sauerstoff" },
+        { "cat": "Löschmittel und Löschverfahren", "q": "Welche Erscheinungsformen des Feuers können vorliegen?", "a": "- nur Glut\n- nur Flammen\n- Flammen und Glut" },
+        { "cat": "Löschmittel und Löschverfahren", "q": "Welche fünf Brandklassen gibt es?", "a": "- Brandklasse A: feste brennbare Stoffe (Holz, Kohle, Papier, Pappe, …)\n- Brandklasse B: flüssige oder flüssig werdende brennbare Stoffe (Benzin, Diesel, Ethanol, …)\n- Brandklasse C: brennbare gasförmige Stoffe (Methan, Ethan, Propan, Butan, Wasserstoff, …)\n- Brandklasse D: brennbare Metalle\n- Brandklasse F: Brände von Speiseölen und -fetten in Frittier- und Fettbackgeräten" },
+        { "cat": "Löschmittel und Löschverfahren", "q": "Welche beiden grundsätzlichen Löschwirkungen werden unterschieden?", "a": "- Abkühlen und\n- Ersticken" },
+        { "cat": "Löschmittel und Löschverfahren", "q": "Welche Löschmittel sind euch bekannt?", "a": "- Wasser\n- Schaum\n- Pulver\n- Kohlendioxid\n- Sand" },
+        { "cat": "Löschmittel und Löschverfahren", "q": "Welches ist das Hauptlöschmittel bei der Feuerwehr?", "a": "- Wasser" },
+        { "cat": "Löschmittel und Löschverfahren", "q": "Welche Vorteile hat das Löschmittel Wasser?", "a": "- Es ist (fast) überall vorhanden.\n- Es ist sehr preiswert.\n- Es kann viel Wärme aufnehmen.\n- Es ist ungiftig.\n- Es ist chemisch neutral.\n- Es hat eine große Wurfweite und Wurfhöhe." },
+        { "cat": "Löschmittel und Löschverfahren", "q": "Welche Hauptlöschwirkung besitzt das Löschmittel Wasser beim Löschen eines Brandes?", "a": "- kühlende Wirkung, weil es dem brennbaren Stoff Wärme entzieht" },
+        { "cat": "Löschmittel und Löschverfahren", "q": "Nennt Beispiele für Brände, bei denen Wasser nicht eingesetzt werden darf!", "a": "- Brände von Flüssigkeiten, die nicht mit Wasser mischbar sind\n- Fettbrände\n- Metallbrände\n- Schornsteinbrände\n- Elektrische Anlagen nur bedingt (Sicherheitsabstände einhalten)" },
+        { "cat": "Löschmittel und Löschverfahren", "q": "Bei welchen Bränden kann das Löschmittel Schaum zum Einsatz kommen?", "a": "- Brände der Brandklasse B (flüssige und flüssig werdende brennbare Stoffe)\n- Brände der Brandklasse F (Brände von Speiseölen und -fetten)" },
+        { "cat": "Löschmittel und Löschverfahren", "q": "Welche zwei Löschwirkungen hat Schaum?", "a": "- Der Schaum hat hauptsächlich erstickende Wirkung.\n- Als Nebenlöschwirkung tritt auch Abkühlen auf, da Schaum Wasser enthält." },
+        { "cat": "Unfallverhütung", "q": "In welcher Vorschrift ist der Unfallschutz im Feuerwehrdienst geregelt?", "a": "- in der Unfallverhütungsvorschrift „Feuerwehren“ (DGUV Vorschrift 49)" },
+        { "cat": "Unfallverhütung", "q": "Nennt die persönliche Schutzausrüstung eines Jugendfeuerwehrmitglieds!", "a": "(1) Übungsanzug der Deutschen Jugendfeuerwehr\n(2) Schutzhelm der Jugendfeuerwehr\n(3) Zweidornschnalle\n(4) Schutzhandschuhe\n(5) Festes Schuhwerk" },
+        { "cat": "Unfallverhütung", "q": "In welchen Situationen gelten die Richtlinien der Unfallverhütungsvorschrift „Feuerwehren“?", "a": "- bei Ausbildungen\n- bei Übungen\n- bei Lehrgängen\n- bei Einsätzen\n- beim Dienstsport\n- bei der Kameradschaftspflege\n- beim technischen Dienst\n- bei Freizeitmaßnahmen der Jugendfeuerwehr\n- bei allen Veranstaltungen, die unmittelbar mit dem Feuerwehrdienst verbunden sind\n- auf dem Weg zum Feuerwehrgerätehaus und wieder nach Hause" },
+        { "cat": "Unfallverhütung", "q": "Müssen Feuerwehrangehörige über die Unfallverhütungsvorschriften informiert sein?", "a": "- Ja, jeder Angehörige einer Freiwilligen Feuerwehr ist einmal im Jahr über die Festlegungen der UVV zu belehren.\n- Alle Teilnehmer an der Belehrung sind schriftlich festzuhalten und bestätigen ihre Teilnahme mit Unterschrift.\n- Jedem Feuerwehrmitglied müssen die Bestimmungen der DGUV Vorschrift 49 ständig zugänglich sein." },
+        { "cat": "Unfallverhütung", "q": "Wo sind Jugendfeuerwehrmitglieder gegen Unfälle versichert?", "a": "- Jugendfeuerwehrmitglieder sind wie alle anderen Feuerwehrleute in der Feuerwehrunfallkasse Brandenburg (FUKBB) unfallversichert." },
+        { "cat": "Unfallverhütung", "q": "Darf von den Bestimmungen der DGUV Vorschrift 49 abgewichen werden?", "a": "- Nein, diese Vorschriften sind grundsätzlich einzuhalten.\n- Eine Ausnahme gibt es gemäß § 15 Abs. (1) der DGUV Vorschrift 49: Im Einzelfall kann bei Einsätzen unter Beachtung des Eigenschutzes zur Rettung von Personen aus Lebensgefahr von den Bestimmungen abgewichen werden." },
+        { "cat": "Unfallverhütung", "q": "Was ist zu tun, wenn ein Feuerwehrmitglied einen Unfall erlitten hat?", "a": "- Zunächst einmal ist erste Hilfe zu leisten.\n- Jede Verletzung ist unverzüglich dem Jugendfeuerwehrwart, Gruppenführer, Einsatzleiter oder einem anderen Verantwortlichen zu melden.\n- Die Verletzung ist durch Eintragung in das Verbandbuch zu dokumentieren.\n- Bei schweren Verletzungen ist unverzüglich ein Arzt aufzusuchen.\n- Eine Unfallanzeige muss innerhalb von drei Tagen an die Feuerwehrunfallkasse Brandenburg gesandt werden." },
+        { "cat": "Unfallverhütung", "q": "Dürfen Mitglieder einer Jugendfeuerwehr am Dienst der aktiven Feuerwehrangehörigen (Einsatzabteilung) teilnehmen?", "a": "- Ja, gemäß § 17 Abs. (2) der DGUV Vorschrift 49 dürfen Kinder und Jugendliche\n- nur nach landesrechtlichen Bestimmungen\n- und nur außerhalb des Gefahrenbereichs\n- unter Aufsicht erfahrener Feuerwehrangehöriger mitwirken." },
+        { "cat": "Unfallverhütung", "q": "Dürfen Mitglieder einer Jugendfeuerwehr an Einsätzen teilnehmen?", "a": "- Nein, Kinder und Jugendliche dürfen gemäß § 17 Abs. (3) der DGUV Vorschrift 49 als Feuerwehrangehörige an Feuerwehreinsätzen nicht teilnehmen." }
+      ];
+
+      const categories = ["Alle", ...Array.from(new Set(CARDS.map(c => c.cat)))];
+      let activeCat = "Alle";
+      let order = CARDS.map((_, i) => i);
+      let idx = 0;
+      let flipped = false;
+      let known = {};
+
+      function shuffleArr(arr) {
+        const a = [...arr];
+        for (let i = a.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [a[i], a[j]] = [a[j], a[i]];
+        }
+        return a;
+      }
+
+      function filteredOrder() {
+        if (activeCat === "Alle") return order;
+        return order.filter(i => CARDS[i].cat === activeCat);
+      }
+
+      function renderCats() {
+        const el = document.getElementById('cats');
+        el.innerHTML = '';
+        categories.forEach(c => {
+          const b = document.createElement('button');
+          b.className = 'cat-btn' + (c === activeCat ? ' active' : '');
+          b.textContent = c;
+          b.addEventListener('click', () => {
+            activeCat = c;
+            idx = 0;
+            flipped = false;
+            renderCats();
+            renderCard();
+          });
+          el.appendChild(b);
+        });
+      }
+
+      function renderCard() {
+        const fo = filteredOrder();
+        if (idx >= fo.length) idx = 0;
+        const cardIndex = fo[idx];
+        const card = CARDS[cardIndex];
+
+        document.getElementById('progress').textContent = fo.length ? `Karte ${idx + 1} / ${fo.length}` : 'Keine Karten';
+        const knownVals = Object.values(known);
+        document.getElementById('knownCount').textContent = knownVals.filter(v => v === true).length;
+        document.getElementById('unknownCount').textContent = knownVals.filter(v => v === false).length;
+
+        if (!card) {
+          document.getElementById('cardEyebrow').textContent = '';
+          document.getElementById('cardBody').textContent = 'Keine Karten in dieser Kategorie.';
+          return;
+        }
+        document.getElementById('cardEyebrow').textContent = card.cat + (flipped ? ' · Antwort' : ' · Frage');
+        document.getElementById('cardBody').textContent = flipped ? card.a : card.q;
+      }
+
+      document.getElementById('card').addEventListener('click', () => {
+        flipped = !flipped;
+        renderCard();
+      });
+
+      function next() {
+        flipped = false;
+        const fo = filteredOrder();
+        idx = (idx + 1) % fo.length;
+        renderCard();
+      }
+      function prev() {
+        flipped = false;
+        const fo = filteredOrder();
+        idx = (idx - 1 + fo.length) % fo.length;
+        renderCard();
+      }
+      function markKnown(val) {
+        const fo = filteredOrder();
+        const cardIndex = fo[idx];
+        known[cardIndex] = val;
+        next();
+      }
+
+      document.getElementById('btnNope').addEventListener('click', () => markKnown(false));
+      document.getElementById('btnYep').addEventListener('click', () => markKnown(true));
+      document.getElementById('btnPrev').addEventListener('click', prev);
+      document.getElementById('btnNext').addEventListener('click', next);
+      document.getElementById('btnShuffle').addEventListener('click', () => {
+        order = shuffleArr(CARDS.map((_, i) => i));
         idx = 0;
         flipped = false;
+        renderCard();
+      });
+      document.getElementById('btnReset').addEventListener('click', () => {
+        order = CARDS.map((_, i) => i);
+        activeCat = "Alle";
+        idx = 0;
+        flipped = false;
+        known = {};
         renderCats();
         renderCard();
       });
-      el.appendChild(b);
+
+      renderCats();
+      renderCard();
     });
-  }
-
-  function renderCard(){
-    const fo = filteredOrder();
-    if(idx >= fo.length) idx = 0;
-    const cardIndex = fo[idx];
-    const card = CARDS[cardIndex];
-
-    document.getElementById('progress').textContent = fo.length ? `Karte ${idx + 1} / ${fo.length}` : 'Keine Karten';
-    const knownVals = Object.values(known);
-    document.getElementById('knownCount').textContent = knownVals.filter(v => v === true).length;
-    document.getElementById('unknownCount').textContent = knownVals.filter(v => v === false).length;
-
-    if(!card){
-      document.getElementById('cardEyebrow').textContent = '';
-      document.getElementById('cardBody').textContent = 'Keine Karten in dieser Kategorie.';
-      return;
-    }
-    document.getElementById('cardEyebrow').textContent = card.cat + (flipped ? ' · Antwort' : ' · Frage');
-    document.getElementById('cardBody').textContent = flipped ? card.a : card.q;
-  }
-
-  document.getElementById('card').addEventListener('click', () => {
-    flipped = !flipped;
-    renderCard();
-  });
-
-  function next(){
-    flipped = false;
-    const fo = filteredOrder();
-    idx = (idx + 1) % fo.length;
-    renderCard();
-  }
-  function prev(){
-    flipped = false;
-    const fo = filteredOrder();
-    idx = (idx - 1 + fo.length) % fo.length;
-    renderCard();
-  }
-  function markKnown(val){
-    const fo = filteredOrder();
-    const cardIndex = fo[idx];
-    known[cardIndex] = val;
-    next();
-  }
-
-  document.getElementById('btnNope').addEventListener('click', () => markKnown(false));
-  document.getElementById('btnYep').addEventListener('click', () => markKnown(true));
-  document.getElementById('btnPrev').addEventListener('click', prev);
-  document.getElementById('btnNext').addEventListener('click', next);
-  document.getElementById('btnShuffle').addEventListener('click', () => {
-    order = shuffleArr(CARDS.map((_, i) => i));
-    idx = 0;
-    flipped = false;
-    renderCard();
-  });
-  document.getElementById('btnReset').addEventListener('click', () => {
-    order = CARDS.map((_, i) => i);
-    activeCat = "Alle";
-    idx = 0;
-    flipped = false;
-    known = {};
-    renderCats();
-    renderCard();
-  });
-
-  renderCats();
-  renderCard();
-});
-</script>
+  </script>
 </body>
+
 </html>

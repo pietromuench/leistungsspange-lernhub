@@ -1,349 +1,890 @@
 <!DOCTYPE html>
 <html lang="de">
+
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Staffelführer — Befehlsgebung</title>
-<style>
-@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;600&display=swap');
-:root{--bg:#111213;--surface:#1a1c1e;--border:#2e3133;--text:#dfe1db;--muted:#6b7175;--red:#cc2b2b;--red-dim:#7a1a1a;--green:#2a7a4a;--green-text:#a3d9b8;--yellow:#7a5e1a;--yellow-text:#e3c97a;--sidebar:220px;}
-*,*::before,*::after{box-sizing:border-box;}
-html,body{margin:0;background:var(--bg);color:var(--text);font-family:'IBM Plex Sans',system-ui,sans-serif;font-size:15px;line-height:1.5;}
-::selection{background:var(--red);color:#fff;}
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Staffelführer-Befehlsgebung</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;600&display=swap');
 
-/* SIDEBAR */
-.sidebar{position:fixed;top:0;left:0;height:100vh;width:var(--sidebar);background:#0d0e0f;border-right:1px solid var(--border);display:flex;flex-direction:column;z-index:100;overflow-y:auto;}
-.sidebar-logo{padding:18px 16px 14px;border-bottom:1px solid var(--border);}
-.sidebar-logo a{text-decoration:none;color:#fff;font-weight:700;font-size:14px;display:block;}
-.sidebar-logo span{display:block;font-size:11px;color:var(--muted);margin-top:2px;}
-.sidebar-section{padding:14px 16px 4px;font-size:10px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.6px;}
-.sidebar-link{display:block;padding:8px 16px;font-size:13px;color:var(--muted);text-decoration:none;border-left:2px solid transparent;transition:color .12s,border-color .12s;}
-.sidebar-link:hover,.sidebar-link:focus-visible{color:var(--text);border-left-color:var(--red);background:#1f2123;outline:none;}
-.sidebar-link.active{color:#fff;border-left-color:var(--red);}
-.sidebar-footer{margin-top:auto;padding:14px 16px;font-size:10.5px;color:var(--muted);border-top:1px solid var(--border);}
+    :root {
+      color-scheme: dark;
+      --bg: #111213;
+      --surface: #1a1c1e;
+      --surface-hover: #1f2123;
+      --border: #2e3133;
+      --text: #dfe1db;
+      --muted: #6b7175;
+      --red: #cc2b2b;
+      --red-dim: #7a1a1a;
+      --green: #2a7a4a;
+      --green-text: #a3d9b8;
+      --yellow: #7a5e1a;
+      --yellow-text: #e3c97a;
+      --bad-bright: #e05050;
+      --sidebar: 220px;
+      --radius: 8px;
+    }
 
-/* HAMBURGER */
-.hamburger{display:none;position:fixed;top:12px;left:12px;z-index:200;background:#0d0e0f;border:1px solid var(--border);color:var(--text);width:40px;height:40px;cursor:pointer;align-items:center;justify-content:center;font-size:18px;}
-.overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:99;}
-.overlay.show{display:block;}
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+    }
 
-/* MAIN */
-.main{margin-left:var(--sidebar);}
-.tool-header{display:flex;align-items:center;justify-content:space-between;padding:18px 24px 16px;border-bottom:1px solid var(--border);gap:12px;}
-.tool-header h1{font-size:20px;font-weight:700;color:#fff;margin:0;letter-spacing:-0.3px;}
-.tool-header .sub{font-size:11.5px;color:var(--muted);margin-top:2px;}
-.header-btn{font-family:'IBM Plex Sans',sans-serif;font-weight:600;font-size:12px;background:var(--red);border:none;color:#fff;padding:8px 16px;cursor:pointer;white-space:nowrap;flex-shrink:0;}
-.header-btn:hover{background:#e03030;}
-.wrap{padding:24px 24px 80px;}
+    html,
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'IBM Plex Sans', system-ui, sans-serif;
+      font-size: 15px;
+      line-height: 1.5;
+      min-height: 100vh;
+    }
 
-/* MOBILE */
-@media(max-width:768px){
-  .sidebar{transform:translateX(-100%);transition:transform .2s;}
-  .sidebar.open{transform:translateX(0);}
-  .hamburger{display:flex;}
-  .main{margin-left:0;}
-  .tool-header{padding:14px 16px 12px;padding-left:60px;}
-  .wrap{padding:18px 16px 80px;}
-}
-button:not(.hamburger){padding-top:9px!important;padding-bottom:9px!important;border:1px solid var(--red)!important;border-radius:6px;background:#111213!important;color:#fff!important;cursor:pointer;transition:background .15s,color .15s,border-color .15s,transform .15s}
-button:not(.hamburger):hover:not(:disabled),button:not(.hamburger):focus-visible:not(:disabled){background:var(--red)!important;border-color:var(--red)!important;color:#111213!important}
-button:not(.hamburger):disabled{cursor:not-allowed;opacity:.48}
-</style>
-<style>
-.panel details.block{padding:0;overflow:hidden}
-.panel details.block>summary{list-style:none;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:16px 18px;cursor:pointer;color:#fff;font-weight:600;user-select:none}
-.panel details.block>summary::-webkit-details-marker{display:none}
-.panel details.block>summary::after{content:'→';color:var(--red);font-size:18px;line-height:1}
-.panel details.block[open]>summary::after{content:'↓'}
-.panel details.block>summary:hover{color:var(--red)}
-.panel .block-content{padding:0 18px 18px}
-</style>
+    ::selection {
+      background: var(--red);
+      color: #fff;
+    }
+
+    .sidebar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: 100vh;
+      width: var(--sidebar);
+      background: #0d0e0f;
+      border-right: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      z-index: 100;
+      overflow-y: auto;
+    }
+
+    .sidebar-logo {
+      padding: 18px 16px 14px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .sidebar-logo a {
+      text-decoration: none;
+      color: #fff;
+      font-weight: 700;
+      font-size: 15px;
+      display: block;
+    }
+
+    .sidebar-logo span {
+      display: block;
+      font-size: 11px;
+      color: var(--muted);
+      margin-top: 2px;
+    }
+
+    .sidebar-section {
+      padding: 14px 16px 4px;
+      font-size: 10px;
+      font-weight: 600;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: .6px;
+    }
+
+    .sidebar-link {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 8px 16px;
+      font-size: 13px;
+      color: var(--muted);
+      text-decoration: none;
+      border-left: 2px solid transparent;
+      transition: color .12s, border-color .12s, background .12s
+    }
+
+    .sidebar-link:hover,
+    .sidebar-link:focus-visible {
+      color: var(--text);
+      border-left-color: var(--red);
+      background: #1f2123;
+      outline: none
+    }
+
+    .sidebar-link.active {
+      color: #fff;
+      border-left-color: var(--red)
+    }
+
+    .sidebar-link .tool-arrow {
+      margin-left: auto;
+      color: var(--muted);
+      font-size: 15px;
+      transition: transform .12s, color .12s
+    }
+
+    .sidebar-link:hover .tool-arrow {
+      transform: translateX(3px);
+      color: #fff
+    }
+
+    .sidebar-footer {
+      margin-top: auto;
+      padding: 14px 16px;
+      font-size: 10.5px;
+      color: var(--muted);
+      border-top: 1px solid var(--border);
+    }
+
+    .hamburger {
+      display: none;
+      position: fixed;
+      top: 12px;
+      left: 12px;
+      z-index: 200;
+      background: #0d0e0f;
+      border: 1px solid var(--border);
+      color: var(--text);
+      width: 40px;
+      height: 40px;
+      cursor: pointer;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      border-radius: 6px;
+    }
+
+    .overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, .6);
+      z-index: 99;
+    }
+
+    .overlay.show {
+      display: block;
+    }
+
+    .wrap {
+      max-width: 760px;
+      margin: 0 auto;
+      padding: 26px 18px 90px;
+    }
+
+    header {
+      position: relative;
+      padding: 18px 20px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: var(--surface);
+      margin-bottom: 22px;
+    }
+
+    header h1 {
+      font-family: system-ui, -apple-system, 'Segoe UI', sans-serif;
+      font-size: clamp(22px, 4vw, 28px);
+      margin: 0 0 4px;
+      letter-spacing: -0.3px;
+      line-height: 1.25;
+      color: #fff;
+    }
+
+    header .sub {
+      font-size: 13px;
+      color: var(--muted);
+    }
+
+    nav {
+      display: flex;
+      gap: 2px;
+      flex-wrap: wrap;
+      margin-bottom: 24px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    nav button {
+      font-family: 'IBM Plex Sans', sans-serif;
+      font-size: 13px;
+      font-weight: 500;
+      background: none;
+      border: none;
+      border-bottom: 2px solid transparent;
+      color: var(--muted);
+      padding: 10px 14px;
+      cursor: pointer;
+      margin-bottom: -1px;
+    }
+
+    nav button:hover {
+      color: var(--text);
+    }
+
+    nav button.active {
+      color: #fff;
+      border-bottom-color: var(--red);
+    }
+
+    section.panel {
+      display: none;
+    }
+
+    section.panel.active {
+      display: block;
+    }
+
+    .block,
+    .quiz-card {
+      border: 1px solid var(--border);
+      background: var(--surface);
+      padding: 18px;
+      margin-bottom: 14px;
+      border-radius: var(--radius);
+    }
+
+    .block h3 {
+      font-size: 14px;
+      font-weight: 600;
+      color: #fff;
+      margin: 0 0 8px;
+    }
+
+    .block .desc {
+      font-size: 12.5px;
+      color: var(--muted);
+      margin-bottom: 10px;
+      line-height: 1.5;
+    }
+
+    .cmd {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 13.5px;
+      line-height: 1.55;
+      color: var(--text);
+      background: #0d0e0f;
+      border-left: 3px solid var(--red);
+      padding: 10px 14px;
+      margin: 4px 0;
+      border-radius: 0 5px 5px 0;
+    }
+
+    .cmd .note {
+      display: block;
+      font-family: 'IBM Plex Sans', sans-serif;
+      font-size: 11.5px;
+      color: var(--muted);
+      margin-top: 3px;
+    }
+
+    .step-label {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--muted);
+      margin: 14px 0 4px;
+    }
+
+    .step-label:first-child {
+      margin-top: 0;
+    }
+
+    .formula {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 13px;
+      background: #0d0e0f;
+      padding: 10px 14px;
+      border: 1px dashed var(--border);
+      color: var(--yellow-text);
+      margin-bottom: 12px;
+      border-radius: 6px;
+    }
+
+    .info-block {
+      background: #151a17;
+      border: 1px solid #28382d;
+      color: #b6e3bf;
+      padding: 14px 16px;
+      font-size: 13px;
+      border-radius: var(--radius);
+      margin-top: 16px;
+      line-height: 1.5;
+    }
+
+    .quiz-progress {
+      font-size: 12px;
+      color: var(--muted);
+      margin-bottom: 10px;
+    }
+
+    .quiz-situation {
+      font-size: 14px;
+      color: var(--text);
+      margin-bottom: 14px;
+      line-height: 1.5;
+    }
+
+    textarea.answer {
+      width: 100%;
+      min-height: 70px;
+      background: #0d0e0f;
+      border: 1px solid var(--border);
+      color: var(--text);
+      font-family: 'IBM Plex Sans', sans-serif;
+      font-size: 13.5px;
+      padding: 10px 12px;
+      resize: vertical;
+      border-radius: 6px;
+    }
+
+    textarea.answer:focus {
+      outline: none;
+      border-color: var(--red);
+    }
+
+    .quiz-controls {
+      display: flex;
+      gap: 8px;
+      margin-top: 12px;
+      flex-wrap: wrap;
+    }
+
+    button.act {
+      font-family: 'IBM Plex Sans', sans-serif;
+      font-weight: 600;
+      font-size: 13px;
+      border: 1px solid var(--border);
+      background: transparent;
+      color: var(--text);
+      padding: 9px 16px;
+      cursor: pointer;
+      border-radius: 6px;
+      transition: background .12s, border-color .12s, color .12s;
+    }
+
+    button.act.primary {
+      background: var(--red);
+      border-color: var(--red);
+      color: #fff;
+    }
+
+    button.act.primary:hover {
+      background: #e03030;
+      border-color: #e03030;
+    }
+
+    button.act:hover {
+      border-color: var(--muted);
+      color: #fff;
+      background: #1f2123;
+    }
+
+    .check-result {
+      display: none;
+      margin-top: 10px;
+      padding: 10px 14px;
+      font-size: 13px;
+      line-height: 1.5;
+      border-radius: 0 6px 6px 0;
+    }
+
+    .check-result.show {
+      display: block;
+    }
+
+    .check-result.good {
+      background: #0e2318;
+      border-left: 3px solid var(--green);
+      color: var(--green-text);
+    }
+
+    .check-result.partial {
+      background: #1e1a0a;
+      border-left: 3px solid var(--yellow);
+      color: var(--yellow-text);
+    }
+
+    .check-result.bad {
+      background: #1e0d0d;
+      border-left: 3px solid var(--red-dim);
+      color: #e8a8a8;
+    }
+
+    .check-result .miss {
+      display: block;
+      margin-top: 6px;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 12px;
+      opacity: .9;
+    }
+
+    .reveal {
+      display: none;
+      margin-top: 10px;
+      padding: 12px 14px;
+      background: #0d0e0f;
+      border-left: 3px solid var(--green);
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 13px;
+      line-height: 1.6;
+      color: var(--green-text);
+      white-space: pre-line;
+      border-radius: 0 6px 6px 0;
+    }
+
+    .reveal.show {
+      display: block;
+    }
+
+    .scorebar {
+      font-size: 12px;
+      color: var(--muted);
+      text-align: right;
+      margin-bottom: 10px;
+    }
+
+    .scorebar b {
+      color: var(--green-text);
+    }
+
+    .footer-note {
+      margin-top: 34px;
+      padding-top: 14px;
+      border-top: 1px solid var(--border);
+      font-size: 11.5px;
+      color: var(--muted);
+    }
+
+    /* Accordion / Details styling */
+    .panel details.block {
+      padding: 0;
+      overflow: hidden;
+    }
+
+    .panel details.block>summary {
+      list-style: none;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 16px 18px;
+      cursor: pointer;
+      color: #fff;
+      font-weight: 600;
+      user-select: none;
+    }
+
+    .panel details.block>summary::-webkit-details-marker {
+      display: none;
+    }
+
+    .panel details.block>summary::after {
+      content: '→';
+      color: var(--red);
+      font-size: 18px;
+      line-height: 1;
+    }
+
+    .panel details.block[open]>summary::after {
+      content: '↓';
+    }
+
+    .panel details.block>summary:hover {
+      color: var(--red);
+    }
+
+    .panel .block-content {
+      padding: 0 18px 18px;
+    }
+
+    /* Desktop & Mobile Responsive Grid Layout */
+    @media(min-width:1059px) {
+      .wrap {
+        margin-left: calc(var(--sidebar) + (100vw - var(--sidebar) - 760px)/2);
+        margin-right: auto;
+      }
+    }
+
+    @media(min-width:769px) and (max-width:1058px) {
+      .wrap {
+        margin: 0 18px 0 calc(var(--sidebar) + 18px);
+      }
+    }
+
+    @media(max-width:768px) {
+      .sidebar {
+        transform: translateX(-100%);
+        transition: transform .2s;
+      }
+
+      .sidebar.open {
+        transform: translateX(0);
+      }
+
+      .hamburger {
+        display: flex;
+      }
+
+      .wrap {
+        margin: 0 auto;
+        padding-top: 70px;
+      }
+    }
+
+    @media(prefers-reduced-motion:reduce) {
+
+      *,
+      *:before,
+      *:after {
+        transition: none !important;
+      }
+    }
+  </style>
 </head>
+
 <body>
 
-<button class="hamburger" id="hamburger">☰</button>
-<div class="overlay" id="overlay"></div>
-<nav class="sidebar" id="sidebar">
-  <div class="sidebar-logo">
-    <a href="../">Leistungsspange Lernhub</a>
-    <span>© Pietro Münch &amp; Liam Schmirgal</span>
-  </div>
-  <div class="sidebar-section">Befehlsgebung</div>
-  <a class="sidebar-link" href="../test-gruppenfuehrer-befehle/test-index.html" data-tool="gf">Gruppenführer-Befehle</a>
-  <a class="sidebar-link" href="../staffelfuehrer-befehle/" data-tool="sf">Staffelführer-Befehle</a>
-  <a class="sidebar-link" href="../loeschangriff-simulator/" data-tool="ls">Löschangriff-Simulator</a>
-  <div class="sidebar-section">Fragenbeantwortung</div>
-  <a class="sidebar-link" href="../test-leistungsspange-fragen/test-index.html" data-tool="fragen">Fragenbeantwortung</a>
-  <div class="sidebar-section">Sport &amp; Wertung</div>
-  <a class="sidebar-link" href="../schnelligkeits-timer/" data-tool="timer">Schnelligkeitsübung — Timer</a>
-  <a class="sidebar-link" href="../../wertungsrechner/" data-tool="rechner">Wertungsrechner</a>
-</nav>
+  <button class="hamburger" id="hamburger" type="button" aria-label="Navigation öffnen" aria-expanded="false">☰</button>
+  <div class="overlay" id="overlay"></div>
 
-<div class="wrap">
-  <div class="main">
-  <div class="tool-header">
-    <div>
-      <h1>Staffelführer — Befehlsgebung</h1>
-      <div class="sub">Lage · Befehle · Aufgaben</div>
+  <nav class="sidebar" id="sidebar" aria-label="Lernhub-Navigation">
+    <div class="sidebar-logo"><a href="../">Leistungsspange Lernhub</a>
     </div>
-    <button class="header-btn" id="headerBtn">Abfragen</button>
-  </div>
-
-  <nav>
-    <button class="active" data-p="lage">Lage &amp; Befehle</button>
-    <button data-p="trupps">Rückmeldungen</button>
-    <button data-p="aufgaben">Aufgaben</button>
-    <button data-p="quiz">Abfragen</button>
+    <a class="sidebar-link" href="../">Startseite<span class="tool-arrow">→</span></a>
+    <div class="sidebar-section">Befehlsgebung</div>
+    <a class="sidebar-link" href="../test-gruppenfuehrer-befehle/test-index.html">Gruppenführer-Befehle<span
+        class="tool-arrow">→</span></a>
+    <a class="sidebar-link active" href="../staffelfuehrer-befehle">Staffelführer-Befehle<span
+        class="tool-arrow">→</span></a>
+    <a class="sidebar-link" href="../loeschangriff-simulator">Löschangriff-Simulator<span
+        class="tool-arrow">→</span></a>
+    <div class="sidebar-section">Fragenbeantwortung</div>
+    <a class="sidebar-link" href="../test-leistungsspange-fragen/test-index.html">Fragenbeantwortung<span
+        class="tool-arrow">→</span></a>
+    <div class="sidebar-section">Sport &amp; Wertung</div>
+    <a class="sidebar-link" href="../schnelligkeits-timer">Schnelligkeitsübung - Timer<span
+        class="tool-arrow">→</span></a>
+    <a class="sidebar-link" href="../wertungsrechner">Wertungsrechner<span class="tool-arrow">→</span></a>
+    <div class="sidebar-footer">© Pietro Münch &amp; Liam Schmirgal</div>
   </nav>
 
-  <section class="panel active" id="p-lage">
-    <div class="block">
-      <h3>Beginn der Übung — Lage schildern</h3>
-      <div class="cmd">„Zur Lage: es brennt …"</div>
-      <div class="cmd">„Wasserentnahmestelle: offenes Gewässer"<span class="note">mit der Hand in die Richtung zeigen</span></div>
-      <div class="cmd">„Lage des Verteilers: eine B-Länge in diese Richtung"<span class="note">mit der Hand in die Richtung zeigen</span></div>
-      <div class="cmd">„Angriffstrupp: verlegt C-Leitung selbst"</div>
-    </div>
-    <div class="block">
-      <h3>Die Formel für jeden Trupp-Befehl</h3>
-      <div class="desc">Immer dieselbe Reihenfolge:</div>
-      <div class="formula">EINHEIT → AUFTRAG → MITTEL → ZIEL → WEG → VOR!</div>
-      <div class="step-label">Angriffstrupp</div>
-      <div class="cmd">Angriffstrupp<span class="note">Wen sprichst du an?</span></div>
-      <div class="cmd">zur Brandbekämpfung<span class="note">Was sollen die Trupps machen?</span></div>
-      <div class="cmd">mit 1. C-Strahlrohr<span class="note">Was sollen die Trupps mitnehmen?</span></div>
-      <div class="cmd">zum linken Brandabschnitt<span class="note">Auf welche Seite sollen die Trupps gehen?</span></div>
-      <div class="cmd">über die Wiese<span class="note">Wo sollen die Trupps lang gehen?</span></div>
-      <div class="cmd">VOR!!!</div>
-      <div class="step-label">Wassertrupp</div>
-      <div class="cmd">Wassertrupp</div>
-      <div class="cmd">zur Brandbekämpfung</div>
-      <div class="cmd">mit 2. C-Strahlrohr</div>
-      <div class="cmd">zum rechten Brandabschnitt</div>
-      <div class="cmd">über die Wiese</div>
-      <div class="cmd">VOR!!!</div>
-    </div>
-    <div class="block">
-      <h3>Ende der Übung</h3>
-      <div class="desc">Frage an die Trupps:</div>
-      <div class="cmd">„Ist das Feuer aus?"</div>
-      <div class="desc" style="margin-top:10px;">Dann Meldung an den Prüfer:</div>
-      <div class="cmd">„Die Gruppe … hat die Übung nach Feuerwehrdienstvorschrift 3 beendet!"</div>
-      <div class="cmd">„Zum Abmarsch fertig!!"</div>
-    </div>
-    <div class="info-block">Unterschied zum Gruppenführer: Die Staffel hat nur Angriffstrupp und Wassertrupp — keinen Schlauchtrupp und keinen Melder. Der Staffelführer bedient den Verteiler selbst.</div>
-  </section>
+  <div class="wrap">
+    <header>
+      <h1>Staffelführer-Befehlsgebung</h1>
+      <div class="sub">Befehle, Ablauf und Team-Check für den Löschangriff</div>
+    </header>
 
-  <section class="panel" id="p-trupps">
-    <div class="block">
-      <h3>Angriffstrupp — Rückmeldung an den Staffelführer</h3>
-      <div class="desc">Befehl vom Staffelführer wiederholen, dann:</div>
-      <div class="cmd">Angriffstrupp</div>
-      <div class="cmd">zur Brandbekämpfung</div>
-      <div class="cmd">mit 1. C-Strahlrohr</div>
-      <div class="cmd">zum linken Brandabschnitt</div>
-      <div class="cmd">über die Wiese</div>
-      <div class="cmd">VOR!!!</div>
-      <div class="desc" style="margin-top:10px;">Verlegt C-Leitung selbst. Dann vorn am Strahlrohr:</div>
-      <div class="cmd">„1. Strahlrohr Wasser marsch"</div>
-      <div class="cmd">„1. Strahlrohr Wasser halt"</div>
-    </div>
-    <div class="block">
-      <h3>Wassertrupp — Rückmeldung an den Staffelführer</h3>
-      <div class="desc">Zuerst Sauglängen ansagen:</div>
-      <div class="cmd">„4-Sauglängen in diese Richtung"<span class="note">ein Schritt vortreten, mit der Hand in die Richtung zeigen</span></div>
-      <div class="desc" style="margin-top:10px;">Dann Befehl vom Staffelführer wiederholen:</div>
-      <div class="cmd">Wassertrupp</div>
-      <div class="cmd">zur Brandbekämpfung</div>
-      <div class="cmd">mit 2. C-Strahlrohr</div>
-      <div class="cmd">zum rechten Brandabschnitt</div>
-      <div class="cmd">über die Wiese</div>
-      <div class="cmd">VOR!!!</div>
-      <div class="desc" style="margin-top:10px;">Dann vorn am Strahlrohr:</div>
-      <div class="cmd">„2. Strahlrohr Wasser marsch"</div>
-      <div class="cmd">„2. Strahlrohr Wasser halt"</div>
-    </div>
-  </section>
+    <nav>
+      <button class="active" data-p="lage">Lage &amp; Befehle</button>
+      <button data-p="trupps">Rückmeldungen</button>
+      <button data-p="aufgaben">Aufgaben</button>
+      <button data-p="quiz">Abfragen</button>
+    </nav>
 
-  <section class="panel" id="p-aufgaben">
-    <div class="block">
-      <h3>Staffelführer</h3>
-      <div class="desc">Ist an keinen Standort gebunden und kann schauen was seine Trupps machen.</div>
-      <div class="cmd">Begibt sich zum Verteiler und bedient diesen</div>
-    </div>
-    <div class="block">
-      <h3>Maschinist</h3>
-      <div class="cmd">Hilft bei den Sauglängen — hebt mit hoch und hält mit fest</div>
-      <div class="cmd">Kuppelt die Saugleitung an die Pumpe und macht die Sicherungsleine und die Halteleine an der Pumpe fest</div>
-      <div class="cmd">Kuppelt den B-Schlauch an die Pumpe an</div>
-      <div class="cmd">Dreht beim Befehl „Wasser marsch" das Niederschraubventil auf (B-Leitung an der Pumpe)</div>
-      <div class="cmd">Dreht beim Befehl „Wasser halt" das Niederschraubventil zu</div>
-    </div>
-    <div class="block">
-      <h3>Angriffstrupp</h3>
-      <div class="step-label">Schritt 1</div>
-      <div class="cmd">Unterstützt den Wassertrupp beim Verlegen der Saugleitung</div>
-      <div class="step-label">Schritt 2</div>
-      <div class="cmd">Setzt den Verteiler</div>
-      <div class="step-label">Ausrüstung</div>
-      <div class="cmd">Jeder nimmt einen C-Schlauch mit, eine Handlampe, ein Strahlrohr und einen Leinenbeutel</div>
-      <div class="step-label">Ablauf</div>
-      <div class="cmd">C-Schlauch Nr. 1 ausrollen, eine Kupplung dem Staffelführer geben, Schlauch ausdrehen</div>
-      <div class="cmd">C-Schlauch Nr. 2 ausrollen, Schlauch 1 und 2 zusammenkuppeln, vorgehen</div>
-      <div class="cmd">ATF legt eine Schlauchreserve</div>
-      <div class="cmd">Während der ATM das Strahlrohr hält: „1. Strahlrohr Wasser marsch"</div>
-      <div class="cmd">Später: „1. Strahlrohr Wasser halt"</div>
-    </div>
-    <div class="block">
-      <h3>Wassertrupp</h3>
-      <div class="cmd">Legt fest wie viele Sauglängen: „4-Sauglängen in diese Richtung"</div>
-      <div class="cmd">Baut die Saugleitung auf (mit Hilfe vom Angriffstrupp)</div>
-      <div class="cmd">Saugleitung zusammenkuppeln, Saugkorb mit Schwimmblase, Saugkorbschutz, Sicherungsleine und Halteleine anbringen</div>
-      <div class="cmd">Die Leinenbeutel dem Maschinisten übergeben</div>
-      <div class="cmd">Verlegt den B-Schlauch zum Verteiler gemeinsam und gibt dem Maschinisten das Kommando „Wasser Marsch"</div>
-      <div class="cmd">Wenn Wasserversorgung steht: beim Staffelführer einsatzbereit melden</div>
-      <div class="step-label">Ausrüstung</div>
-      <div class="cmd">Jeder nimmt einen C-Schlauch mit, eine Handlampe, ein Strahlrohr und einen Leinenbeutel</div>
-      <div class="step-label">Ablauf</div>
-      <div class="cmd">C-Schlauch Nr. 1 ausrollen, eine Kupplung dem Staffelführer geben, Schlauch ausdrehen</div>
-      <div class="cmd">C-Schlauch Nr. 2 ausrollen, Schlauch 1 und 2 zusammenkuppeln, vorgehen</div>
-      <div class="cmd">WTF legt eine Schlauchreserve</div>
-      <div class="cmd">Während der WTM das Strahlrohr hält: „2. Strahlrohr Wasser marsch"</div>
-      <div class="cmd">Später: „2. Strahlrohr Wasser halt"</div>
-    </div>
-    <div class="info-block">Es wird immer truppweise vorgegangen!</div>
-  </section>
-
-  <section class="panel" id="p-quiz">
-    <div class="scorebar">Richtig geschafft: <b id="scoreVal">0</b> / <span id="scoreTotal">0</span></div>
-    <div class="quiz-card">
-      <div class="quiz-progress" id="quizProgress">Frage 1 / 10</div>
-      <div class="quiz-situation" id="quizQ"></div>
-      <textarea class="answer" id="quizAnswer" placeholder="Sag oder tippe deinen Befehl hier zur Selbstkontrolle …"></textarea>
-      <div class="quiz-controls">
-        <button class="act primary" id="btnCheck">Prüfen</button>
-        <button class="act" id="btnReveal">Lösung zeigen</button>
-        <button class="act" id="btnNext">Nächste Frage →</button>
+    <section class="panel active" id="p-lage">
+      <div class="block">
+        <h3>Beginn der Übung — Lage schildern</h3>
+        <div class="cmd">„Zur Lage: es brennt …“</div>
+        <div class="cmd">„Wasserentnahmestelle: offenes Gewässer“ <span class="note">mit der Hand in die Richtung
+            zeigen</span></div>
+        <div class="cmd">„Lage des Verteilers: eine B-Länge in diese Richtung“ <span class="note">mit der Hand in die
+            Richtung zeigen</span></div>
+        <div class="cmd">„Angriffstrupp: verlegt C-Leitung selbst“</div>
       </div>
-      <div class="check-result" id="checkResult"></div>
-      <div class="reveal" id="quizReveal"></div>
+      <div class="block">
+        <h3>Die Formel für jeden Trupp-Befehl</h3>
+        <div class="desc">Immer dieselbe Reihenfolge:</div>
+        <div class="formula">EINHEIT → AUFTRAG → MITTEL → ZIEL → WEG → VOR!</div>
+        <div class="step-label">Angriffstrupp</div>
+        <div class="cmd">Angriffstrupp <span class="note">Wen sprichst du an?</span></div>
+        <div class="cmd">zur Brandbekämpfung <span class="note">Was sollen die Trupps machen?</span></div>
+        <div class="cmd">mit 1. C-Strahlrohr <span class="note">Was sollen die Trupps mitnehmen?</span></div>
+        <div class="cmd">zum linken Brandabschnitt <span class="note">Auf welche Seite sollen die Trupps gehen?</span>
+        </div>
+        <div class="cmd">über die Wiese <span class="note">Wo sollen die Trupps lang gehen?</span></div>
+        <div class="cmd">VOR!!!</div>
+        <div class="step-label">Wassertrupp</div>
+        <div class="cmd">Wassertrupp</div>
+        <div class="cmd">zur Brandbekämpfung</div>
+        <div class="cmd">mit 2. C-Strahlrohr</div>
+        <div class="cmd">zum rechten Brandabschnitt</div>
+        <div class="cmd">über die Wiese</div>
+        <div class="cmd">VOR!!!</div>
+      </div>
+      <div class="block">
+        <h3>Ende der Übung</h3>
+        <div class="desc">Frage an die Trupps:</div>
+        <div class="cmd">„Ist das Feuer aus?“</div>
+        <div class="desc" style="margin-top:10px;">Dann Meldung an den Prüfer:</div>
+        <div class="cmd">„Die Gruppe … hat die Übung nach Feuerwehrdienstvorschrift 3 beendet!“</div>
+        <div class="cmd">„Zum Abmarsch fertig!!“</div>
+      </div>
+      <div class="info-block">Unterschied zum Gruppenführer: Die Staffel hat nur Angriffstrupp und Wassertrupp — keinen
+        Schlauchtrupp und keinen Melder. Der Staffelführer bedient den Verteiler selbst.</div>
+    </section>
+
+    <section class="panel" id="p-trupps">
+      <div class="block">
+        <h3>Angriffstrupp — Rückmeldung an den Staffelführer</h3>
+        <div class="desc">Befehl vom Staffelführer wiederholen, dann:</div>
+        <div class="cmd">Angriffstrupp</div>
+        <div class="cmd">zur Brandbekämpfung</div>
+        <div class="cmd">mit 1. C-Strahlrohr</div>
+        <div class="cmd">zum linken Brandabschnitt</div>
+        <div class="cmd">über die Wiese</div>
+        <div class="cmd">VOR!!!</div>
+        <div class="desc" style="margin-top:10px;">Verlegt C-Leitung selbst. Dann vorn am Strahlrohr:</div>
+        <div class="cmd">„1. Strahlrohr Wasser marsch“</div>
+        <div class="cmd">„1. Strahlrohr Wasser halt“</div>
+      </div>
+      <div class="block">
+        <h3>Wassertrupp — Rückmeldung an den Staffelführer</h3>
+        <div class="desc">Zuerst Sauglängen ansagen:</div>
+        <div class="cmd">„4-Sauglängen in diese Richtung“ <span class="note">ein Schritt vortreten, mit der Hand in die
+            Richtung zeigen</span></div>
+        <div class="desc" style="margin-top:10px;">Dann Befehl vom Staffelführer wiederholen:</div>
+        <div class="cmd">Wassertrupp</div>
+        <div class="cmd">zur Brandbekämpfung</div>
+        <div class="cmd">mit 2. C-Strahlrohr</div>
+        <div class="cmd">zum rechten Brandabschnitt</div>
+        <div class="cmd">über die Wiese</div>
+        <div class="cmd">VOR!!!</div>
+        <div class="desc" style="margin-top:10px;">Dann vorn am Strahlrohr:</div>
+        <div class="cmd">„2. Strahlrohr Wasser marsch“</div>
+        <div class="cmd">„2. Strahlrohr Wasser halt“</div>
+      </div>
+    </section>
+
+    <section class="panel" id="p-aufgaben">
+      <div class="block">
+        <h3>Staffelführer</h3>
+        <div class="desc">Ist an keinen Standort gebunden und kann schauen, was seine Trupps machen.</div>
+        <div class="cmd">Begibt sich zum Verteiler und bedient diesen</div>
+      </div>
+      <div class="block">
+        <h3>Maschinist</h3>
+        <div class="cmd">Hilft bei den Sauglängen — hebt mit hoch und hält mit fest</div>
+        <div class="cmd">Kuppelt die Saugleitung an die Pumpe und macht die Sicherungsleine und die Halteleine an der
+          Pumpe fest</div>
+        <div class="cmd">Kuppelt den B-Schlauch an die Pumpe an</div>
+        <div class="cmd">Dreht beim Befehl „Wasser marsch“ das Niederschraubventil auf (B-Leitung an der Pumpe)</div>
+        <div class="cmd">Dreht beim Befehl „Wasser halt“ das Niederschraubventil zu</div>
+      </div>
+      <div class="block">
+        <h3>Angriffstrupp</h3>
+        <div class="step-label">Schritt 1</div>
+        <div class="cmd">Unterstützt den Wassertrupp beim Verlegen der Saugleitung</div>
+        <div class="step-label">Schritt 2</div>
+        <div class="cmd">Setzt den Verteiler</div>
+        <div class="step-label">Ausrüstung</div>
+        <div class="cmd">Jeder nimmt einen C-Schlauch mit, eine Handlampe, ein Strahlrohr und einen Leinenbeutel</div>
+        <div class="step-label">Ablauf</div>
+        <div class="cmd">C-Schlauch Nr. 1 ausrollen, eine Kupplung dem Staffelführer geben, Schlauch ausdrehen</div>
+        <div class="cmd">C-Schlauch Nr. 2 ausrollen, Schlauch 1 und 2 zusammenkuppeln, vorgehen</div>
+        <div class="cmd">ATF legt eine Schlauchreserve</div>
+        <div class="cmd">Während der ATM das Strahlrohr hält: „1. Strahlrohr Wasser marsch“</div>
+        <div class="cmd">Später: „1. Strahlrohr Wasser halt“</div>
+      </div>
+      <div class="block">
+        <h3>Wassertrupp</h3>
+        <div class="cmd">Legt fest, wie viele Sauglängen: „4-Sauglängen in diese Richtung“</div>
+        <div class="cmd">Baut die Saugleitung auf (mit Hilfe vom Angriffstrupp)</div>
+        <div class="cmd">Saugleitung zusammenkuppeln, Saugkorb mit Schwimmblase, Saugkorbschutz, Sicherungsleine und
+          Halteleine anbringen</div>
+        <div class="cmd">Die Leinenbeutel dem Maschinisten übergeben</div>
+        <div class="cmd">Verlegt den B-Schlauch zum Verteiler gemeinsam und gibt dem Maschinisten das Kommando „Wasser
+          marsch“</div>
+        <div class="cmd">Wenn Wasserversorgung steht: beim Staffelführer einsatzbereit melden</div>
+        <div class="step-label">Ausrüstung</div>
+        <div class="cmd">Jeder nimmt einen C-Schlauch mit, eine Handlampe, ein Strahlrohr und einen Leinenbeutel</div>
+        <div class="step-label">Ablauf</div>
+        <div class="cmd">C-Schlauch Nr. 1 ausrollen, eine Kupplung dem Staffelführer geben, Schlauch ausdrehen</div>
+        <div class="cmd">C-Schlauch Nr. 2 ausrollen, Schlauch 1 und 2 zusammenkuppeln, vorgehen</div>
+        <div class="cmd">WTF legt eine Schlauchreserve</div>
+        <div class="cmd">Während der WTM das Strahlrohr hält: „2. Strahlrohr Wasser marsch“</div>
+        <div class="cmd">Später: „2. Strahlrohr Wasser halt“</div>
+      </div>
+      <div class="info-block">Es wird immer truppweise vorgegangen!</div>
+    </section>
+
+    <section class="panel" id="p-quiz">
+      <div class="scorebar">Richtig geschafft: <b id="scoreVal">0</b> / <span id="scoreTotal">0</span></div>
+      <div class="quiz-card">
+        <div class="quiz-progress" id="quizProgress">Frage 1 / 10</div>
+        <div class="quiz-situation" id="quizQ"></div>
+        <textarea class="answer" id="quizAnswer"
+          placeholder="Sag oder tippe deinen Befehl hier zur Selbstkontrolle …"></textarea>
+        <div class="quiz-controls">
+          <button class="act primary" id="btnCheck">Prüfen</button>
+          <button class="act" id="btnReveal">Lösung zeigen</button>
+          <button class="act" id="btnNext">Nächste Frage →</button>
+        </div>
+        <div class="check-result" id="checkResult"></div>
+        <div class="reveal" id="quizReveal"></div>
+      </div>
+      <div class="quiz-controls">
+        <button class="act" id="btnShuffleQ">Fragen mischen</button>
+        <button class="act" id="btnResetScore">Score zurücksetzen</button>
+      </div>
+    </section>
+
+    <div class="footer-note">Tipp: Sprich deine Befehle laut und klar. So sitzt der Ablauf auch vor dem Wertungsrichter.
     </div>
-    <div class="quiz-controls">
-      <button class="act" id="btnShuffleQ">Fragen mischen</button>
-      <button class="act" id="btnResetScore">Score zurücksetzen</button>
-    </div>
-  </section>
-</div>
+  </div>
 
-<script>
-document.querySelectorAll('nav button').forEach(b=>{
-  b.addEventListener('click',()=>{
-    document.querySelectorAll('nav button').forEach(x=>x.classList.remove('active'));
-    document.querySelectorAll('.panel').forEach(x=>x.classList.remove('active'));
-    b.classList.add('active');
-    document.getElementById('p-'+b.dataset.p).classList.add('active');
-  });
-});
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      document.querySelectorAll('nav button').forEach(b => {
+        b.addEventListener('click', () => {
+          document.querySelectorAll('nav button').forEach(x => x.classList.remove('active'));
+          document.querySelectorAll('.panel').forEach(x => x.classList.remove('active'));
+          b.classList.add('active');
+          document.getElementById('p-' + b.dataset.p).classList.add('active');
+        });
+      });
 
-const QUIZ = [
-  {q:"Die Übung beginnt. Wie schilderst du die Lage?",a:"„Zur Lage: es brennt …"\n„Wasserentnahmestelle: offenes Gewässer" (zeigen)\n„Lage des Verteilers: eine B-Länge in diese Richtung" (zeigen)\n„Angriffstrupp: verlegt C-Leitung selbst"",key:["zur lage","es brennt","wasserentnahmestelle","offenes gewässer","verteiler","angriffstrupp","c-leitung selbst"]},
-  {q:"Befehl an den Angriffstrupp: mit dem 1. C-Strahlrohr zum linken Brandabschnitt über die Wiese.",a:"Angriffstrupp\nzur Brandbekämpfung\nmit 1. C-Strahlrohr\nzum linken Brandabschnitt\nüber die Wiese\nVOR!!!",key:["angriffstrupp","zur brandbekämpfung","1 c strahlrohr","linken brandabschnitt","über die wiese","vor"]},
-  {q:"Befehl an den Wassertrupp: mit dem 2. C-Strahlrohr zum rechten Brandabschnitt über die Wiese.",a:"Wassertrupp\nzur Brandbekämpfung\nmit 2. C-Strahlrohr\nzum rechten Brandabschnitt\nüber die Wiese\nVOR!!!",key:["wassertrupp","zur brandbekämpfung","2 c strahlrohr","rechten brandabschnitt","über die wiese","vor"]},
-  {q:"Was ist die Formel für jeden Trupp-Befehl?",a:"EINHEIT → AUFTRAG → MITTEL → ZIEL → WEG → VOR!",key:["einheit","auftrag","mittel","ziel","weg","vor"]},
-  {q:"Wie meldet der Wassertrupp seine Sauglängen?",a:"„4-Sauglängen in diese Richtung" — ein Schritt vortreten, mit der Hand in die Richtung zeigen",key:["sauglan","in diese richtung","zeigen"]},
-  {q:"Wie meldet der Angriffstrupp am Strahlrohr wenn Wasser kommt?",a:"„1. Strahlrohr Wasser marsch"",key:["1 strahlrohr","wasser marsch"]},
-  {q:"Wie meldet der Wassertrupp am Strahlrohr wenn Wasser kommt?",a:"„2. Strahlrohr Wasser marsch"",key:["2 strahlrohr","wasser marsch"]},
-  {q:"Was macht der Staffelführer während des Angriffs?",a:"Er ist an keinen Standort gebunden, behält den Überblick über seine Trupps und begibt sich zum Verteiler, den er selbst bedient.",key:["verteiler","bedient"]},
-  {q:"Worin unterscheidet sich die Staffel von der Gruppe?",a:"Die Staffel hat nur Angriffstrupp und Wassertrupp — keinen Schlauchtrupp und keinen Melder. Der Staffelführer bedient den Verteiler selbst.",key:["kein schlauchtrupp","kein melder","verteiler selbst"]},
-  {q:"Wie schließt du die Übung ab?",a:"Frage an die Trupps: „Ist das Feuer aus?"\nDann Meldung an den Prüfer: „Die Gruppe … hat die Übung nach Feuerwehrdienstvorschrift 3 beendet!"\n„Zum Abmarsch fertig!!"",key:["ist das feuer aus","feuerwehrdienstvorschrift 3","zum abmarsch fertig"]},
-];
+      const QUIZ = [
+        { q: "Die Übung beginnt. Wie schilderst du die Lage?", a: "„Zur Lage: es brennt …“\n„Wasserentnahmestelle: offenes Gewässer“ (zeigen)\n„Lage des Verteilers: eine B-Länge in diese Richtung“ (zeigen)\n„Angriffstrupp: verlegt C-Leitung selbst“", key: ["zur lage", "es brennt", "wasserentnahmestelle", "offenes gewässer", "verteiler", "angriffstrupp", "c-leitung selbst"] },
+        { q: "Befehl an den Angriffstrupp: mit dem 1. C-Strahlrohr zum linken Brandabschnitt über die Wiese.", a: "Angriffstrupp\nzur Brandbekämpfung\nmit 1. C-Strahlrohr\nzum linken Brandabschnitt\nüber die Wiese\nVOR!!!", key: ["angriffstrupp", "zur brandbekämpfung", "1 c strahlrohr", "linken brandabschnitt", "über die wiese", "vor"] },
+        { q: "Befehl an den Wassertrupp: mit dem 2. C-Strahlrohr zum rechten Brandabschnitt über die Wiese.", a: "Wassertrupp\nzur Brandbekämpfung\nmit 2. C-Strahlrohr\nzum rechten Brandabschnitt\nüber die Wiese\nVOR!!!", key: ["wassertrupp", "zur brandbekämpfung", "2 c strahlrohr", "rechten brandabschnitt", "über die wiese", "vor"] },
+        { q: "Was ist die Formel für jeden Trupp-Befehl?", a: "EINHEIT → AUFTRAG → MITTEL → ZIEL → WEG → VOR!", key: ["einheit", "auftrag", "mittel", "ziel", "weg", "vor"] },
+        { q: "Wie meldet der Wassertrupp seine Sauglängen?", a: "„4-Sauglängen in diese Richtung“ — ein Schritt vortreten, mit der Hand in die Richtung zeigen", key: ["sauglängen", "in diese richtung", "zeigen"] },
+        { q: "Wie meldet der Angriffstrupp am Strahlrohr, wenn Wasser kommt?", a: "„1. Strahlrohr Wasser marsch“", key: ["1 strahlrohr", "wasser marsch"] },
+        { q: "Wie meldet der Wassertrupp am Strahlrohr, wenn Wasser kommt?", a: "„2. Strahlrohr Wasser marsch“", key: ["2 strahlrohr", "wasser marsch"] },
+        { q: "Was macht der Staffelführer während des Angriffs?", a: "Er ist an keinen Standort gebunden, behält den Überblick über seine Trupps und begibt sich zum Verteiler, den er selbst bedient.", key: ["verteiler", "bedient"] },
+        { q: "Worin unterscheidet sich die Staffel von der Gruppe?", a: "Die Staffel hat nur Angriffstrupp und Wassertrupp — keinen Schlauchtrupp und keinen Melder. Der Staffelführer bedient den Verteiler selbst.", key: ["kein schlauchtrupp", "kein melder", "verteiler selbst"] },
+        { q: "Wie schließt du die Übung ab?", a: "Frage an die Trupps: „Ist das Feuer aus?“\nDann Meldung an den Prüfer: „Die Gruppe … hat die Übung nach Feuerwehrdienstvorschrift 3 beendet!“\n„Zum Abmarsch fertig!!“", key: ["ist das feuer aus", "feuerwehrdienstvorschrift 3", "zum abmarsch fertig"] },
+      ];
 
-let order=QUIZ.map((_,i)=>i),qi=0,score=0;
-document.getElementById('scoreTotal').textContent=QUIZ.length;
+      let order = QUIZ.map((_, i) => i);
+      let qi = 0;
+      let score = 0;
+      const scoreTotalEl = document.getElementById('scoreTotal');
+      if (scoreTotalEl) scoreTotalEl.textContent = QUIZ.length;
 
-function normalize(str){return str.toLowerCase().replace(/ä/g,'a').replace(/ö/g,'o').replace(/ü/g,'u').replace(/ß/g,'ss').replace(/[„""'`.,!?;:\-–—()]/g,' ').replace(/\s+/g,' ').trim();}
+      function normalize(str) {
+        return str
+          .toLowerCase()
+          .replace(/ä/g, 'a').replace(/ö/g, 'o').replace(/ü/g, 'u').replace(/ß/g, 'ss')
+          .replace(/[„“"'`.,!?;:\-–—()]/g, ' ')
+          .replace(/\s+/g, ' ')
+          .trim();
+      }
 
-function showQ(){
-  const item=QUIZ[order[qi]];
-  document.getElementById('quizProgress').textContent='Frage '+(qi+1)+' / '+QUIZ.length;
-  document.getElementById('quizQ').textContent=item.q;
-  document.getElementById('quizAnswer').value='';
-  document.getElementById('quizReveal').classList.remove('show');
-  document.getElementById('quizReveal').textContent=item.a;
-  const cr=document.getElementById('checkResult');
-  cr.classList.remove('show','good','partial','bad');
-  cr.innerHTML='';
-}
-showQ();
+      function showQ() {
+        const item = QUIZ[order[qi]];
+        document.getElementById('quizProgress').textContent = `Frage ${qi + 1} / ${QUIZ.length}`;
+        document.getElementById('quizQ').innerHTML = item.q;
+        document.getElementById('quizAnswer').value = '';
+        document.getElementById('quizReveal').classList.remove('show');
+        document.getElementById('quizReveal').textContent = item.a;
+        const cr = document.getElementById('checkResult');
+        cr.classList.remove('show', 'good', 'partial', 'bad');
+        cr.innerHTML = '';
+      }
+      showQ();
 
-document.getElementById('btnCheck').addEventListener('click',()=>{
-  const item=QUIZ[order[qi]];
-  const userNorm=normalize(document.getElementById('quizAnswer').value);
-  const cr=document.getElementById('checkResult');
-  if(!userNorm){cr.className='check-result show bad';cr.innerHTML='Noch nichts eingetragen.';return;}
-  const missing=[];
-  item.key.forEach(k=>{const words=normalize(k).split(' ').filter(Boolean);if(!words.every(w=>userNorm.includes(w)))missing.push(k);});
-  const ratio=(item.key.length-missing.length)/item.key.length;
-  if(ratio===1){cr.className='check-result show good';cr.innerHTML='✓ Passt — alle Kernpunkte sind drin.';score++;document.getElementById('scoreVal').textContent=score;}
-  else if(ratio>=0.6){cr.className='check-result show partial';cr.innerHTML='Fast — dir fehlt noch:<span class="miss">'+missing.join(' · ')+'</span>';}
-  else{cr.className='check-result show bad';cr.innerHTML='Da fehlt noch einiges.<span class="miss">Fehlt: '+missing.join(' · ')+'</span>';}
-});
+      document.getElementById('btnCheck').addEventListener('click', () => {
+        const item = QUIZ[order[qi]];
+        const userNorm = normalize(document.getElementById('quizAnswer').value);
+        const cr = document.getElementById('checkResult');
 
-document.getElementById('btnReveal').addEventListener('click',()=>{document.getElementById('quizReveal').classList.add('show');});
-document.getElementById('btnNext').addEventListener('click',()=>{qi=(qi+1)%QUIZ.length;showQ();});
-document.getElementById('btnShuffleQ').addEventListener('click',()=>{
-  for(let i=order.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[order[i],order[j]]=[order[j],order[i]];}
-  qi=0;showQ();
-});
-document.getElementById('btnResetScore').addEventListener('click',()=>{score=0;document.getElementById('scoreVal').textContent=0;});
-</script>
-<div style="margin-top:32px;padding-top:12px;border-top:1px solid var(--border);font-size:11px;color:var(--muted);">© Pietro Münch &amp; Liam Schmirgal</div>
-</div></div><!-- /main -->
-<script>
+        if (!userNorm) {
+          cr.className = 'check-result show bad';
+          cr.innerHTML = 'Noch nichts eingetragen.';
+          return;
+        }
 
-(function(){
-  var hb = document.getElementById('hamburger');
-  var sb = document.getElementById('sidebar');
-  var ov = document.getElementById('overlay');
-  if(hb){
-    hb.addEventListener('click',function(){sb.classList.toggle('open');ov.classList.toggle('show');});
-    ov.addEventListener('click',function(){sb.classList.remove('open');ov.classList.remove('show');});
-  }
-})();
+        const missing = [];
+        item.key.forEach(k => {
+          const kNorm = normalize(k);
+          const words = kNorm.split(' ').filter(Boolean);
+          const allPresent = words.every(w => userNorm.includes(w));
+          if (!allPresent) missing.push(k);
+        });
 
+        const total = item.key.length;
+        const hit = total - missing.length;
+        const ratio = hit / total;
 
-(function(){
-  var links = document.querySelectorAll('.sidebar-link');
-  links.forEach(function(l){ if(l.dataset.tool==='sf') l.classList.add('active'); });
-})();
+        if (ratio === 1) {
+          cr.className = 'check-result show good';
+          cr.innerHTML = '✓ Passt — alle Kernpunkte sind drin.';
+          score++;
+          document.getElementById('scoreVal').textContent = score;
+        } else if (ratio >= 0.6) {
+          cr.className = 'check-result show partial';
+          cr.innerHTML = 'Fast — dir fehlt noch:<span class="miss">' + missing.join(' · ') + '</span>';
+        } else {
+          cr.className = 'check-result show bad';
+          cr.innerHTML = 'Da fehlt noch einiges.<span class="miss">Fehlt: ' + missing.join(' · ') + '</span>';
+        }
+      });
 
+      document.getElementById('btnReveal').addEventListener('click', () => {
+        document.getElementById('quizReveal').classList.add('show');
+      });
+      document.getElementById('btnNext').addEventListener('click', () => {
+        qi = (qi + 1) % QUIZ.length;
+        showQ();
+      });
+      document.getElementById('btnShuffleQ').addEventListener('click', () => {
+        for (let i = order.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [order[i], order[j]] = [order[j], order[i]];
+        }
+        qi = 0;
+        showQ();
+      });
+      document.getElementById('btnResetScore').addEventListener('click', () => {
+        score = 0;
+        document.getElementById('scoreVal').textContent = 0;
+      });
+    });
+  </script>
 
-document.getElementById('headerBtn').addEventListener('click',function(){
-  // Tab aktivieren
-  var target = document.querySelector('nav button[data-p=\"quiz\"]') || document.querySelector('.tab-nav button[data-p=\"quiz\"]');
-  if(target) target.click();
-  // Zu Tab scrollen
-  var panel = document.getElementById('p-quiz');
-  if(panel) panel.scrollIntoView({behavior:'smooth',block:'start'});
-});
+  <!-- Hamburger Menu Script -->
+  <script>
+    (() => {
+      const button = document.getElementById('hamburger');
+      const sidebar = document.getElementById('sidebar');
+      const overlay = document.getElementById('overlay');
+      if (!button || !sidebar || !overlay) return;
+      const setOpen = open => {
+        sidebar.classList.toggle('open', open);
+        overlay.classList.toggle('show', open);
+        button.setAttribute('aria-expanded', String(open));
+        button.setAttribute('aria-label', open ? 'Navigation schließen' : 'Navigation öffnen');
+      };
+      button.addEventListener('click', () => setOpen(!sidebar.classList.contains('open')));
+      overlay.addEventListener('click', () => setOpen(false));
+      document.addEventListener('keydown', event => {
+        if (event.key === 'Escape') setOpen(false);
+      });
+    })();
+  </script>
 
-</script>
-<script>
-document.querySelectorAll('.panel .block').forEach(block=>{
-  const heading=block.querySelector('h3');
-  if(!heading)return;
-  const details=document.createElement('details');
-  details.className='block';
-  details.open=true;
-  const summary=document.createElement('summary');
-  summary.innerHTML=heading.innerHTML;
-  const content=document.createElement('div');
-  content.className='block-content';
-  let node=heading.nextSibling;
-  while(node){const next=node.nextSibling;content.append(node);node=next;}
-  details.append(summary,content);
-  block.replaceWith(details);
-});
-</script>
+  <!-- Accordion Script for Blocks -->
+  <script>
+    document.querySelectorAll('.panel .block').forEach(block => {
+      const heading = block.querySelector('h3');
+      if (!heading) return;
+      const details = document.createElement('details');
+      details.className = 'block';
+      details.open = true;
+      const summary = document.createElement('summary');
+      summary.innerHTML = heading.innerHTML;
+      const content = document.createElement('div');
+      content.className = 'block-content';
+      let node = heading.nextSibling;
+      while (node) {
+        const next = node.nextSibling;
+        content.append(node);
+        node = next;
+      }
+      details.append(summary, content);
+      block.replaceWith(details);
+    });
+  </script>
 </body>
+
 </html>
