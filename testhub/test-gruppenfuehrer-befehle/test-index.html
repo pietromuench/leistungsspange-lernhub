@@ -100,12 +100,12 @@ textarea.answer,.card{border:1px solid #5b5b5b;border-radius:7px;background:#303
 button.act.nope,button.act.yep{border-color:#777;color:#e6e6e6}button.act.nope:hover,button.act.yep:hover{background:#555;color:#fff}.check-result.good,.check-result.partial,.check-result.bad{background:#353535;border-left-color:#aaa;color:#e6e6e6}.reveal{background:#303030;border-left-color:#ccc;color:#e6e6e6}.statbar,.footer-note{color:#bdbdbd}.statbar b,.scorebar b{color:#e6e6e6}
 .footer-note{border-color:#5b5b5b}
 @media(max-width:540px){.wrap{padding:18px 14px 48px}header{padding:16px}.block,.quiz-card{padding:15px}nav button{padding:8px 9px;font-size:12px}button.act{padding:10px 9px;font-size:12px}}
-@media(max-width:768px){.sidebar{transform:translateX(-100%);transition:transform .2s}.sidebar.open{transform:translateX(0)}.hamburger{display:flex}.wrap{margin:0 auto;padding-top:70px}}
+@media(max-width:768px){.sidebar{left:calc(var(--sidebar) * -1);transition:left .2s}.sidebar.open{left:0}.hamburger{display:flex}.wrap{margin:0 auto;padding-top:70px}}
 @media(prefers-reduced-motion:reduce){*,*:before,*:after{transition:none!important}}
 </style>
 </head>
 <body>
-<button class="hamburger" id="hamburger" aria-label="Navigation öffnen" aria-expanded="false">☰</button>
+<button class="hamburger" id="hamburger" type="button" aria-label="Navigation öffnen" aria-expanded="false">☰</button>
 <div class="overlay" id="overlay"></div>
 <aside class="sidebar" id="sidebar" aria-label="Lernhub-Navigation">
   <div class="sidebar-logo"><a href="../">Leistungsspange Lernhub</a><span>© Pietro Münch &amp; Liam Schmirgal</span></div>
@@ -435,7 +435,7 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 </script>
 <script>
-(()=>{const button=document.getElementById('hamburger'),sidebar=document.getElementById('sidebar'),overlay=document.getElementById('overlay');button.addEventListener('click',()=>{const open=sidebar.classList.toggle('open');overlay.classList.toggle('show',open);button.setAttribute('aria-expanded',open);button.setAttribute('aria-label',open?'Navigation schließen':'Navigation öffnen')});overlay.addEventListener('click',()=>{sidebar.classList.remove('open');overlay.classList.remove('show');button.setAttribute('aria-expanded','false');button.setAttribute('aria-label','Navigation öffnen')})})();
+(()=>{const button=document.getElementById('hamburger'),sidebar=document.getElementById('sidebar'),overlay=document.getElementById('overlay');if(!button||!sidebar||!overlay)return;const setOpen=open=>{sidebar.classList.toggle('open',open);overlay.classList.toggle('show',open);button.setAttribute('aria-expanded',String(open));button.setAttribute('aria-label',open?'Navigation schließen':'Navigation öffnen')};button.addEventListener('click',()=>setOpen(!sidebar.classList.contains('open')));overlay.addEventListener('click',()=>setOpen(false));document.addEventListener('keydown',event=>{if(event.key==='Escape')setOpen(false)})})();
 </script>
 </body>
 </html>
