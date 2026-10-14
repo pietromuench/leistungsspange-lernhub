@@ -6,7 +6,7 @@
 <title>Fragenbeantwortung — Karteikarten</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;600&display=swap');
-:root{--bg:#111213;--surface:#1a1c1e;--border:#2e3133;--text:#dfe1db;--muted:#6b7175;--red:#cc2b2b;--red-dim:#7a1a1a;--green:#2a7a4a;--green-text:#a3d9b8;--bad:#cc2b2b;--bad-bright:#e05050;}
+:root{--bg:#111213;--surface:#1a1c1e;--border:#2e3133;--text:#dfe1db;--muted:#6b7175;--red:#cc2b2b;--red-dim:#7a1a1a;--green:#2a7a4a;--green-text:#a3d9b8;--bad:#cc2b2b;--bad-bright:#e05050;--sidebar:220px;}
 *,*::before,*::after{box-sizing:border-box;}
 html,body{margin:0;background:var(--bg);color:var(--text);font-family:'IBM Plex Sans',system-ui,sans-serif;}
 ::selection{background:var(--red);color:#fff;}
@@ -84,10 +84,28 @@ textarea.answer,.card{border:1px solid #5b5b5b;border-radius:7px;background:#303
 button.act.nope,button.act.yep{border-color:#777;color:#e6e6e6}button.act.nope:hover,button.act.yep:hover{background:#555;color:#fff}.check-result.good,.check-result.partial,.check-result.bad{background:#353535;border-left-color:#aaa;color:#e6e6e6}.reveal{background:#303030;border-left-color:#ccc;color:#e6e6e6}.statbar,.footer-note{color:#bdbdbd}.statbar b,.scorebar b{color:#e6e6e6}
 .footer-note{border-color:#5b5b5b}
 @media(max-width:540px){.wrap{padding:18px 14px 48px}header{padding:16px}.block,.quiz-card{padding:15px}nav button{padding:8px 9px;font-size:12px}button.act{padding:10px 9px;font-size:12px}}
+.sidebar{position:fixed;top:0;left:0;height:100vh;width:var(--sidebar);background:#0d0e0f;border-right:1px solid var(--border);display:flex;flex-direction:column;z-index:100;overflow-y:auto}.sidebar-logo{padding:18px 16px 14px;border-bottom:1px solid var(--border)}.sidebar-logo a{text-decoration:none;color:#fff;font-weight:700;font-size:14px;display:block}.sidebar-logo span{display:block;font-size:11px;color:var(--muted);margin-top:2px}.sidebar-section{padding:14px 16px 4px;font-size:10px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.6px}.sidebar-link{display:block;padding:8px 16px;font-size:13px;color:var(--muted);text-decoration:none;border-left:2px solid transparent;transition:color .12s,border-color .12s}.sidebar-link:hover{color:var(--text);border-left-color:var(--border)}.sidebar-link.active{color:#fff;border-left-color:var(--red)}.sidebar-footer{margin-top:auto;padding:14px 16px;font-size:10.5px;color:var(--muted);border-top:1px solid var(--border)}.hamburger{display:none;position:fixed;top:12px;left:12px;z-index:200;background:#0d0e0f;border:1px solid var(--border);color:var(--text);width:40px;height:40px;cursor:pointer;align-items:center;justify-content:center;font-size:18px}.overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:99}.overlay.show{display:block}
+@media(min-width:1059px){.wrap{margin-left:calc(var(--sidebar) + (100vw - var(--sidebar) - 820px)/2);margin-right:auto}}
+@media(min-width:769px) and (max-width:1058px){.wrap{margin:0 18px 0 calc(var(--sidebar) + 18px)}}
+@media(max-width:768px){.sidebar{transform:translateX(-100%);transition:transform .2s}.sidebar.open{transform:translateX(0)}.hamburger{display:flex}.wrap{margin:0 auto;padding-top:70px}}
 @media(prefers-reduced-motion:reduce){*,*:before,*:after{transition:none!important}}
 </style>
 </head>
 <body>
+<button class="hamburger" id="hamburger" aria-label="Navigation öffnen" aria-expanded="false">☰</button>
+<div class="overlay" id="overlay"></div>
+<aside class="sidebar" id="sidebar" aria-label="Lernhub-Navigation">
+  <div class="sidebar-logo"><a href="../">Leistungsspange Lernhub</a><span>© Pietro Münch &amp; Liam Schmirgal</span></div>
+  <div class="sidebar-section">Befehlsgebung</div>
+  <a class="sidebar-link" href="../test-gruppenfuehrer-befehle/test-index.html" data-tool="gf">Gruppenführer-Befehle</a>
+  <a class="sidebar-link" href="../../staffelfuehrer-befehle/" data-tool="sf">Staffelführer-Befehle</a>
+  <a class="sidebar-link" href="../../loeschangriff-simulator/" data-tool="ls">Löschangriff-Simulator</a>
+  <div class="sidebar-section">Fragenbeantwortung</div>
+  <a class="sidebar-link active" href="../test-leistungsspange-fragen/test-index.html" data-tool="fragen">Fragenbeantwortung</a>
+  <div class="sidebar-section">Sport &amp; Wertung</div>
+  <a class="sidebar-link" href="../../schnelligkeits-timer/" data-tool="timer">Schnelligkeitsübung — Timer</a>
+  <a class="sidebar-link" href="../../wertungsrechner/" data-tool="rechner">Wertungsrechner</a>
+</aside>
 <div class="wrap">
   <header>
     <h1>Fragenbeantwortung — Karteikarten</h1>
@@ -335,6 +353,9 @@ document.addEventListener('DOMContentLoaded', () => {
   renderCats();
   renderCard();
 });
+</script>
+<script>
+(()=>{const button=document.getElementById('hamburger'),sidebar=document.getElementById('sidebar'),overlay=document.getElementById('overlay');button.addEventListener('click',()=>{const open=sidebar.classList.toggle('open');overlay.classList.toggle('show',open);button.setAttribute('aria-expanded',open);button.setAttribute('aria-label',open?'Navigation schließen':'Navigation öffnen')});overlay.addEventListener('click',()=>{sidebar.classList.remove('open');overlay.classList.remove('show');button.setAttribute('aria-expanded','false');button.setAttribute('aria-label','Navigation öffnen')})})();
 </script>
 </body>
 </html>
