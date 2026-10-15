@@ -308,7 +308,7 @@ button.primary:hover:not(:disabled) { background:#a82424; color:#fff; }
       <div class="tool-header">
         <div>
           <h1>Wertungsrechner</h1>
-          <div class="sub">Punkte berechnen für alle messbaren Disziplinen</div>
+          <div class="sub">Punktevergleich für Gruppe und Staffel in den messbaren Disziplinen</div>
         </div>
 
       </div>
@@ -458,8 +458,8 @@ button.primary:hover:not(:disabled) { background:#a82424; color:#fff; }
 
       <div class="total-block">
         <div>
-          <div class="total-label">Gesamtpunkte (ohne Löschangriff &amp; Fragenbeantwortung)</div>
-          <div class="total-score"><span id="totalScore">0</span> <span class="total-max">/ 12</span></div>
+          <div class="total-label">Summe der Vergleichswerte (Gruppe und Staffel)</div>
+          <div class="total-score"><span id="totalScore">0</span> <span class="total-max">/ 24</span></div>
         </div>
         <div id="verdict" class="verdict" style="display:none;"></div>
       </div>
@@ -573,10 +573,10 @@ button.primary:hover:not(:disabled) { background:#a82424; color:#fff; }
         const verdict = document.getElementById('verdict');
         if (vals.length === 6) {
           verdict.style.display = 'block';
-          if (total >= 8) {
+          if (total >= 16) {
             verdict.className = 'verdict bestanden';
             verdict.textContent = '✓ Sehr gutes Ergebnis in den messbaren Disziplinen.';
-          } else if (total >= 4) {
+          } else if (total >= 8) {
             verdict.className = 'verdict knapp';
             verdict.textContent = '~ Solides Ergebnis — noch Luft nach oben.';
           } else {
