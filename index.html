@@ -76,12 +76,81 @@
       margin-bottom: 36px;
     }
 
+
+    /* HANDGEZEICHNETER MARKER-UNTERSTRICH */
+
+
     .intro h1 {
-      margin: 0 0 12px;
+      position: relative;
+      display: table;
+      max-width: 100%;
+      margin: 0 0 32px;
       color: #fff;
       font-size: clamp(32px, 5vw, 48px);
       line-height: 1.12;
       letter-spacing: -.035em;
+    }
+
+    .marker-underline {
+      position: relative;
+      display: block;
+      width: 94%;
+      height: 19px;
+      margin: 5px auto 0;
+    }
+
+    .marker-underline i {
+      position: absolute;
+      display: block;
+      background: #ed1717;
+      transform-origin: center;
+    }
+
+    /* Langer, kräftiger Hauptstrich */
+    .marker-underline i:nth-child(1) {
+      top: 2px;
+      left: -2%;
+      width: 104%;
+      height: 7px;
+      transform: rotate(-0.6deg);
+
+      clip-path: polygon(0 48%, 3% 24%, 12% 16%,
+          24% 29%, 39% 8%, 53% 19%,
+          69% 4%, 84% 14%, 97% 7%,
+          100% 38%, 98% 67%,
+          83% 81%, 70% 69%, 54% 91%,
+          38% 76%, 23% 96%, 9% 77%,
+          1% 88%);
+    }
+
+    /* Zweiter, etwas kürzerer Strich */
+    .marker-underline i:nth-child(2) {
+      top: 8px;
+      left: 10%;
+      width: 83%;
+      height: 6px;
+      transform: rotate(0.5deg);
+
+      clip-path: polygon(0 35%, 5% 13%, 21% 25%,
+          37% 5%, 56% 20%, 74% 8%,
+          95% 17%, 100% 42%,
+          96% 70%, 77% 84%, 59% 68%,
+          40% 96%, 23% 75%, 4% 89%);
+    }
+
+    /* Kurzer, grober Abschlussstrich */
+    .marker-underline i:nth-child(3) {
+      top: 13px;
+      left: 39%;
+      width: 48%;
+      height: 5px;
+      transform: rotate(-1.3deg);
+
+      clip-path: polygon(0 53%, 7% 17%, 25% 29%,
+          46% 5%, 67% 22%, 88% 9%,
+          100% 32%, 96% 69%,
+          73% 85%, 51% 72%, 29% 100%,
+          8% 79%);
     }
 
     .intro p {
@@ -407,15 +476,12 @@
     </div>
     <a class="sidebar-link active" href="../">Startseite<span class="tool-arrow">→</span></a>
     <div class="sidebar-section">Befehlsgebung</div>
-    <a class="sidebar-link" href="../gruppenfuehrer-befehle">Gruppenführer-Befehle<span
-        class="tool-arrow">→</span></a>
-    <a class="sidebar-link" href="../staffelfuehrer-befehle">Staffelführer-Befehle<span
-        class="tool-arrow">→</span></a>
+    <a class="sidebar-link" href="../gruppenfuehrer-befehle">Gruppenführer-Befehle<span class="tool-arrow">→</span></a>
+    <a class="sidebar-link" href="../staffelfuehrer-befehle">Staffelführer-Befehle<span class="tool-arrow">→</span></a>
     <a class="sidebar-link" href="../loeschangriff-simulator">Löschangriff-Simulator<span
         class="tool-arrow">→</span></a>
     <div class="sidebar-section">Fragenbeantwortung</div>
-    <a class="sidebar-link" href="../fragenbeantwortung">Fragenbeantwortung<span
-        class="tool-arrow">→</span></a>
+    <a class="sidebar-link" href="../fragenbeantwortung">Fragenbeantwortung<span class="tool-arrow">→</span></a>
     <div class="sidebar-section">Sport &amp; Wertung</div>
     <a class="sidebar-link" href="../schnelligkeits-timer">Schnelligkeitsübung - Timer<span
         class="tool-arrow">→</span></a>
@@ -424,7 +490,14 @@
   </nav>
   <main>
     <header class="intro">
-      <h1>Leistungsspange Lernhub</h1>
+      <h1>
+        Leistungsspange Lernhub
+        <span class="marker-underline" aria-hidden="true">
+          <i></i>
+          <i></i>
+          <i></i>
+        </span>
+      </h1>
       <p>Hier findest du die fünf Disziplinen auf einen Blick. Such dir ein Thema aus, übe in deinem Tempo und
         unterstütz dein Team.</p>
     </header>
@@ -435,7 +508,8 @@
         <a class="discipline" href="../schnelligkeits-timer"><span class="number">1</span>
           <div>
             <h3>Schnelligkeitsübung</h3>
-            <p>Als Gruppe/Staffel eine C-Schlauchleitung so schnell wie möglich und ohne Verdreher auslegen.</p><span class="status ready">Timer
+            <p>Als Gruppe/Staffel eine C-Schlauchleitung so schnell wie möglich und ohne Verdreher auslegen.</p><span
+              class="status ready">Timer
               öffnen →</span>
           </div>
         </a>
@@ -449,21 +523,24 @@
         <a class="discipline" href="../wertungsrechner"><span class="number">3</span>
           <div>
             <h3>Staffellauf</h3>
-            <p>Den Staffelstab sicher weitergeben und als Team so schnell wie möglich ins Ziel kommen.</p><span class="status ready">Wertung
+            <p>Den Staffelstab sicher weitergeben und als Team so schnell wie möglich ins Ziel kommen.</p><span
+              class="status ready">Wertung
               berechnen →</span>
           </div>
         </a>
         <a class="discipline" href="../loeschangriff-simulator"><span class="number">4</span>
           <div>
             <h3>Löschangriff</h3>
-            <p>Ablauf nach FwDV 3 und die Befehle der Gruppen- bzw. Staffelführung üben.</p><span class="status ready">Simulator
+            <p>Ablauf nach FwDV 3 und die Befehle der Gruppen- bzw. Staffelführung üben.</p><span
+              class="status ready">Simulator
               öffnen →</span>
           </div>
         </a>
         <a class="discipline" href="../fragenbeantwortung"><span class="number">5</span>
           <div>
             <h3>Fragenbeantwortung</h3>
-            <p>Die Fragen der Themen mit Karteikarten wiederholen.</p><span class="status ready">Karteikarten öffnen →</span>
+            <p>Die Fragen der Themen mit Karteikarten wiederholen.</p><span class="status ready">Karteikarten öffnen
+              →</span>
           </div>
         </a>
       </div>
