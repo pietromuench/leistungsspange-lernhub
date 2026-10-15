@@ -1237,6 +1237,16 @@
       border-color: var(--red) !important;
       box-shadow: inset 0 -3px 0 var(--red) !important;
     }
+  
+    /* Erklärvideo: ausschließlich Löschangriff der Gruppe */
+    .video-card { border-color: var(--border); border-radius: 8px; overflow: hidden; }
+    .video-card .video-eyebrow { color: var(--red); font-size: 11px; font-weight: 700; letter-spacing: .07em; text-transform: uppercase; margin-bottom: 5px; }
+    .video-card .video-frame { width: 100%; aspect-ratio: 16 / 9; display: block; background: #0d0e0f; border: 1px solid var(--border); border-radius: 6px; }
+    .video-card .video-note { margin-top: 12px; padding: 10px 12px; background: #0d0e0f; border-left: 3px solid var(--red); font-size: 12.5px; line-height: 1.6; color: var(--text); }
+    .video-card .video-credit { color: var(--muted); font-size: 11.5px; margin-top: 9px; }
+    .video-card .video-fallback { font-size: 12.5px; margin-top: 10px; color: var(--muted); }
+    .video-card .video-fallback a { color: #fff; text-decoration-color: var(--red); text-underline-offset: 3px; }
+
   </style>
   <style>
     .panel details.block {
@@ -1425,6 +1435,19 @@
     </section>
 
     <section class="panel" id="p-loeschangriff">
+      <div class="block video-card">
+        <div class="video-eyebrow">Schematische Animation · Gruppe</div>
+        <h3>Der Löschangriff im Überblick</h3>
+        <div class="desc">Liams Animation veranschaulicht die Aufgaben und Bewegungen beim Löschangriff der Gruppe nach FwDV 3. Sie behandelt nicht den Ablauf der Staffel.</div>
+        <video class="video-frame" controls playsinline preload="metadata" aria-label="Schematische Animation des Löschangriffs der Gruppe">
+          <source src="./loeschangriff-gruppe-vorschau.mp4" type="video/mp4">
+          Dein Browser unterstützt die Videowiedergabe nicht.
+        </video>
+        <div class="video-fallback"><a href="./loeschangriff-gruppe-vorschau.mp4" download>Video als MP4 öffnen oder speichern</a></div>
+        <div class="video-note"><strong>Vorläufige Fassung:</strong> Die Animation wird noch mit der offiziellen Leistungsspangen-Broschüre abgeglichen und ist derzeit keine vollständige Prüfungsanleitung. Maßgeblich sind die offiziellen Vorgaben und die Anleitung eurer Ausbilder.</div>
+        <div class="video-credit">Animation: Liam Schmirgal · Laufzeit: ca. 1:25 Min.</div>
+      </div>
+
       <div class="block">
         <h3>1. Lage schildern</h3>
         <div class="cmd">„Zur Lage: es brennt …“</div>
