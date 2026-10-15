@@ -239,12 +239,48 @@
         padding: 18px 16px 80px;
       }
     }
-  </style>
+  
+/* Einheitliches Lernhub-Tooldesign */
+.wrap { max-width:820px; margin:0 auto; padding:28px 20px 72px; }
+.wrap .main { margin-left:0; min-width:0; }
+.tool-header { display:block; padding:18px 20px; margin-bottom:22px; background:var(--surface); border:1px solid var(--border); border-radius:8px; }
+.tool-header h1 { font-size:clamp(23px,4vw,30px); line-height:1.25; letter-spacing:-.025em; }
+.tool-header .sub { font-size:13px; margin-top:4px; }
+.block,.step-card,.steps-block,.result-screen,.result-block,.total-block { background:var(--surface); border:1px solid var(--border); border-radius:8px; padding:18px; margin-bottom:14px; }
+.block h3,.steps-block h3 { color:#fff; font-size:15px; margin:0 0 14px; }
+button:not(.hamburger) { font:600 13px system-ui,-apple-system,'Segoe UI',sans-serif; border:1px solid var(--red); border-radius:6px; background:#111213; color:#fff; padding:9px 14px; cursor:pointer; transition:background .15s,border-color .15s,color .15s; }
+button:not(.hamburger):hover:not(:disabled),button:not(.hamburger):focus-visible:not(:disabled) { background:#7a1a1a; border-color:var(--red); color:#fff; }
+button:not(.hamburger):disabled { cursor:not-allowed; opacity:.48; }
+button.primary { background:var(--red); color:#fff; }
+button.primary:hover:not(:disabled) { background:#a82424; color:#fff; }
+.mode-row,.btn-row,.nav-row { display:flex; flex-wrap:wrap; gap:8px; margin:0 0 18px; }
+.mode-row button { flex:1; }
+.mode-row button.active,.mode-row button.active:hover,.mode-row button.active:focus-visible { background:#7a1a1a; border-color:var(--red); box-shadow:inset 0 -3px 0 var(--red); color:#fff; }
+.tabelle { width:100%; border-collapse:collapse; font-size:13px; }
+.tabelle th,.tabelle td { padding:10px 12px; border-bottom:1px solid var(--border); text-align:left; }
+.tabelle th { background:#0d0e0f; color:#fff; font-weight:600; }
+.tabelle tr:last-child td { border-bottom:0; }
+.info-block { background:#0d0e0f; border-left:3px solid var(--red); padding:12px 14px; margin:12px 0; color:var(--text); font-size:13px; }
+.sidebar-link.active { color:#fff; border-left-color:var(--red); }
+@media(min-width:1059px) { .wrap { margin-left:calc(var(--sidebar) + (100vw - var(--sidebar) - 820px)/2); margin-right:auto; } }
+@media(min-width:769px) and (max-width:1058px) { .wrap { margin:0 18px 0 calc(var(--sidebar) + 18px); } }
+@media(max-width:768px) { .wrap { margin:0 auto; padding:70px 14px 48px; } .main { margin-left:0; } .tool-header { padding:16px; } }
+@media(max-width:540px) { .block,.step-card,.steps-block,.result-screen,.result-block,.total-block { padding:15px; } .tabelle th,.tabelle td { padding:8px 6px; font-size:12px; } }
+.field-row { display:grid; grid-template-columns:minmax(130px,1fr) minmax(95px,150px) auto auto; gap:10px; align-items:center; margin:10px 0; }
+.field-row label { font-size:13px; color:var(--text); } .field-row input { width:100%; min-width:0; padding:10px 12px; border:1px solid var(--border); border-radius:6px; background:#0d0e0f; color:#fff; font:14px system-ui,sans-serif; }
+.field-row input:focus { outline:2px solid var(--red); outline-offset:1px; } .unit { font-size:12px; color:var(--muted); }
+.points-badge { min-width:64px; text-align:center; border:1px solid var(--border); border-radius:6px; padding:7px; font-size:12px; color:var(--muted); }
+.points-badge.p4,.points-badge.p3 { color:var(--green-text); border-color:var(--green); } .points-badge.p2,.points-badge.p1 { color:var(--yellow-text); border-color:var(--yellow); } .points-badge.p0 { color:#e8a8a8; border-color:var(--red-dim); }
+.total-block { display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:16px; border-color:var(--red); }
+.total-label { color:var(--muted); font-size:13px; } .total-score { font-size:40px; font-weight:700; color:#fff; } .total-max { font-size:17px; color:var(--muted); }
+.verdict { max-width:270px; font-size:13px; } .verdict.bestanden { color:var(--green-text); } .verdict.knapp { color:var(--yellow-text); } .verdict.nichtbestanden { color:#e8a8a8; }
+@media(max-width:540px) { .field-row { grid-template-columns:1fr minmax(85px,120px) auto; gap:7px; } .field-row label { grid-column:1/-1; } .field-row .unit { font-size:11px; } }
+</style>
 </head>
 
 <body>
 
-  <button class="hamburger" id="hamburger">☰</button>
+  <button class="hamburger" id="hamburger" type="button" aria-label="Navigation öffnen" aria-expanded="false">☰</button>
   <div class="overlay" id="overlay"></div>
   <nav class="sidebar" id="sidebar" aria-label="Lernhub-Navigation">
     <div class="sidebar-logo"><a href="../">Leistungsspange Lernhub</a>
@@ -281,13 +317,13 @@
         <h3>Schnelligkeitsübung</h3>
         <div class="field-row">
           <label>Zeit Gruppe</label>
-          <input type="number" id="schnell-gruppe" placeholder="z. B. 58" min="0">
+          <input type="number" id="schnell-gruppe" step="any" placeholder="z. B. 58" min="0">
           <span class="unit">Sekunden</span>
           <div class="points-badge" id="badge-schnell-gruppe">—</div>
         </div>
         <div class="field-row">
           <label>Zeit Staffel</label>
-          <input type="number" id="schnell-staffel" placeholder="z. B. 52" min="0">
+          <input type="number" id="schnell-staffel" step="any" placeholder="z. B. 52" min="0">
           <span class="unit">Sekunden</span>
           <div class="points-badge" id="badge-schnell-staffel">—</div>
         </div>
@@ -378,12 +414,12 @@
         <h3>Staffellauf</h3>
         <div class="field-row">
           <label>Zeit Gruppe (Min:Sek)</label>
-          <input type="text" id="staffel-gruppe" placeholder="z. B. 3:40">
+          <input type="text" id="staffel-gruppe" inputmode="numeric" placeholder="z. B. 3:40">
           <div class="points-badge" id="badge-staffel-gruppe">—</div>
         </div>
         <div class="field-row">
           <label>Zeit Staffel (Min:Sek)</label>
-          <input type="text" id="staffel-staffel" placeholder="z. B. 2:25">
+          <input type="text" id="staffel-staffel" inputmode="numeric" placeholder="z. B. 2:25">
           <div class="points-badge" id="badge-staffel-staffel">—</div>
         </div>
         <table class="tabelle" style="margin-top:14px;">
@@ -439,8 +475,9 @@
         if (!str) return null;
         const parts = str.trim().split(':');
         if (parts.length !== 2) return null;
-        const m = parseInt(parts[0]), s = parseInt(parts[1]);
-        if (isNaN(m) || isNaN(s)) return null;
+        if (!/^\\d+:\\d{1,2}$/.test(str.trim())) return null;
+        const m = Number(parts[0]), s = Number(parts[1]);
+        if (s >= 60) return null;
         return m * 60 + s;
       }
 
@@ -465,7 +502,7 @@
         if (v > 70) return 4;
         if (v > 64) return 3;
         if (v > 59) return 2;
-        if (v > 55) return 1;
+        if (v >= 55) return 1;
         return 0;
       }
       function getKugelStaffel(v) {
@@ -473,7 +510,7 @@
         if (v > 46) return 4;
         if (v > 42) return 3;
         if (v > 39) return 2;
-        if (v > 36) return 1;
+        if (v >= 36) return 1;
         return 0;
       }
       function getStaffelGruppe(sek) {
@@ -500,11 +537,18 @@
         el.className = 'points-badge p' + pts;
       }
 
+      function readNumber(id) {
+        const el = document.getElementById(id);
+        if (el.value.trim() === '' || !el.validity.valid) return null;
+        const value = Number(el.value);
+        return Number.isFinite(value) && value >= 0 ? value : null;
+      }
+
       function recalc() {
-        const sg = parseFloat(document.getElementById('schnell-gruppe').value) || null;
-        const ss = parseFloat(document.getElementById('schnell-staffel').value) || null;
-        const kg = parseFloat(document.getElementById('kugel-gruppe').value) || null;
-        const ks = parseFloat(document.getElementById('kugel-staffel').value) || null;
+        const sg = readNumber('schnell-gruppe');
+        const ss = readNumber('schnell-staffel');
+        const kg = readNumber('kugel-gruppe');
+        const ks = readNumber('kugel-staffel');
         const tg = parseTime(document.getElementById('staffel-gruppe').value);
         const ts = parseTime(document.getElementById('staffel-staffel').value);
 
@@ -557,8 +601,8 @@
       var sb = document.getElementById('sidebar');
       var ov = document.getElementById('overlay');
       if (hb) {
-        hb.addEventListener('click', function () { sb.classList.toggle('open'); ov.classList.toggle('show'); });
-        ov.addEventListener('click', function () { sb.classList.remove('open'); ov.classList.remove('show'); });
+        hb.addEventListener('click', function () { sb.classList.toggle('open'); ov.classList.toggle('show'); hb.setAttribute('aria-expanded', String(sb.classList.contains('open'))); });
+        ov.addEventListener('click', function () { sb.classList.remove('open'); ov.classList.remove('show'); hb.setAttribute('aria-expanded', 'false'); });
       }
     })();
 
