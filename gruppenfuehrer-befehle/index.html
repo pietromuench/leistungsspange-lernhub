@@ -32,11 +32,10 @@
     html,
     body {
       margin: 0;
+      min-height: 100dvh;
       background: var(--bg);
       color: var(--text);
-      font-family: 'IBM Plex Sans', system-ui, sans-serif;
-      font-size: 15px;
-      line-height: 1.5;
+      font: 16px/1.6 system-ui, -apple-system, 'Segoe UI', sans-serif
     }
 
     ::selection {
@@ -183,7 +182,6 @@
 
     nav {
       display: flex;
-      gap: 2px;
       flex-wrap: wrap;
       margin-bottom: 24px;
       border-bottom: 1px solid var(--border);
@@ -483,23 +481,7 @@
       color: #bcc6bb
     }
 
-    .back-home {
-      display: inline-flex;
-      align-items: center;
-      gap: 7px;
-      margin-top: 13px;
-      color: #f0c775;
-      text-decoration: none;
-      font-size: 12px;
-      font-weight: 700
-    }
-
-    .back-home:hover {
-      color: #ffe4a7
-    }
-
     nav {
-      gap: 6px;
       border: 0;
       margin-bottom: 24px
     }
@@ -785,24 +767,7 @@
       color: #6b7175
     }
 
-    .back-home {
-      display: inline-flex;
-      align-items: center;
-      gap: 7px;
-      margin-top: 12px;
-      color: #e6e6e6;
-      text-decoration: underline;
-      text-underline-offset: 3px;
-      font-size: 13px;
-      font-weight: 600
-    }
-
-    .back-home:hover {
-      color: #fff
-    }
-
     nav {
-      gap: 5px;
       border: 0;
       margin-bottom: 20px
     }

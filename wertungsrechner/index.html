@@ -32,11 +32,10 @@
     html,
     body {
       margin: 0;
+      min-height: 100dvh;
       background: var(--bg);
       color: var(--text);
-      font-family: 'IBM Plex Sans', system-ui, sans-serif;
-      font-size: 15px;
-      line-height: 1.5;
+      font: 16px/1.6 system-ui, -apple-system, 'Segoe UI', sans-serif;
     }
 
     ::selection {
@@ -52,7 +51,7 @@
       height: 100vh;
       width: var(--sidebar);
       background: #0d0e0f;
-      border-right: 1px solid var(--line);
+      border-right: 1px solid var(--border);
       display: flex;
       flex-direction: column;
       z-index: 100;
@@ -61,7 +60,7 @@
 
     .sidebar-logo {
       padding: 18px 16px 14px;
-      border-bottom: 1px solid var(--line)
+      border-bottom: 1px solid var(--border);
     }
 
     .sidebar-logo a {
@@ -130,7 +129,7 @@
       padding: 14px 16px;
       font-size: 10.5px;
       color: var(--muted);
-      border-top: 1px solid var(--line)
+      border-top: 1px solid var(--border);
     }
 
     /* HAMBURGER */

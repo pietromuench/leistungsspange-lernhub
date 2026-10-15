@@ -15,7 +15,7 @@
       --bg: #111213;
       --surface: #1a1c1e;
       --surface-hover: #1f2123;
-      --line: #2e3133;
+      --border: #2e3133;
       --text: #dfe1db;
       --muted: #6b7175;
       --soft: #6b7175;
@@ -34,7 +34,7 @@
 
     body {
       margin: 0;
-      min-height: 100vh;
+      min-height: 100dvh;
       background: var(--bg);
       color: var(--text);
       font: 16px/1.6 system-ui, -apple-system, 'Segoe UI', sans-serif
@@ -59,7 +59,7 @@
       font-size: 12px;
       font-weight: 700;
       letter-spacing: .1em;
-      text-transform: uppercase
+      text-transform: uppercase;
     }
 
     .brand-logo {
@@ -68,12 +68,12 @@
       flex: none;
       object-fit: contain;
       filter: grayscale(1);
-      opacity: .82
+      opacity: .82;
     }
 
     .intro {
       max-width: 680px;
-      margin-bottom: 36px
+      margin-bottom: 36px;
     }
 
     .intro h1 {
@@ -81,45 +81,25 @@
       color: #fff;
       font-size: clamp(32px, 5vw, 48px);
       line-height: 1.12;
-      letter-spacing: -.035em
+      letter-spacing: -.035em;
     }
 
     .intro p {
       margin: 0;
-      color: var(--muted);
-      font-size: 17px
-    }
-
-    .facts {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      margin-top: 20px
-    }
-
-    .fact {
-      padding: 6px 11px;
-      border: 1px solid var(--line);
-      border-radius: 6px;
-      color: var(--text);
-      font-size: 13px
-    }
-
-    .fact strong {
-      margin-right: 5px;
-      font-size: 15px
+      color: rgb(200, 200, 200);
+      font-size: 17px;
     }
 
     .section-title {
       margin: 0 0 13px;
       color: #fff;
       font-size: 20px;
-      letter-spacing: -.02em
+      letter-spacing: -.02em;
     }
 
     .section-subtitle {
       margin: -7px 0 17px;
-      color: var(--muted);
+      color: rgb(180, 180, 180);
       font-size: 14px
     }
 
@@ -135,12 +115,12 @@
       align-items: flex-start;
       min-height: 140px;
       padding: 18px;
-      border: 1px solid var(--line);
+      border: 1px solid var(--border);
       border-left: 3px solid transparent;
       border-radius: 8px;
       background: var(--surface);
       text-decoration: none;
-      transition: background .12s, border-color .12s
+      transition: background .12s, border-color .12s;
     }
 
     .discipline[href]:hover {
@@ -162,19 +142,19 @@
       border: 1px solid #777;
       border-radius: 6px;
       color: var(--text);
-      font-size: 13px;
-      font-weight: 700
+      font-size: 14px;
+      font-weight: 700;
     }
 
     .discipline h3 {
       margin: 1px 0 5px;
       color: #fff;
-      font-size: 16px
+      font-size: 17px;
     }
 
     .discipline p {
       margin: 0;
-      color: var(--muted);
+      color: rgb(180, 180, 180);
       font-size: 14px;
       line-height: 1.5
     }
@@ -183,17 +163,17 @@
       display: inline-block;
       margin-top: 12px;
       color: var(--soft);
-      font-size: 12px;
-      transition: transform .12s
+      font-size: 14px;
+      transition: transform .12s;
     }
 
     .discipline[href]:hover .status.ready {
-      transform: translateX(3px)
+      transform: translateX(3px);
     }
 
     .status.ready {
       color: #fff;
-      font-weight: 600
+      font-weight: 600;
     }
 
     .note {
@@ -201,8 +181,8 @@
       padding: 15px 17px;
       border-left: 3px solid var(--red);
       background: var(--surface);
-      color: var(--muted);
-      font-size: 14px
+      color: rgb(200, 200, 200);
+      font-size: 16px;
     }
 
     .note strong {
@@ -212,9 +192,9 @@
     footer {
       margin-top: 38px;
       padding-top: 15px;
-      border-top: 1px solid var(--line);
+      border-top: 1px solid var(--border);
       color: var(--soft);
-      font-size: 12px
+      font-size: 12px;
     }
 
     .sidebar {
@@ -224,16 +204,16 @@
       height: 100vh;
       width: var(--sidebar);
       background: #0d0e0f;
-      border-right: 1px solid var(--line);
+      border-right: 1px solid var(--border);
       display: flex;
       flex-direction: column;
       z-index: 100;
-      overflow-y: auto
+      overflow-y: auto;
     }
 
     .sidebar-logo {
       padding: 18px 16px 14px;
-      border-bottom: 1px solid var(--line)
+      border-bottom: 1px solid var(--border)
     }
 
     .sidebar-logo a {
@@ -302,7 +282,7 @@
       padding: 14px 16px;
       font-size: 10.5px;
       color: var(--muted);
-      border-top: 1px solid var(--line)
+      border-top: 1px solid var(--border)
     }
 
     .hamburger {
@@ -312,7 +292,7 @@
       left: 12px;
       z-index: 200;
       background: #0d0e0f;
-      border: 1px solid var(--line);
+      border: 1px solid var(--border);
       color: var(--text);
       width: 40px;
       height: 40px;
@@ -452,38 +432,38 @@
       <h2 class="section-title" id="discipline-heading">Das kommt dran</h2>
       <p class="section-subtitle">Die Prüfung verbindet Sport, Feuerwehrwissen und Teamarbeit.</p>
       <div class="disciplines">
-        <a class="discipline" href="../schnelligkeits-timer"><span class="number">01</span>
+        <a class="discipline" href="../schnelligkeits-timer"><span class="number">1</span>
           <div>
             <h3>Schnelligkeitsübung</h3>
-            <p>Als Gruppe eine C-Schlauchleitung zügig und ordentlich auslegen.</p><span class="status ready">Timer
+            <p>Als Gruppe/Staffel eine C-Schlauchleitung so schnell wie möglich und ohne Verdreher auslegen.</p><span class="status ready">Timer
               öffnen →</span>
           </div>
         </a>
-        <a class="discipline" href="../wertungsrechner"><span class="number">02</span>
+        <a class="discipline" href="../wertungsrechner"><span class="number">2</span>
           <div>
             <h3>Kugelstoßen</h3>
             <p>Mit Technik und gemeinsamer Leistung möglichst weit stoßen.</p><span class="status ready">Wertung
               berechnen →</span>
           </div>
         </a>
-        <a class="discipline" href="../wertungsrechner"><span class="number">03</span>
+        <a class="discipline" href="../wertungsrechner"><span class="number">3</span>
           <div>
             <h3>Staffellauf</h3>
-            <p>Den Staffelstab sicher weitergeben und als Team ins Ziel kommen.</p><span class="status ready">Wertung
+            <p>Den Staffelstab sicher weitergeben und als Team so schnell wie möglich ins Ziel kommen.</p><span class="status ready">Wertung
               berechnen →</span>
           </div>
         </a>
-        <a class="discipline" href="../loeschangriff-simulator"><span class="number">04</span>
+        <a class="discipline" href="../loeschangriff-simulator"><span class="number">4</span>
           <div>
             <h3>Löschangriff</h3>
-            <p>Ablauf nach FwDV 3 und die Befehle der Gruppenführung üben.</p><span class="status ready">Simulator
+            <p>Ablauf nach FwDV 3 und die Befehle der Gruppen- bzw. Staffelführung üben.</p><span class="status ready">Simulator
               öffnen →</span>
           </div>
         </a>
-        <a class="discipline" href="../fragenbeantwortung"><span class="number">05</span>
+        <a class="discipline" href="../fragenbeantwortung"><span class="number">5</span>
           <div>
             <h3>Fragenbeantwortung</h3>
-            <p>Wichtige Themen mit Karteikarten wiederholen.</p><span class="status ready">Karteikarten öffnen →</span>
+            <p>Die Fragen der Themen mit Karteikarten wiederholen.</p><span class="status ready">Karteikarten öffnen →</span>
           </div>
         </a>
       </div>
