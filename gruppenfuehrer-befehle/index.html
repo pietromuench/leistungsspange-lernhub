@@ -1210,6 +1210,31 @@
       cursor: not-allowed;
       opacity: .48
     }
+  
+    /* Tabs: weißer Text und dauerhaft sichtbare aktive Auswahl */
+    .wrap nav button:not(.hamburger),
+    .cats .cat-btn {
+      color: #fff !important;
+    }
+    .wrap nav button:not(.hamburger):hover,
+    .wrap nav button:not(.hamburger):focus-visible,
+    .cats .cat-btn:hover,
+    .cats .cat-btn:focus-visible {
+      color: #fff !important;
+      background: #1f2123 !important;
+      border-color: var(--red) !important;
+    }
+    .wrap nav button.active:not(.hamburger),
+    .wrap nav button.active:not(.hamburger):hover,
+    .wrap nav button.active:not(.hamburger):focus-visible,
+    .cats .cat-btn.active,
+    .cats .cat-btn.active:hover,
+    .cats .cat-btn.active:focus-visible {
+      color: #fff !important;
+      background: #7a1a1a !important;
+      border-color: var(--red) !important;
+      box-shadow: inset 0 -3px 0 var(--red) !important;
+    }
   </style>
   <style>
     .panel details.block {
