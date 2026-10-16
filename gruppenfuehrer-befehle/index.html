@@ -1724,7 +1724,7 @@
     (() => { const button = document.getElementById('hamburger'), sidebar = document.getElementById('sidebar'), overlay = document.getElementById('overlay'); if (!button || !sidebar || !overlay) return; const setOpen = open => { sidebar.classList.toggle('open', open); overlay.classList.toggle('show', open); button.setAttribute('aria-expanded', String(open)); button.setAttribute('aria-label', open ? 'Navigation schließen' : 'Navigation öffnen') }; button.addEventListener('click', () => setOpen(!sidebar.classList.contains('open'))); overlay.addEventListener('click', () => setOpen(false)); document.addEventListener('keydown', event => { if (event.key === 'Escape') setOpen(false) }) })();
   </script>
   <script>
-    document.querySelectorAll('.panel .block').forEach(block => {
+    document.querySelectorAll('.panel .block:not(.video-card)').forEach(block => {
       const heading = block.querySelector('h3');
       if (!heading) return;
       const details = document.createElement('details');
