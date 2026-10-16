@@ -475,14 +475,18 @@
     }
 
     .panel details.block>summary::after {
-      content: '→';
+      content: '➜︎';
       color: var(--red);
-      font-size: 18px;
+      font-size: 20px;
+      font-weight: 200;
       line-height: 1;
     }
 
     .panel details.block[open]>summary::after {
-      content: '↓';
+      content: '➜︎';
+      display: inline-block;
+      transform: rotate(90deg);
+      transform-origin: center;
     }
 
     .panel details.block>summary:hover {
@@ -729,19 +733,19 @@
   <nav class="sidebar" id="sidebar" aria-label="Lernhub-Navigation">
     <div class="sidebar-logo"><a href="../">Leistungsspange Lernhub</a>
     </div>
-    <a class="sidebar-link" href="../">Startseite<span class="tool-arrow">→</span></a>
+    <a class="sidebar-link" href="../">Startseite<span class="tool-arrow"><span style="font-weight: 100;">➜︎</span></span></a>
     <div class="sidebar-section">Befehlsgebung</div>
-    <a class="sidebar-link" href="../gruppenfuehrer-befehle">Gruppenführer-Befehle<span class="tool-arrow">→</span></a>
+    <a class="sidebar-link" href="../gruppenfuehrer-befehle">Gruppenführer-Befehle<span class="tool-arrow"><span style="font-weight: 100;">➜︎</span></span></a>
     <a class="sidebar-link active" href="../staffelfuehrer-befehle">Staffelführer-Befehle<span
-        class="tool-arrow">→</span></a>
+        class="tool-arrow"><span style="font-weight: 100;">➜︎</span></span></a>
     <a class="sidebar-link" href="../loeschangriff-simulator">Löschangriff-Simulator<span
-        class="tool-arrow">→</span></a>
+        class="tool-arrow"><span style="font-weight: 100;">➜︎</span></span></a>
     <div class="sidebar-section">Fragenbeantwortung</div>
-    <a class="sidebar-link" href="../fragenbeantwortung">Fragenbeantwortung<span class="tool-arrow">→</span></a>
+    <a class="sidebar-link" href="../fragenbeantwortung">Fragenbeantwortung<span class="tool-arrow"><span style="font-weight: 100;">➜︎</span></span></a>
     <div class="sidebar-section">Sport &amp; Wertung</div>
     <a class="sidebar-link" href="../schnelligkeits-timer">Schnelligkeitsübung - Timer<span
-        class="tool-arrow">→</span></a>
-    <a class="sidebar-link" href="../wertungsrechner">Wertungsrechner<span class="tool-arrow">→</span></a>
+        class="tool-arrow"><span style="font-weight: 100;">➜︎</span></span></a>
+    <a class="sidebar-link" href="../wertungsrechner">Wertungsrechner<span class="tool-arrow"><span style="font-weight: 100;">➜︎</span></span></a>
     <div class="sidebar-footer">© Pietro Münch &amp; Liam Schmirgal</div>
   </nav>
 

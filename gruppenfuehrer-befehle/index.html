@@ -764,7 +764,7 @@
 
     header .sub {
       font-size: 13px;
-      color: #6b7175
+      color: rgb(180, 180, 180);
     }
 
     nav {
@@ -1237,35 +1237,192 @@
       border-color: var(--red) !important;
       box-shadow: inset 0 -3px 0 var(--red) !important;
     }
-  
+
     /* Eigener Lernhub-Videoplayer */
-    .player-status { padding:12px 18px; margin:0; background:#271515; color:#ffc0c0; border-left:3px solid var(--red); font-size:12.5px; }
-    .player-status[hidden] { display:none; }
-    .video-card { padding:0!important; overflow:hidden; border:1px solid var(--border); border-radius:8px; background:var(--surface); }
-    .video-heading { padding:20px 20px 16px; }
-    .video-kicker { display:flex; align-items:center; gap:8px; font-size:11px; font-weight:700; letter-spacing:.08em; color:var(--red); text-transform:uppercase; margin-bottom:8px; }
-    .video-kicker::before { content:""; width:18px; height:3px; background:var(--red); border-radius:2px; }
-    .video-heading h3 { margin:0 0 5px; font-size:19px; letter-spacing:-.025em; }
-    .video-heading p { margin:0; color:#b7bcb9; font-size:13px; line-height:1.55; }
-    .learning-player { background:#0a0b0c; }
-    .player-screen { position:relative; background:#070809; aspect-ratio:16/9; overflow:hidden; }
-    .player-screen video { width:100%; height:100%; display:block; object-fit:contain; }
-    .player-cover { position:absolute; inset:0; background:linear-gradient(180deg,rgba(0,0,0,.18),rgba(0,0,0,.68)),linear-gradient(125deg,#241212,#111213 55%,#321414); display:flex; flex-direction:column; justify-content:center; align-items:center; text-align:center; gap:11px; padding:20px; }
-    .player-cover[hidden] { display:none; }
-    .player-cover .cover-index { color:#f26868; font-size:11px; font-weight:700; letter-spacing:.14em; text-transform:uppercase; }
-    .player-cover strong { font-size:clamp(20px,4vw,31px); color:#fff; line-height:1.15; letter-spacing:-.04em; }
-    .player-cover .cover-sub { font-size:12px; color:#bbb; }
-    .player-cover button { display:grid; place-items:center; width:62px; height:62px; border-radius:50%; font-size:23px; background:var(--red)!important; border:1px solid #ed5b5b!important; color:#fff!important; padding:0!important; }
-    .player-cover button:hover { background:#a82424!important; color:#fff!important; }
-    .player-controls { display:flex; align-items:center; gap:11px; padding:10px 15px; border-top:1px solid #2e3133; }
-    .player-controls button { background:transparent!important; border:0!important; color:#fff!important; padding:5px!important; min-width:30px; font-size:18px; line-height:1; }
-    .player-controls button:hover { background:#242628!important; color:#fff!important; }
-    .player-seek { min-width:0; flex:1; accent-color:var(--red); cursor:pointer; }
-    .player-clock { color:#cbd0ce; font:11px/1.3 'IBM Plex Mono',monospace; white-space:nowrap; font-variant-numeric:tabular-nums; }
-    .player-footer { padding:13px 20px 17px; display:flex; justify-content:space-between; gap:12px; align-items:center; border-top:1px solid var(--border); }
-    .player-footer span { color:var(--muted); font-size:11.5px; }
-    .player-footer strong { color:var(--text); font-weight:600; }
-    @media(max-width:540px){.video-heading{padding:16px}.player-footer{padding:12px 16px}.player-controls{gap:5px;padding:8px}.player-clock{font-size:10px}}
+    .video-card {
+      padding: 0 !important;
+      overflow: hidden;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: var(--surface);
+    }
+
+    .video-heading {
+      padding: 20px 20px 16px;
+    }
+
+    .video-kicker {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: .08em;
+      color: var(--red);
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+
+    .video-heading h3 {
+      margin: 0 0 5px;
+      font-size: 19px;
+      letter-spacing: -.025em;
+    }
+
+    .video-heading p {
+      margin: 0;
+      color: #b7bcb9;
+      font-size: 13px;
+      line-height: 1.55;
+    }
+
+    .learning-player {
+      background: #0a0b0c;
+    }
+
+    .player-screen {
+      position: relative;
+      background: #070809;
+      aspect-ratio: 16/9;
+      overflow: hidden;
+    }
+
+    .player-screen video {
+      width: 100%;
+      height: 100%;
+      display: block;
+      object-fit: contain;
+    }
+
+    .player-cover {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(180deg, rgba(0, 0, 0, .18), rgba(0, 0, 0, .68)), linear-gradient(125deg, #241212, #111213 55%, #321414);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      gap: 11px;
+      padding: 20px;
+    }
+
+    .player-cover[hidden] {
+      display: none;
+    }
+
+    .player-cover .cover-index {
+      color: #f26868;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+    }
+
+    .player-cover strong {
+      font-size: clamp(20px, 4vw, 31px);
+      color: #fff;
+      line-height: 1.15;
+      letter-spacing: -.04em;
+    }
+
+    .player-cover .cover-sub {
+      font-size: 12px;
+      color: #bbb;
+    }
+
+    .player-cover button {
+      display: grid;
+      place-items: center;
+      width: 62px;
+      height: 62px;
+      border-radius: 50%;
+      font-size: 23px;
+      background: var(--red) !important;
+      border: 1px solid #ed5b5b !important;
+      color: #fff !important;
+      padding: 0 !important;
+    }
+
+    .player-cover button:hover {
+      background: #a82424 !important;
+      color: #fff !important;
+    }
+
+    .player-controls {
+      display: flex;
+      align-items: center;
+      gap: 11px;
+      padding: 10px 15px;
+      border-top: 1px solid #2e3133;
+    }
+
+    .player-controls button {
+      background: transparent !important;
+      border: 0 !important;
+      color: #fff !important;
+      padding: 5px !important;
+      min-width: 30px;
+      font-size: 18px;
+      line-height: 1;
+    }
+
+    .player-controls button:hover {
+      background: #242628 !important;
+      color: #fff !important;
+    }
+
+    .player-seek {
+      min-width: 0;
+      flex: 1;
+      accent-color: var(--red);
+      cursor: pointer;
+    }
+
+    .player-clock {
+      color: #cbd0ce;
+      font: 11px/1.3 'IBM Plex Mono', monospace;
+      white-space: nowrap;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .player-footer {
+      padding: 13px 20px 17px;
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      align-items: center;
+      border-top: 1px solid var(--border);
+    }
+
+    .player-footer span {
+      color: var(--muted);
+      font-size: 11.5px;
+    }
+
+    .player-footer strong {
+      color: var(--text);
+      font-weight: 600;
+    }
+
+    @media(max-width:540px) {
+      .video-heading {
+        padding: 16px
+      }
+
+      .player-footer {
+        padding: 12px 16px
+      }
+
+      .player-controls {
+        gap: 5px;
+        padding: 8px
+      }
+
+      .player-clock {
+        font-size: 10px
+      }
+    }
   </style>
   <style>
     .panel details.block {
@@ -1291,14 +1448,18 @@
     }
 
     .panel details.block>summary::after {
-      content: '→';
+      content: '➜︎';
       color: var(--red);
-      font-size: 18px;
-      line-height: 1
+      font-size: 20px;
+      font-weight: 200;
+      line-height: 1;
     }
 
     .panel details.block[open]>summary::after {
-      content: '↓'
+      content: '➜︎';
+      display: inline-block;
+      transform: rotate(90deg);
+      transform-origin: center;
     }
 
     .panel details.block>summary:hover {
@@ -1317,19 +1478,19 @@
   <nav class="sidebar" id="sidebar" aria-label="Lernhub-Navigation">
     <div class="sidebar-logo"><a href="../">Leistungsspange Lernhub</a>
     </div>
-    <a class="sidebar-link" href="../">Startseite<span class="tool-arrow">→</span></a>
+    <a class="sidebar-link" href="../">Startseite<span class="tool-arrow"><span style="font-weight: 100;">➜︎</span></span></a>
     <div class="sidebar-section">Befehlsgebung</div>
     <a class="sidebar-link active" href="../gruppenfuehrer-befehle">Gruppenführer-Befehle<span
-        class="tool-arrow">→</span></a>
-    <a class="sidebar-link" href="../staffelfuehrer-befehle">Staffelführer-Befehle<span class="tool-arrow">→</span></a>
+        class="tool-arrow"><span style="font-weight: 100;">➜︎</span></span></a>
+    <a class="sidebar-link" href="../staffelfuehrer-befehle">Staffelführer-Befehle<span class="tool-arrow"><span style="font-weight: 100;">➜︎</span></span></a>
     <a class="sidebar-link" href="../loeschangriff-simulator">Löschangriff-Simulator<span
-        class="tool-arrow">→</span></a>
+        class="tool-arrow"><span style="font-weight: 100;">➜︎</span></span></a>
     <div class="sidebar-section">Fragenbeantwortung</div>
-    <a class="sidebar-link" href="../fragenbeantwortung">Fragenbeantwortung<span class="tool-arrow">→</span></a>
+    <a class="sidebar-link" href="../fragenbeantwortung">Fragenbeantwortung<span class="tool-arrow"><span style="font-weight: 100;">➜︎</span></span></a>
     <div class="sidebar-section">Sport &amp; Wertung</div>
     <a class="sidebar-link" href="../schnelligkeits-timer">Schnelligkeitsübung - Timer<span
-        class="tool-arrow">→</span></a>
-    <a class="sidebar-link" href="../wertungsrechner">Wertungsrechner<span class="tool-arrow">→</span></a>
+        class="tool-arrow"><span style="font-weight: 100;">➜︎</span></span></a>
+    <a class="sidebar-link" href="../wertungsrechner">Wertungsrechner<span class="tool-arrow"><span style="font-weight: 100;">➜︎</span></span></a>
     <div class="sidebar-footer">© Pietro Münch &amp; Liam Schmirgal</div>
   </nav>
   <div class="wrap">
@@ -1454,36 +1615,39 @@
     </section>
 
     <section class="panel" id="p-loeschangriff">
+
+
       <div class="block video-card">
         <div class="video-heading">
-          <div class="video-kicker">Die Übung verstehen · Gruppe (1/8/9)</div>
+          <div class="video-kicker">🎬︎ Schematisches Erklärvideo</div>
           <h3>Löschangriff nach FwDV 3</h3>
-          <p>Der schematische Übungsablauf für Gruppenführer und Trupps – ergänzend zu den Befehlen und Aufgaben auf dieser Seite.</p>
+          <p>Der schematische Übungsablauf für Gruppenführer und Trupps – ergänzend zu den Befehlen und Aufgaben auf
+            dieser Seite. <br><br> <i style="font-size: 20px; font-weight: 700; color: var(--red);">Video folgt
+              bald...</i></p>
         </div>
-        <div class="learning-player" id="learningPlayer">
+        <!-- <div class="learning-player" id="learningPlayer">
           <div class="player-screen">
             <video id="learningVideo" preload="metadata" playsinline aria-label="Erklärvideo Löschangriff nach FwDV 3 für die Gruppe">
               <source src="./loeschangriff-gruppe.mp4" type="video/mp4">
               Dein Browser unterstützt dieses Video nicht.
             </video>
             <div class="player-cover" id="playerCover">
-              <span class="cover-index">Leistungsspange Lernhub · Film 01</span>
+              <span class="cover-index">Leistungsspange Lernhub · Erklärvideo</span>
               <strong>Der Löschangriff.<br>Schritt für Schritt.</strong>
               <span class="cover-sub">FwDV 3 · Gruppenführer · 01:51</span>
-              <button id="playerCoverPlay" type="button" aria-label="Erklärvideo starten">▶</button>
+              <button id="playerCoverPlay" type="button" aria-label="Erklärvideo starten">▶︎</button>
             </div>
           </div>
           <div class="player-controls" role="group" aria-label="Videosteuerung">
-            <button id="playerToggle" type="button" aria-label="Video abspielen">▶</button>
+            <button id="playerToggle" type="button" aria-label="Video abspielen">▶︎</button>
             <input id="playerSeek" class="player-seek" type="range" min="0" max="1000" value="0" step="1" aria-label="Videoposition">
             <span class="player-clock" id="playerClock">00:00 / 01:51</span>
-            <button id="playerMute" type="button" aria-label="Ton ausschalten">♫</button>
             <button id="playerFullscreen" type="button" aria-label="Vollbild">⛶</button>
           </div>
         </div>
-        <p class="player-status" id="playerStatus" role="status" hidden></p>
-        <div class="player-footer"><span><strong>Animation:</strong> Liam Schmirgal</span><span>Gruppe · FwDV 3</span></div>
+        <div class="player-footer"><span><strong>Animation:</strong> Liam Schmirgal</span><span>Gruppe · FwDV 3</span></div> -->
       </div>
+
 
       <div class="block">
         <h3>1. Lage schildern</h3>
@@ -1753,7 +1917,6 @@
       const mute = document.getElementById('playerMute');
       const frame = document.querySelector('#learningPlayer .player-screen');
       if (!video) return;
-      video.load();
       const stamp = seconds => {
         if (!Number.isFinite(seconds)) return '00:00';
         const n = Math.floor(seconds);
@@ -1768,18 +1931,7 @@
         mute.textContent = video.muted ? '♪̸' : '♫';
         mute.setAttribute('aria-label', video.muted ? 'Ton einschalten' : 'Ton ausschalten');
       };
-      const toggle = async () => {
-        if (!video.paused) { video.pause(); return; }
-        try {
-          await video.play();
-        } catch (error) {
-          cover.hidden = false;
-          const status = document.getElementById('playerStatus');
-          status.hidden = false;
-          status.textContent = 'Video konnte nicht gestartet werden. Bitte prüfe, ob die MP4-Datei vollständig bereitgestellt wurde.';
-          console.error('Lernhub video playback:', error, video.currentSrc, video.error);
-        }
-      };
+      const toggle = () => { if (video.paused) video.play().catch(() => { }); else video.pause(); };
       document.getElementById('playerCoverPlay').addEventListener('click', toggle);
       play.addEventListener('click', toggle);
       video.addEventListener('click', toggle);
@@ -1793,13 +1945,7 @@
         else if (frame.requestFullscreen) frame.requestFullscreen();
         else if (video.webkitEnterFullscreen) video.webkitEnterFullscreen();
       });
-      video.addEventListener('error', () => {
-        clock.textContent = 'Video nicht verfügbar';
-        cover.hidden = false;
-        const status = document.getElementById('playerStatus');
-        status.hidden = false;
-        status.textContent = 'Die MP4-Datei konnte nicht geladen werden. Bitte kontrolliere die Veröffentlichung und lade die Seite danach neu.';
-      });
+      video.addEventListener('error', () => { clock.textContent = 'Video nicht verfügbar'; });
       sync();
     })();
   </script>
